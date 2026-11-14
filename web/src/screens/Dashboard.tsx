@@ -5,7 +5,7 @@
  *   below. Composes components; no calculation.
  * Roadmap stage: 5 — Interface (see docs/ROTEIRO.md).
  */
-import { lazy, Suspense, useMemo, useState } from 'react';
+import { lazy, Suspense, useMemo, useRef, useState } from 'react';
 import { bodyDirectionsAt } from '../calc/scene3d';
 import { AnnualStrips } from '../components/AnnualStrips';
 import { Footer } from '../components/Footer';
@@ -15,6 +15,7 @@ import { MissionRulesPanel } from '../components/MissionRulesPanel';
 import { ScatterPlot } from '../components/ScatterPlot';
 import { ShadedMap } from '../components/ShadedMap';
 import { SiteCard } from '../components/SiteCard';
+import { SmallMove } from '../components/SmallMove';
 import { Starfield } from '../components/Starfield';
 import type { SiteData, SiteSummary, Terrain } from '../data/contract';
 import { useI18n } from '../i18n/I18nProvider';
@@ -55,6 +56,15 @@ export function Dashboard({ sites, data, terrain, inputs, onInputs, onOpenSite }
   const bestName = sites.find((s) => s.id === d.now.bestId)?.name;
   const earliestName = sites.find((s) => s.id === d.earliest?.siteId)?.name;
   const px = Math.round(terrain.pixelM);
+  const smallMove = useRef<HTMLDetailsElement>(null);
+  const openSmallMove = () => {
+    const el = smallMove.current;
+    if (!el) return;
+    el.open = true;
+    el.scrollIntoView({
+      behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+    });
+  };
 
   return (
     <div className="app dash">
@@ -112,9 +122,14 @@ export function Dashboard({ sites, data, terrain, inputs, onInputs, onOpenSite }
             )}
             <p className="stage-note note">
               <span title={t('map.demoNote')}>{t('map.numbersNote')}</span>{' '}
-              <button type="button" className="linkbtn" onClick={() => setView3d((v) => !v)}>
-                {t(view3d ? 'map.show2d' : 'map.show3d')}
-              </button>
+              <span className="stage-actions">
+                <button type="button" className="linkbtn" onClick={openSmallMove}>
+                  {t('small.title')} ↓
+                </button>
+                <button type="button" className="linkbtn" onClick={() => setView3d((v) => !v)}>
+                  {t(view3d ? 'map.show2d' : 'map.show3d')}
+                </button>
+              </span>
             </p>
           </section>
 
@@ -201,6 +216,17 @@ export function Dashboard({ sites, data, terrain, inputs, onInputs, onOpenSite }
             landingMs={d.landingMs}
             durationH={inputs.durationH}
             selectedId={selectedId}
+          />
+        </details>
+        <details className="section glass" id="small-move" ref={smallMove}>
+          <summary>{t('small.title')}</summary>
+          <SmallMove
+            sites={sites}
+            data={data}
+            landingDayMs={d.landingMs}
+            durationH={inputs.durationH}
+            rules={inputs.rules}
+            sphereRadiusM={terrain.sphereRadiusM}
           />
         </details>
         <details className="section glass">

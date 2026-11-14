@@ -18,6 +18,9 @@ const AXIS_H = 28;
 const PX_PER_DEG = W / 360;
 const MARGIN_DEG = 0.5;
 const LOCATOR_R = 14;
+/** Elevation grid: the smallest of these steps (deg) that gives at most MAX_TICKS lines. */
+const TICK_STEPS = [1, 2, 5, 10];
+const MAX_TICKS = 8;
 const CARDINALS: [number, MessageKey][] = [
   [0, 'dir.N'],
   [90, 'dir.E'],
@@ -47,10 +50,11 @@ interface Props {
 
 export function HorizonPanorama({ horizons, bodies, ariaLabel, range }: Props) {
   const { t } = useI18n();
+  // All horizons share one scale: the range covers every contour and every path.
   const r =
     range ??
     elevationRange(
-      horizons[0]?.values ?? [],
+      horizons.flatMap((h) => Array.from(h.values)),
       bodies.flatMap((b) => [...b.path, ...(b.now ? [[b.now]] : [])]),
       MARGIN_DEG,
     );
@@ -61,7 +65,7 @@ export function HorizonPanorama({ horizons, bodies, ariaLabel, range }: Props) {
   const y = (el: number) => top + (r.max - el) * pxPerDegY;
   const bottom = PLOT_H;
   const ticks: number[] = [];
-  const step = r.max - r.min > 8 ? 2 : 1;
+  const step = TICK_STEPS.find((s) => (r.max - r.min) / s <= MAX_TICKS) ?? 10;
   for (let e = Math.ceil(r.min / step) * step; e <= r.max; e += step) ticks.push(e);
 
   const silhouette = (h: ArrayLike<number>) => {
@@ -144,11 +148,13 @@ export function HorizonPanorama({ horizons, bodies, ariaLabel, range }: Props) {
       <figcaption className="pano-caption">
         <span className="pano-scale">{t('detail.vertical', { n: ex })}</span>
         <span className="note">
-          {t('detail.astroHorizon')} ·{' '}
-          {t('detail.realSize', {
-            s: bodies.find((b) => b.kind === 'sun')?.now?.diam ?? 0,
-            e: bodies.find((b) => b.kind === 'earth')?.now?.diam ?? 0,
-          })}
+          {t('detail.astroHorizon')}
+          {bodies.some((b) => b.now) && ' · '}
+          {bodies.some((b) => b.now) &&
+            t('detail.realSize', {
+              s: bodies.find((b) => b.kind === 'sun')?.now?.diam ?? 0,
+              e: bodies.find((b) => b.kind === 'earth')?.now?.diam ?? 0,
+            })}
         </span>
       </figcaption>
     </figure>

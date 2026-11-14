@@ -20,6 +20,25 @@ export function toMapXY(latDeg: number, lonDeg: number, radiusM: number): { x: n
   return { x: rho * Math.sin(lonDeg * DEG), y: rho * Math.cos(lonDeg * DEG) };
 }
 
+/**
+ * Great-circle distance (km) between two points on a sphere of radius `radiusM` (haversine).
+ * Latitudes/longitudes in degrees (MOON_ME).
+ */
+export function surfaceDistanceKm(
+  lat1Deg: number,
+  lon1Deg: number,
+  lat2Deg: number,
+  lon2Deg: number,
+  radiusM: number,
+): number {
+  const dLat = (lat2Deg - lat1Deg) * DEG;
+  const dLon = (lon2Deg - lon1Deg) * DEG;
+  const a =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(lat1Deg * DEG) * Math.cos(lat2Deg * DEG) * Math.sin(dLon / 2) ** 2;
+  return (2 * radiusM * Math.asin(Math.min(1, Math.sqrt(a)))) / 1000;
+}
+
 /** Fractional pixel (column, row) of a map point on the terrain grid. */
 export function toPixel(t: Terrain, x: number, y: number): { col: number; row: number } {
   return { col: (x - t.xMinM) / t.pixelM - 0.5, row: (t.yMaxM - y) / t.pixelM - 0.5 };

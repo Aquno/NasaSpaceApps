@@ -298,4 +298,20 @@ export const en = {
   'dir.E': 'E',
   'dir.S': 'S',
   'dir.W': 'W',
+
+  // small move, big change (D43)
+  'small.title': 'Small move, big change',
+  'small.lead': '{a} and {b} are only {km:km1} apart. Same landing day, same rules:',
+  'small.aria': 'Horizon contours of {a} and {b} on the same scale',
+  'small.sunPath': 'Sun path during the mission',
+  'small.verdict': 'Verdict',
+  'small.sun': 'Sunlight',
+  'small.earth': 'Direct contact with Earth',
+  'small.pct': '{p:pct}',
+  'small.dark': 'Longest darkness',
+  'small.gap': 'Longest gap without contact',
+  'small.hours': '{h:hours}',
+  'small.deg': '{s:deg1}',
+  'small.slope': 'Slope',
+  'small.reason': 'Reason',
 } as const;

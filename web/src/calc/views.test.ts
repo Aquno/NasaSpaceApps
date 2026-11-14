@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import type { Terrain } from '../data/contract';
 import { dailyFractions } from './annual';
-import { hillshade, toMapXY, toPixel } from './mapGeometry';
+import { hillshade, surfaceDistanceKm, toMapXY, toPixel } from './mapGeometry';
 
 describe('daily fractions', () => {
   it('fraction of lit hours per day', () => {
@@ -57,5 +57,16 @@ describe('map geometry', () => {
     const fromEast = hillshade(t, 90, 30, 1)[4] as number;
     const fromWest = hillshade(t, 270, 30, 1)[4] as number;
     expect(fromWest).toBeGreaterThan(fromEast);
+  });
+});
+
+describe('surface distance', () => {
+  it('one degree of latitude is R * pi / 180', () => {
+    const R = 1_737_400;
+    expect(surfaceDistanceKm(-89, 0, -90, 0, R)).toBeCloseTo((R * Math.PI) / 180 / 1000, 6);
+  });
+  it('across the pole: 0.5 deg on each side is one degree', () => {
+    const R = 1_737_400;
+    expect(surfaceDistanceKm(-89.5, 0, -89.5, 180, R)).toBeCloseTo((R * Math.PI) / 180 / 1000, 6);
   });
 });

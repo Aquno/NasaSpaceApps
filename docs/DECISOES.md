@@ -263,6 +263,12 @@ Formato: data, decisão, motivo, consequências. Decisões novas vão no fim. N�
 - **Cálculo:** a missão começa na hora de pouso da D36 para o dia escolhido no painel (com o atraso). Visibilidade pelo módulo único (D9); funções puras novas em `calc/panorama.ts` com testes.
 - **Status:** aplicada (2026-11-14).
 
+### D43 — 2026-11-14 — "Small move, big change"
+
+- **Decisão:** bloco recolhível no painel (botão "Small move, big change ↓" ao lado do 3D abre e rola até ele) com o ponto de referência da borda do Shackleton (D30) e o centro publicado da região do MDE da NASA, que fica na parede interna da cratera (`purpose = sensitivity_demo`). Mostra a distância entre os dois pontos (grande círculo, raio da esfera do mapa), os dois contornos de horizonte no mesmo panorama e na mesma escala, a trajetória do Sol durante a missão e os números lado a lado (veredito, notas, horas de Sol e de contato, maior escuridão, maior intervalo sem contato, inclinação, motivo), para o dia de pouso e as regras do painel.
+- **Cálculo:** `surfaceDistanceKm` (haversine) em `calc/mapGeometry.ts`, com testes; avaliação pelo módulo único (D9). O par fica em `SMALL_MOVE_SITE_IDS` (`config/scoring.ts`).
+- **Status:** aplicada (2026-11-14).
+
 ### Pendências abertas após a etapa 2
 - Nenhuma pendência de dados da etapa 2.
 

@@ -72,3 +72,8 @@ export const DEFAULT_LANDING_ISO = '2027-03-04T00:00:00Z';
 export const MAX_DELAY_DAYS = 60;
 /** Delay used in the pitch question ("Your launch just slipped three weeks"). */
 export const PITCH_DELAY_DAYS = 21;
+/**
+ * "Small move, big change" (D43): the rim reference point (D30) and the published centre of the
+ * NASA DEM region, which lies on the crater's inner wall (sites.json, purpose sensitivity_demo).
+ */
+export const SMALL_MOVE_SITE_IDS = ['shackleton-rim', 'shackleton-inner-wall'] as const;

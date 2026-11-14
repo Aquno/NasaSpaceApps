@@ -286,4 +286,20 @@ export const ptBR: Messages = {
   'dir.E': 'L',
   'dir.S': 'S',
   'dir.W': 'O',
+
+  // small move, big change (D43)
+  'small.title': 'Pequena mudança, grande diferença',
+  'small.lead': '{a} e {b} ficam a apenas {km:km1} um do outro. Mesmo dia de pouso, mesmas regras:',
+  'small.aria': 'Contornos do horizonte de {a} e {b} na mesma escala',
+  'small.sunPath': 'Trajetória do Sol durante a missão',
+  'small.verdict': 'Veredito',
+  'small.sun': 'Luz do Sol',
+  'small.earth': 'Contato direto com a Terra',
+  'small.pct': '{p:pct}',
+  'small.dark': 'Maior escuridão',
+  'small.gap': 'Maior intervalo sem contato',
+  'small.hours': '{h:hours}',
+  'small.deg': '{s:deg1}',
+  'small.slope': 'Inclinação',
+  'small.reason': 'Motivo',
 };

@@ -1257,3 +1257,29 @@ svg text {
   gap: var(--s2) var(--s6);
   margin-top: var(--s2);
 }
+
+/* ---- small move, big change (D43) ---- */
+.stage-actions {
+  display: flex;
+  gap: var(--s2);
+  flex-wrap: wrap;
+}
+.small-move {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s4);
+}
+.small-lead {
+  font-size: 1.05rem;
+}
+.swatch.dashed {
+  background: transparent;
+  border: 2px dashed var(--science);
+}
+.small-table th[scope='row'] {
+  font-weight: 400;
+  color: var(--muted);
+}
+.small-table td.num {
+  font-family: var(--font-mono);
+}

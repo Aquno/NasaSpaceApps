@@ -6,7 +6,8 @@
  * Roadmap stage: 5 — Interface / 7 — Delivery (see docs/ROTEIRO.md).
  * Inputs: a running server (npm run build && npx vite preview --port 4173), optional base URL as
  *   the first argument; CHROME env var for the browser path.
- * Outputs: PNG files <page>-<width>x<height>-<lang>.png.
+ * Outputs: PNG files <page>-<width>x<height>-<lang>.png (pages listed in SHOTS; env ONLY=a,b
+ *   captures a subset).
  *
  * Usage: npm run screenshots -- [baseUrl]
  */
@@ -27,6 +28,33 @@ const LANGS = ['en', 'pt-BR'];
 /** Time for data, three.js and the entrance motion to settle (ms). */
 const SETTLE_MS = 7000;
 const SCROLL_SETTLE_MS = 1800;
+
+/** Pages to capture: route (hash) and optional script run before the capture. */
+const SHOTS: { name: string; route: string; js?: string }[] = [
+  { name: 'opening-top', route: '/' },
+  { name: 'opening-how', route: '/', js: `document.getElementById('how').scrollIntoView()` },
+  { name: 'opening-end', route: '/', js: 'window.scrollTo(0, document.body.scrollHeight)' },
+  { name: 'mission', route: '/mission' },
+  {
+    name: 'small-move',
+    route: '/mission',
+    js: `(() => { const d = document.getElementById('small-move'); d.open = true; d.scrollIntoView(); })()`,
+  },
+  {
+    name: 'nasa-check',
+    route: '/mission',
+    js: `(() => { const d = document.getElementById('nasa-check'); d.open = true; d.scrollIntoView(); })()`,
+  },
+  { name: 'site-detail', route: '/site/shackleton-rim' },
+  {
+    name: 'site-detail-more',
+    route: '/site/shackleton-rim',
+    js: `(() => { const d = document.querySelector('.section-details'); d.open = true; window.scrollTo(0, document.body.scrollHeight); })()`,
+  },
+  { name: 'roadmap', route: '/roadmap' },
+];
+/** Optional comma-separated subset of shot names (env ONLY). */
+const ONLY = process.env.ONLY?.split(',');
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
@@ -105,17 +133,16 @@ async function main() {
       });
       for (const lang of LANGS) {
         const tag = `${width}x${height}-${lang}`;
-        await cdp.send('Page.navigate', { url: `${BASE}?lang=${lang}#/` });
-        await sleep(SETTLE_MS);
-        await shot(`opening-top-${tag}`);
-        await scroll(`document.getElementById('how').scrollIntoView()`);
-        await shot(`opening-how-${tag}`);
-        await scroll(`window.scrollTo(0, document.body.scrollHeight)`);
-        await shot(`opening-end-${tag}`);
-        await cdp.send('Page.navigate', { url: `${BASE}?lang=${lang}#/mission` });
-        await sleep(SETTLE_MS);
-        await scroll('window.scrollTo(0, 0)');
-        await shot(`mission-${tag}`);
+        for (const shotDef of SHOTS) {
+          if (ONLY && !ONLY.includes(shotDef.name)) continue;
+          // A different query string forces a fresh page load for every shot.
+          await cdp.send('Page.navigate', {
+            url: `${BASE}?lang=${lang}&shot=${shotDef.name}#${shotDef.route}`,
+          });
+          await sleep(SETTLE_MS);
+          if (shotDef.js) await scroll(shotDef.js);
+          await shot(`${shotDef.name}-${tag}`);
+        }
       }
     }
     cdp.close();
