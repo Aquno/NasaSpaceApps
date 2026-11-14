@@ -190,9 +190,9 @@ export function Intro({ ready }: Props) {
                 </span>
               </li>
               <li>
-                <span className="stat-value">{num(n.delay.changed)}</span>
+                <span className="stat-value">{num(n.delay.siteToSite)}</span>
                 <span className="stat-caption">
-                  {t('intro.statDelay', { d: PITCH_DELAY_DAYS, total: n.delay.compared })}
+                  {t('intro.statDelay', { d: PITCH_DELAY_DAYS })}
                 </span>
               </li>
             </ul>

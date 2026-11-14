@@ -44,7 +44,9 @@ export function SiteCard({
     );
   }
   const { engineering, science, verdict: v, metrics: m, link } = evaluation;
-  const classes = ['card', v.kind, best ? 'best' : '', expanded ? 'expanded' : ''].join(' ');
+  const classes = ['card', 'glass', v.kind, best ? 'best' : '', expanded ? 'expanded' : ''].join(
+    ' ',
+  );
   const linkKey: MessageKey =
     link.kind === 'low'
       ? 'card.linkLow'

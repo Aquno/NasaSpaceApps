@@ -43,8 +43,7 @@ export const en = {
   'intro.statPoints': 'reference points evaluated',
   'intro.statHours': 'hours of Sun and Earth data per site, {year}',
   'intro.statNone': 'days of {year} when no site works (of {total:int})',
-  'intro.statDelay':
-    'landing dates where a {d:int}-day delay changes the best site (of {total:int})',
+  'intro.statDelay': 'dates where a {d:int}-day slip moves the best site to a different one',
   'intro.statsNote':
     'Computed in your browser from the data files, with the default mission rules ({days:int}-day mission).',
   'intro.sources': 'Data sources',

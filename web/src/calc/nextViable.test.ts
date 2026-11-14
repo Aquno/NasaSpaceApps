@@ -129,5 +129,7 @@ describe('delay change days', () => {
     const r = delayChangeDays([s], data, vis, 72, 10);
     expect(r.changed).toBeGreaterThan(0);
     expect(r.changed).toBeLessThanOrEqual(r.compared);
+    // One site only: every change is to or from "no site".
+    expect(r.siteToSite).toBe(0);
   });
 });

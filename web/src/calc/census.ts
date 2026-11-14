@@ -63,7 +63,8 @@ export function landingCensus(
  * or to or from "no site"). Only days whose two missions (planned and delayed) fit in the data
  * are compared. Same calc path as the dashboard (evaluateSites, D9).
  * @param delayDays delay in whole days
- * @returns compared: landing days compared; changed: days whose best compromise differs
+ * @returns compared: landing days compared; changed: days whose best compromise differs;
+ *   siteToSite: days where it moves from one site to a different site (both exist)
  */
 export function delayChangeDays(
   sites: SiteSummary[],
@@ -72,9 +73,9 @@ export function delayChangeDays(
   durationH: number,
   delayDays: number,
   rules: MissionRules = DEFAULT_RULES,
-): { compared: number; changed: number } {
+): { compared: number; changed: number; siteToSite: number } {
   const meta = data.values().next().value?.meta;
-  if (!meta) return { compared: 0, changed: 0 };
+  if (!meta) return { compared: 0, changed: 0, siteToSite: 0 };
   const best: (string | null | undefined)[] = [];
   for (let t = meta.startMs; t <= meta.endMs; t += DAY_MS) {
     const ev = evaluateSites(sites, data, vis, t, durationH, rules);
@@ -83,12 +84,14 @@ export function delayChangeDays(
   }
   let compared = 0;
   let changed = 0;
+  let siteToSite = 0;
   for (let k = 0; k + delayDays < best.length; k++) {
     const b0 = best[k];
     const b1 = best[k + delayDays];
     if (b0 === undefined || b1 === undefined) continue;
     compared++;
     if (b0 !== b1) changed++;
+    if (b0 !== b1 && b0 !== null && b1 !== null) siteToSite++;
   }
-  return { compared, changed };
+  return { compared, changed, siteToSite };
 }

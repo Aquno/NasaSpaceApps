@@ -30,6 +30,9 @@
   --glass-bg: rgb(13 17 23 / 0.82);
   --glass-line: rgb(233 237 242 / 0.12);
   --glass-shadow: 0 10px 40px rgb(0 0 0 / 0.35);
+  /* Panel cards: a little lighter than the page, 85% opaque (contrast in D41). */
+  --card-glass: rgb(21 27 35 / 0.85);
+  --card-glass-2: rgb(27 35 45 / 0.85);
   color-scheme: dark;
 }
 
@@ -214,6 +217,20 @@ p {
 /* ---- dashboard: first screen without scrolling ---- */
 .dash {
   padding-top: 0;
+}
+/* Content above the still sky (Starfield is fixed at z-index 0). */
+.dash > :not(.starfield) {
+  position: relative;
+  z-index: 1;
+}
+.dash .card.glass,
+.dash .section.glass {
+  background: var(--card-glass);
+  border-radius: var(--radius);
+}
+.dash .card.glass.expanded,
+.dash .card.glass:hover {
+  background: var(--card-glass-2);
 }
 .dash-screen {
   height: 100vh;

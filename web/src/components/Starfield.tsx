@@ -1,7 +1,8 @@
 /**
  * What: Subtle star field for the opening background (decoration only, not star data). Stars are
  *   drawn once on two canvases from a fixed seed; the second, sparse layer twinkles through CSS
- *   (static when the system asks for reduced motion).
+ *   (static when the system asks for reduced motion). The mission panel uses a still, fainter
+ *   version (maxAlpha 0.10 keeps every text colour >= 4.5:1 even on a star, D41).
  * Roadmap stage: 5 — Interface (see docs/ROTEIRO.md); decision D40.
  */
 import { useEffect, useRef } from 'react';
@@ -10,6 +11,8 @@ import { useEffect, useRef } from 'react';
 const STARS_PER_MPX = 160;
 const TWINKLE_SHARE = 0.15;
 const SEED = 20270101;
+/** Brightest star opacity in the opening. */
+const OPENING_MAX_ALPHA = 0.8;
 
 /** Small deterministic generator (mulberry32) so the sky is the same on every load. */
 function random(seed: number): () => number {
@@ -23,7 +26,14 @@ function random(seed: number): () => number {
   };
 }
 
-export function Starfield() {
+interface Props {
+  /** No twinkling layer. */
+  still?: boolean;
+  /** Brightest star opacity (0-1). */
+  maxAlpha?: number;
+}
+
+export function Starfield({ still = false, maxAlpha = OPENING_MAX_ALPHA }: Props) {
   const base = useRef<HTMLCanvasElement>(null);
   const twinkle = useRef<HTMLCanvasElement>(null);
 
@@ -42,11 +52,11 @@ export function Starfield() {
         return ctx;
       });
       for (let i = 0; i < count; i++) {
-        const ctx = rand() < TWINKLE_SHARE ? contexts[1] : contexts[0];
+        const ctx = rand() < TWINKLE_SHARE && !still ? contexts[1] : contexts[0];
         const x = rand() * w;
         const y = rand() * h;
         const r = 0.4 + rand() * rand() * 1.2;
-        const alpha = 0.25 + rand() * 0.55;
+        const alpha = ((0.25 + rand() * 0.55) * maxAlpha) / OPENING_MAX_ALPHA;
         if (!ctx) continue;
         ctx.fillStyle = `rgba(233, 237, 242, ${alpha.toFixed(2)})`;
         ctx.beginPath();
@@ -57,7 +67,7 @@ export function Starfield() {
     draw();
     window.addEventListener('resize', draw);
     return () => window.removeEventListener('resize', draw);
-  }, []);
+  }, [still, maxAlpha]);
 
   return (
     <div className="starfield" aria-hidden="true">

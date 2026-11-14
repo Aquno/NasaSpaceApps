@@ -15,12 +15,15 @@ import { MissionRulesPanel } from '../components/MissionRulesPanel';
 import { ScatterPlot } from '../components/ScatterPlot';
 import { ShadedMap } from '../components/ShadedMap';
 import { SiteCard } from '../components/SiteCard';
+import { Starfield } from '../components/Starfield';
 import type { SiteData, SiteSummary, Terrain } from '../data/contract';
 import { useI18n } from '../i18n/I18nProvider';
 import { useEvaluations, usePrecomputed, type MissionInputs } from '../state/useMission';
 import { useFlip } from '../ui/useFlip';
 
 const SouthPole3D = lazy(() => import('../components/SouthPole3D'));
+/** Faint, still sky behind the panel (contrast checked in D41). */
+const DASH_STAR_ALPHA = 0.1;
 
 interface Props {
   sites: SiteSummary[];
@@ -55,6 +58,7 @@ export function Dashboard({ sites, data, terrain, inputs, onInputs, onOpenSite }
 
   return (
     <div className="app dash">
+      <Starfield still maxAlpha={DASH_STAR_ALPHA} />
       <div className="dash-screen">
         <Header sample={sample} />
         {anyMeta && (
@@ -153,7 +157,7 @@ export function Dashboard({ sites, data, terrain, inputs, onInputs, onOpenSite }
       </div>
 
       <div className="more">
-        <details className="section">
+        <details className="section glass">
           <summary>{t('census.title', { year, days: inputs.durationH / 24 })}</summary>
           <ul className="indicators">
             {d.ranked.map((s) => (
@@ -170,7 +174,7 @@ export function Dashboard({ sites, data, terrain, inputs, onInputs, onOpenSite }
             </li>
           </ul>
         </details>
-        <details className="section">
+        <details className="section glass">
           <summary>
             {t('scatter.title')}
             {inputs.delayDays !== 0 && ` · ${t('scatter.trail', { d: inputs.delayDays })}`}
@@ -188,7 +192,7 @@ export function Dashboard({ sites, data, terrain, inputs, onInputs, onOpenSite }
             />
           </div>
         </details>
-        <details className="section">
+        <details className="section glass">
           <summary>{t('strips.title', { year })}</summary>
           <AnnualStrips
             sites={d.ranked}
@@ -199,7 +203,7 @@ export function Dashboard({ sites, data, terrain, inputs, onInputs, onOpenSite }
             selectedId={selectedId}
           />
         </details>
-        <details className="section">
+        <details className="section glass">
           <summary>{t('rules.title')}</summary>
           <MissionRulesPanel rules={inputs.rules} onChange={(rules) => onInputs({ rules })} />
         </details>

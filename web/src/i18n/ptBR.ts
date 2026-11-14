@@ -42,8 +42,7 @@ export const ptBR: Messages = {
   'intro.statPoints': 'pontos de referência avaliados',
   'intro.statHours': 'horas de dados do Sol e da Terra por local, {year}',
   'intro.statNone': 'dias de {year} em que nenhum local serve (de {total:int})',
-  'intro.statDelay':
-    'datas de pouso em que um atraso de {d:int} dias troca o melhor local (de {total:int})',
+  'intro.statDelay': 'datas em que um atraso de {d:int} dias leva o melhor local para outro',
   'intro.statsNote':
     'Calculado no seu navegador a partir dos arquivos de dados, com as regras padrão da missão (missão de {days:int} dias).',
   'intro.sources': 'Fontes de dados',

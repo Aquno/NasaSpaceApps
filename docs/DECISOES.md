@@ -248,6 +248,14 @@ Formato: data, decisão, motivo, consequências. Decisões novas vão no fim. N�
 - **Capturas:** `npm run screenshots` (Chrome sem janela pelo protocolo DevTools, sem dependência nova) gera as telas em `web/docs/screenshots/`.
 - **Status:** aplicada (2026-11-14).
 
+### D41 — 2026-11-14 — Número do atraso na abertura e céu no painel
+
+- **Número do atraso:** a abertura mostra só as datas em que o atraso de 21 dias leva o melhor local para **outro local** (110), com a legenda "dates where a 21-day slip moves the best site to a different one". O total com trocas para ou de "nenhum local" (194 de 331) fica só no relatório (`npm run report:delay`). `delayChangeDays` passa a devolver as duas contagens.
+- **Itens 1 a 6 aprovados:** a D36 fica como regra da hora do pouso; o cenário padrão continua 04/03 → 25/03 (troca de um local para outro).
+- **Céu no painel:** o mesmo campo de estrelas da abertura, parado e bem fraco (opacidade máxima das estrelas 0,10), atrás do conteúdo; cartões e seções em vidro (`rgb(21 27 35 / 0.85)`, selecionado `rgb(27 35 45 / 0.85)`, com desfoque).
+- **Contraste (WCAG), pior caso:** texto direto sobre uma estrela (fundo efetivo `rgb(35 39 45)`): texto 12,76:1; secundário 6,73:1; apagado 4,73:1; âmbar 7,21:1; azul 6,50:1; lilás 6,96:1. Dentro dos cartões, pior caso (vidro selecionado sobre estrela, `rgb(29 36 46)`): apagado 4,92:1, demais acima de 6,7:1.
+- **Status:** aplicada (2026-11-14).
+
 ### Pendências abertas após a etapa 2
 - Nenhuma pendência de dados da etapa 2.
 
