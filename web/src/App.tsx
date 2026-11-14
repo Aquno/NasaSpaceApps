@@ -6,6 +6,7 @@
  */
 import { useEffect, useState } from 'react';
 import { useSites } from './data/useSites';
+import { useI18n } from './i18n/I18nProvider';
 import { Dashboard } from './screens/Dashboard';
 import { Intro } from './screens/Intro';
 import { useMissionInputs } from './state/useMission';
@@ -24,20 +25,21 @@ export function App() {
   const state = useSites();
   const hash = useHash();
   const { inputs, update } = useMissionInputs();
+  const { t } = useI18n();
 
   if (hash === '#/' || hash === '') return <Intro />;
   if (state.status === 'loading') {
     return (
       <p className="app" role="status">
-        Loading site data…
+        {t('app.loading')}
       </p>
     );
   }
   if (state.status === 'error') {
     return (
       <div className="app" role="alert">
-        <h1>Data error</h1>
-        <p>The data files do not match the data contract:</p>
+        <h1>{t('app.dataErrorTitle')}</h1>
+        <p>{t('app.dataErrorIntro')}</p>
         <ul className="mono">
           {state.details.map((d) => (
             <li key={d}>{d}</li>
@@ -46,7 +48,7 @@ export function App() {
       </div>
     );
   }
-  if (state.sites.length === 0) return <p className="app">No sites in sites.json.</p>;
+  if (state.sites.length === 0) return <p className="app">{t('app.noSites')}</p>;
 
   const siteMatch = /^#\/site\/(.+)$/.exec(hash);
   if (siteMatch) {
@@ -54,10 +56,10 @@ export function App() {
     return (
       <main className="app">
         <a className="linkbtn" href="#/mission">
-          ◂ Back to the mission dashboard
+          ◂ {t('app.backToDashboard')}
         </a>
-        <h1>{site ? site.name : 'Unknown site'}</h1>
-        <p className="note">Site detail screen: next step of the roadmap.</p>
+        <h1>{site ? site.name : t('app.unknownSite')}</h1>
+        <p className="note">{t('app.detailComing')}</p>
       </main>
     );
   }

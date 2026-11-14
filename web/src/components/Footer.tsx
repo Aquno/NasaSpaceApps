@@ -1,20 +1,20 @@
 /**
- * What: Footer: sources, nature of the site points and the independent-project notice.
+ * What: Footer: sources, nature of the site points, the independent-project notice and the one
+ *   line on a possible education version (D26). Text from the dictionaries.
  * Roadmap stage: 5 — Interface (see docs/ROTEIRO.md).
  */
+import { useI18n } from '../i18n/I18nProvider';
+
 export function Footer() {
+  const { t } = useI18n();
   return (
     <footer className="footer">
+      <p>{t('footer.sources')}</p>
       <p>
-        Sources: JPL Horizons (Sun and Earth positions); LRO LOLA topography, illumination and
-        permanent-shadow products, NASA Goddard PGDA (products 69, 78, 90); NASA Lunar Surface Data
-        Book (site regions).
+        <strong>{t('footer.points')}</strong> <strong>{t('footer.independent')}</strong>{' '}
+        {t('footer.event')}
       </p>
-      <p>
-        <strong>Regional reference points, not NASA-designated landing sites.</strong>{' '}
-        <strong>Independent hackathon project, not a NASA product.</strong> NASA Space Apps
-        Challenge 2026.
-      </p>
+      <p>{t('footer.future')}</p>
     </footer>
   );
 }

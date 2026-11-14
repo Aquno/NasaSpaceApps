@@ -6,6 +6,7 @@
 import { useEffect, useMemo, useRef } from 'react';
 import { hillshade, toMapXY, toPixel } from '../calc/mapGeometry';
 import type { SiteSummary, Terrain } from '../data/contract';
+import { useI18n } from '../i18n/I18nProvider';
 import { shortName } from '../ui/format';
 import { placeLabels } from '../ui/labelLayout';
 
@@ -25,6 +26,7 @@ interface Props {
 }
 
 export function ShadedMap({ terrain, sites, selectedId, onSelect }: Props) {
+  const { t } = useI18n();
   const canvas = useRef<HTMLCanvasElement>(null);
   const shade = useMemo(
     () => hillshade(terrain, LIGHT_AZIMUTH_DEG, LIGHT_ELEVATION_DEG, MAP_EXAGGERATION),
@@ -72,7 +74,7 @@ export function ShadedMap({ terrain, sites, selectedId, onSelect }: Props) {
         preserveAspectRatio="xMidYMid meet"
         style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}
         role="group"
-        aria-label="South polar shaded relief map with the sites"
+        aria-label={t('map.aria')}
       >
         <foreignObject x={0} y={0} width={terrain.width} height={terrain.height}>
           <canvas
@@ -89,7 +91,7 @@ export function ShadedMap({ terrain, sites, selectedId, onSelect }: Props) {
           fontSize={LABEL_FONT * 0.8}
           style={{ fill: 'var(--text)', paintOrder: 'stroke', stroke: 'var(--bg)', strokeWidth: 4 }}
         >
-          Up = 0° E (toward Earth) · pole at centre
+          {t('map.orientation')}
         </text>
         {sites.map((s) => {
           const { col, row } = positions.get(s.id) ?? { col: 0, row: 0 };
@@ -101,7 +103,7 @@ export function ShadedMap({ terrain, sites, selectedId, onSelect }: Props) {
               key={s.id}
               role="button"
               tabIndex={0}
-              aria-label={`Select ${s.name}`}
+              aria-label={t('map.select', { site: s.name })}
               aria-pressed={selected}
               onClick={() => onSelect(s.id)}
               onKeyDown={(e) => {

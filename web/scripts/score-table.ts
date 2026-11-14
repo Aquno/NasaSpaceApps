@@ -9,7 +9,7 @@
  * Usage: npm run report:scores -- [durationHours] [ISO dates...]
  */
 import { evaluateSites, rankedSites } from '../src/calc/evaluate';
-import { loadAppData } from './lib/app-data';
+import { EN, loadAppData } from './lib/app-data';
 
 const [durationArg, ...dateArgs] = process.argv.slice(2);
 const duration = Number(durationArg ?? 336);
@@ -40,7 +40,7 @@ for (const date of dates) {
       `| ${k + 1} | ${id}${star} | ${e.landingHourFound ? new Date(e.landingMs).toISOString().slice(11, 16) : 'none'} | ${e.engineering.total.toFixed(0)} | ` +
         `${(e.science?.total ?? 0).toFixed(0)} | ${e.verdict.kind} | ` +
         `${(m.sunFraction * 100).toFixed(0)} | ${m.longestDarkHours} | ` +
-        `${(m.earthFraction * 100).toFixed(0)} | ${m.longestNoContactHours} | ${e.verdict.reason} |`,
+        `${(m.earthFraction * 100).toFixed(0)} | ${m.longestNoContactHours} | ${EN.msg(e.verdict.reason)} |`,
     );
   });
 }

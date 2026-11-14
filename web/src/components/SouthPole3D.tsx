@@ -14,6 +14,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { exaggerateDirection, sceneHeightM, terrainPositions, type Vec3 } from '../calc/scene3d';
 import { toMapXY, toPixel } from '../calc/mapGeometry';
 import type { SiteSummary, Terrain } from '../data/contract';
+import { useI18n } from '../i18n/I18nProvider';
 import { shortName } from '../ui/format';
 
 /** Visual parameters (presentation only). */
@@ -57,6 +58,7 @@ interface Stage {
 }
 
 export function SouthPole3D(props: Props) {
+  const { t } = useI18n();
   const {
     terrain,
     sites,
@@ -289,7 +291,7 @@ export function SouthPole3D(props: Props) {
         className="scene3d-canvas"
         tabIndex={0}
         role="application"
-        aria-label="3D south pole view. Arrow keys rotate and tilt, plus and minus zoom, R resets."
+        aria-label={t('scene.aria')}
         onKeyDown={(e) => {
           const keys: Record<string, () => void> = {
             ArrowLeft: () => rotate(-KEY_ROTATE_RAD, 0),
@@ -330,7 +332,7 @@ export function SouthPole3D(props: Props) {
       </div>
       <div className="scene3d-bar">
         <label>
-          <span className="caps">Vertical ×{exaggeration}</span>{' '}
+          <span className="caps">{t('scene.vertical', { n: exaggeration })}</span>{' '}
           <input
             type="range"
             min={MIN_EXAGGERATION}
@@ -338,15 +340,17 @@ export function SouthPole3D(props: Props) {
             step={1}
             value={exaggeration}
             onChange={(e) => setExaggeration(Number(e.target.value))}
-            aria-label="Vertical exaggeration"
+            aria-label={t('scene.verticalAria')}
           />
         </label>
         <button type="button" className="linkbtn" onClick={reset}>
-          Reset view
+          {t('scene.reset')}
         </button>
         <span className="note">
-          <span className="sun">━▶ Sun {sunElDeg.toFixed(1)}°</span> at {lightSiteName} ·{' '}
-          <span className="earth">━▶ Earth</span> · curvature on · visual only
+          <span className="sun">━▶ {t('scene.sun', { el: sunElDeg })}</span>{' '}
+          {t('scene.at', { site: lightSiteName })} ·{' '}
+          <span className="earth">━▶ {t('scene.earth')}</span> · {t('scene.curvature')} ·{' '}
+          {t('scene.visualOnly')}
         </span>
       </div>
     </div>

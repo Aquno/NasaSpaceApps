@@ -1,9 +1,11 @@
 /**
  * What: "Mission rules" block: shows and edits the verdict rules (team choices, not NASA
  *   requirements). Input only; the rules are applied by the calc module.
- * Roadmap stage: 5 — Interface (see docs/ROTEIRO.md); decision D25.
+ * Roadmap stage: 5 — Interface (see docs/ROTEIRO.md); decisions D25, D31, D32, D37.
  */
+import type { ReactNode } from 'react';
 import { DEFAULT_RULES, type MissionRules } from '../config/scoring';
+import { useI18n } from '../i18n/I18nProvider';
 
 interface Props {
   rules: MissionRules;
@@ -12,28 +14,40 @@ interface Props {
 
 const PERCENT = 100;
 
+function Field({ label, children }: { label: string; children: ReactNode }) {
+  return (
+    <label className="control">
+      <span className="caps">{label}</span>
+      {children}
+    </label>
+  );
+}
+
 export function MissionRulesPanel({ rules, onChange }: Props) {
+  const { t } = useI18n();
   const set = (patch: Partial<MissionRules>) => onChange({ ...rules, ...patch });
   const num = (v: string, fallback: number) => (Number.isFinite(Number(v)) ? Number(v) : fallback);
+  const pctInput = (key: keyof MissionRules, value: number) => (
+    <input
+      type="number"
+      min={0}
+      max={100}
+      value={Math.round(value * PERCENT)}
+      onChange={(e) => set({ [key]: num(e.target.value, 0) / PERCENT } as Partial<MissionRules>)}
+    />
+  );
   return (
-    <details className="panel rules">
-      <summary>
-        <strong>Mission rules</strong>{' '}
-        <span className="note">
-          — defaults are our team&apos;s choices for this demo, not NASA requirements
-        </span>
-      </summary>
+    <div className="rules">
+      <p className="note">{t('rules.note')}</p>
       <div className="rules-grid">
-        <label className="control">
-          <span className="caps">Sun visible at landing</span>
+        <Field label={t('rules.sunAtLanding')}>
           <input
             type="checkbox"
             checked={rules.requireSunAtLanding}
             onChange={(e) => set({ requireSunAtLanding: e.target.checked })}
           />
-        </label>
-        <label className="control">
-          <span className="caps">Survival limit: longest darkness (h)</span>
+        </Field>
+        <Field label={t('rules.survival')}>
           <input
             type="number"
             min={1}
@@ -42,29 +56,12 @@ export function MissionRulesPanel({ rules, onChange }: Props) {
               set({ survivalDarknessHours: num(e.target.value, rules.survivalDarknessHours) })
             }
           />
-        </label>
-        <label className="control">
-          <span className="caps">Minimum sunlit share (%)</span>
-          <input
-            type="number"
-            min={0}
-            max={100}
-            value={Math.round(rules.minSunFraction * PERCENT)}
-            onChange={(e) => set({ minSunFraction: num(e.target.value, 0) / PERCENT })}
-          />
-        </label>
-        <label className="control">
-          <span className="caps">Marginal below sunlit share (%)</span>
-          <input
-            type="number"
-            min={0}
-            max={100}
-            value={Math.round(rules.marginalBelowSunFraction * PERCENT)}
-            onChange={(e) => set({ marginalBelowSunFraction: num(e.target.value, 0) / PERCENT })}
-          />
-        </label>
-        <label className="control">
-          <span className="caps">Viable: engineering ≥</span>
+        </Field>
+        <Field label={t('rules.minSun')}>{pctInput('minSunFraction', rules.minSunFraction)}</Field>
+        <Field label={t('rules.marginalSun')}>
+          {pctInput('marginalBelowSunFraction', rules.marginalBelowSunFraction)}
+        </Field>
+        <Field label={t('rules.viableEng')}>
           <input
             type="number"
             min={0}
@@ -72,15 +69,14 @@ export function MissionRulesPanel({ rules, onChange }: Props) {
             value={rules.viableMinEngineering}
             onChange={(e) => set({ viableMinEngineering: num(e.target.value, 0) })}
           />
-        </label>
-        <label className="control">
-          <span className="caps">Minimum science score filter</span>
+        </Field>
+        <Field label={t('rules.scienceFilter')}>
           <span>
             <input
               type="checkbox"
               checked={rules.minScienceEnabled}
               onChange={(e) => set({ minScienceEnabled: e.target.checked })}
-              aria-label="Enable the minimum science score filter"
+              aria-label={t('rules.scienceFilterEnable')}
             />{' '}
             <input
               type="number"
@@ -89,22 +85,14 @@ export function MissionRulesPanel({ rules, onChange }: Props) {
               value={rules.minScienceScore}
               disabled={!rules.minScienceEnabled}
               onChange={(e) => set({ minScienceScore: num(e.target.value, 0) })}
-              aria-label="Minimum science score"
+              aria-label={t('rules.scienceFilterValue')}
             />
           </span>
-        </label>
-        <label className="control">
-          <span className="caps">Relay alert below direct link (%)</span>
-          <input
-            type="number"
-            min={0}
-            max={100}
-            value={Math.round(rules.lowLinkBelowEarthFraction * PERCENT)}
-            onChange={(e) => set({ lowLinkBelowEarthFraction: num(e.target.value, 0) / PERCENT })}
-          />
-        </label>
-        <label className="control">
-          <span className="caps">Max terrain slope (°)</span>
+        </Field>
+        <Field label={t('rules.relay')}>
+          {pctInput('lowLinkBelowEarthFraction', rules.lowLinkBelowEarthFraction)}
+        </Field>
+        <Field label={t('rules.slope')}>
           <input
             type="number"
             min={0}
@@ -112,20 +100,12 @@ export function MissionRulesPanel({ rules, onChange }: Props) {
             value={rules.maxSlopeDeg}
             onChange={(e) => set({ maxSlopeDeg: num(e.target.value, rules.maxSlopeDeg) })}
           />
-        </label>
+        </Field>
         <button type="button" className="linkbtn" onClick={() => onChange(DEFAULT_RULES)}>
-          Reset to defaults
+          {t('rules.reset')}
         </button>
       </div>
-      <p className="note">
-        Not viable: dark at landing, a darkness longer than the survival limit, or too little
-        sunlight. Marginal: sunlight below the comfort share, or an engineering score below the
-        viable minimum. The verdict uses engineering rules only; the science score ranks the sites.
-        Earth contact counts through the engineering score. A terrain slope above the limit lowers
-        the verdict by one level. Best compromise: the site with the highest of min(engineering,
-        science) among sites that are not &quot;not viable&quot; (and pass the optional science
-        filter).
-      </p>
-    </details>
+      <p className="note">{t('rules.explain')}</p>
+    </div>
   );
 }

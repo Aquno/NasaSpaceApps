@@ -1,0 +1,228 @@
+/**
+ * What: Brazilian Portuguese messages. Same keys and placeholders as en.ts (checked by the type
+ *   system and by i18n.test.ts). Site and source names are never translated.
+ * Roadmap stage: 5 — Interface (see docs/ROTEIRO.md); decision docs/DECISOES.md D38.
+ */
+import type { Messages } from './messages';
+
+export const ptBR: Messages = {
+  'app.loading': 'Carregando os dados dos locais…',
+  'app.dataErrorTitle': 'Erro nos dados',
+  'app.dataErrorIntro': 'Os arquivos de dados não seguem o contrato de dados:',
+  'app.noSites': 'Nenhum local em sites.json.',
+  'app.backToDashboard': 'Voltar ao painel da missão',
+  'app.unknownSite': 'Local desconhecido',
+  'app.detailComing': 'Detalhe do local: em breve.',
+
+  'header.title': 'Lunar Site Navigator',
+  'header.context': 'Polo sul da Lua · dados reais da NASA',
+  'header.sample': 'DADOS DE EXEMPLO',
+  'header.start': 'Início',
+  'header.whatThisAdds': 'O que a ferramenta acrescenta',
+  'header.language': 'Idioma',
+  'header.close': 'Fechar',
+  'lang.en': 'English',
+  'lang.pt-BR': 'Português (Brasil)',
+
+  'intro.kicker': 'Polo sul da Lua · dados reais da NASA',
+  'intro.lead':
+    'No polo sul da Lua, o Sol e a Terra ficam rente ao horizonte. Uma única crista pode deixar um módulo de pouso sem energia ou sem contato. Veja, para cada local e data, se haverá luz do Sol e ligação com a Terra, e qual local ainda serve quando o lançamento atrasa.',
+  'intro.question':
+    'Seu lançamento atrasou três semanas. Qual local ainda atende a ciência e a engenharia?',
+  'intro.open': 'Abrir o painel da missão',
+  'intro.whatThisAdds': 'O que a ferramenta acrescenta',
+
+  'adds.today': 'Hoje',
+  'adds.withTool': 'Com esta ferramenta',
+  'adds.r1a': 'Um cenário de cada vez',
+  'adds.r1b': 'Vários locais lado a lado',
+  'adds.r2a': 'Dados brutos',
+  'adds.r2b': 'Um veredito com o motivo',
+  'adds.r3a': 'Três interfaces',
+  'adds.r3b': 'Uma tela',
+  'adds.r4a': 'Só engenharia',
+  'adds.r4b': 'Ciência e engenharia',
+  'adds.r5a': 'Refazer tudo quando a data muda',
+  'adds.r5b': 'Um controle de atraso',
+  'adds.note':
+    'JPL Horizons, LROC Quickmap e NASA Moon Trek continuam sendo as fontes e as ferramentas de análise detalhada.',
+
+  'covers.title': 'O que a ferramenta cobre',
+  'covers.planning':
+    'Uma ferramenta de planejamento, usada na Terra antes do lançamento. Os vereditos vêm de regras de decisão e pontuação fixas, mostradas na tela.',
+  'covers.bestCaseTitle': 'Melhor caso de cada região, não uma área de pouso.',
+  'covers.bestCase':
+    'Cada ponto é o pixel de 60 m mais iluminado da sua região da NASA no mapa de iluminação média da NASA; pixels vizinhos podem receber bem menos luz.',
+  'covers.covers': 'Cobre',
+  'covers.notCovers': 'Não cobre',
+  'covers.c1': 'Luz do Sol no local (energia)',
+  'covers.c2': 'Linha de visada direta para a Terra (comunicação)',
+  'covers.c3': 'Inclinação do terreno no local',
+  'covers.c4': 'Proximidade de regiões em sombra permanente (ciência)',
+  'covers.n1': 'Trajetória e combustível',
+  'covers.n2': 'Ambiente térmico',
+  'covers.n3': 'Obstáculos no solo (rochas, crateras menores que a resolução do mapa)',
+  'covers.n4': 'Redes de satélites de retransmissão',
+
+  'footer.sources':
+    'Fontes: JPL Horizons (posições do Sol e da Terra); produtos de topografia, iluminação e sombra permanente do LRO LOLA, NASA Goddard PGDA (produtos 69, 78, 90); NASA Lunar Surface Data Book (regiões dos locais).',
+  'footer.points': 'Pontos de referência regionais, não locais de pouso designados pela NASA.',
+  'footer.independent': 'Projeto independente de hackathon, não é um produto da NASA.',
+  'footer.event': 'NASA Space Apps Challenge 2026.',
+  'footer.future': 'Uma versão para educação é uma possível evolução futura.',
+
+  'controls.landing': 'Dia do pouso (UTC)',
+  'controls.duration': 'Missão',
+  'controls.durationOption': '{n:int} dias',
+  'controls.delay': 'Atraso do lançamento',
+  'controls.withDelay': 'Pouso com atraso',
+  'controls.delayReadout': '+{d:int} d → {date:date}',
+  'controls.delayAria': '{d:int} dias',
+  'controls.slip': 'Atrasar {n:int} dias',
+  'controls.noDelay': 'Sem atraso',
+
+  'warn.outside':
+    'A missão ({days:int} dias a partir de {date:date}) passa do fim dos dados, que vão de {start:date} a {end:date}. Os resultados não são calculados com dados incompletos.',
+  'warn.noSite': 'Nenhum local atende às regras da missão em {date:date}.',
+  'earliest.after': 'Primeiro local viável depois do atraso',
+  'earliest.from': 'Primeiro local viável a partir desta data',
+  'earliest.value': '{site}, pouso em {date:date} (viável por {n:int} dias de pouso seguidos)',
+  'earliest.none': 'nenhum antes do fim dos dados.',
+  'census.title':
+    'Dias de pouso que funcionam em {year} (missão de {days:int} dias, regras atuais)',
+  'census.site': '{site} {n:int}',
+  'census.none': 'nenhum local: {n:int} de {total:int}',
+  'aria.best': 'Melhor compromisso: {site}',
+  'aria.noBest': 'Nenhum local se qualifica com estas regras.',
+  'cards.aria': 'Locais ordenados para esta missão',
+  'section.map': 'Mapa do polo sul',
+  'section.scatter': 'Ciência versus engenharia',
+
+  'verdict.viable': 'Viável',
+  'verdict.marginal': 'Marginal',
+  'verdict.not-viable': 'Inviável',
+
+  'card.best': 'Melhor compromisso',
+  'card.engineering': 'Engenharia',
+  'card.science': 'Ciência',
+  'card.aria': '{site}, posição {rank:int}, {verdict:verdict}',
+  'card.ariaBest': '{site}, posição {rank:int}, {verdict:verdict}, melhor compromisso',
+  'card.landingAt': 'Pouso {t:datetime}',
+  'card.noLandingHour': 'Nenhuma hora deste dia atende às regras de pouso.',
+  'card.next': 'Próximo pouso viável: {date:date} (viável {n:int} dias seguidos)',
+  'card.noNext': 'Nenhum pouso viável até o fim do ano dos dados.',
+  'card.linkContinuous': 'Linha direta {p:pct} da missão',
+  'card.linkGaps':
+    'Linha direta {p:pct} da missão · maior intervalo {g:hours} (retransmissão necessária nos intervalos)',
+  'card.linkLow': 'Linha direta só {p:pct} da missão: satélite de retransmissão necessário',
+  'card.sun': '{p:pct} de Sol',
+  'card.sunTitle': 'Horas da missão com alguma parte do Sol visível',
+  'card.psr': '{km:km1} até a sombra permanente',
+  'card.psrTitle': 'Distância até a região em sombra permanente mais próxima',
+  'card.slope': 'Inclinação {s:deg1}',
+  'card.slopeTitle': 'Inclinação local do terreno (DEM de 20 m)',
+  'card.howBuilt': 'Como as notas são formadas',
+  'card.partValue': '{v:pct} × {w:int}',
+  'card.partPoints': '= {p:dec1}',
+  'card.fullDisc':
+    'Disco solar inteiro {s:hours}; disco da Terra inteiro {e:hours}. Os pesos são escolhas do time.',
+  'card.details': 'Detalhes do local',
+  'card.outside': 'A missão passa do fim dos dados. Escolha um dia anterior.',
+  'card.outsideAria': '{site}: fora dos dados',
+
+  'part.sunlight': 'Luz do Sol durante a missão',
+  'part.sunlightFromLanding': 'Luz contínua a partir do pouso',
+  'part.earthContact': 'Terra visível durante a missão',
+  'part.contactGaps': 'Intervalos curtos sem contato com a Terra',
+  'part.psrProximity': 'Proximidade da sombra permanente',
+
+  'reason.darkAtLanding':
+    'Escuro no pouso: o Sol está atrás do relevo (regra: Sol visível no pouso).',
+  'reason.survivalDarkness':
+    'A maior escuridão, {h:hours}, passa do limite de sobrevivência de {limit:hours}.',
+  'reason.minSunFraction': 'Só {p:pct} da missão com Sol (mínimo {min:pct}).',
+  'reason.marginalSunFraction':
+    '{p:pct} da missão com Sol, abaixo do nível confortável de {comfort:pct}.',
+  'reason.engineering':
+    'Nota de engenharia {score:dec1floor} abaixo de {min:int}: Terra visível {earth:pct}, maior intervalo sem contato {gap:hours}.',
+  'reason.slope':
+    'Inclinação do terreno {slope:deg1} acima do limite de {limit:deg1} (sem isso seria {would:verdict}).',
+  'reason.viable': '{p:pct} com Sol, Terra visível {earth:pct}, sombra permanente a {km:km1}.',
+  'reason.viableNoPsr': '{p:pct} com Sol, Terra visível {earth:pct}.',
+
+  'rules.title': 'Regras da missão',
+  'rules.note':
+    'Os padrões são escolhas do nosso time para esta demonstração, não requisitos da NASA.',
+  'rules.sunAtLanding': 'Sol visível no pouso',
+  'rules.survival': 'Limite de sobrevivência: maior escuridão (h)',
+  'rules.minSun': 'Fração mínima com Sol (%)',
+  'rules.marginalSun': 'Marginal abaixo da fração com Sol (%)',
+  'rules.viableEng': 'Viável: engenharia ≥',
+  'rules.scienceFilter': 'Filtro de nota mínima de ciência',
+  'rules.scienceFilterEnable': 'Ativar o filtro de nota mínima de ciência',
+  'rules.scienceFilterValue': 'Nota mínima de ciência',
+  'rules.relay': 'Alerta de retransmissão abaixo de linha direta (%)',
+  'rules.slope': 'Inclinação máxima do terreno (°)',
+  'rules.reset': 'Voltar aos padrões',
+  'rules.explain':
+    'Inviável: nenhuma hora do dia do pouso com o Sol visível, escuridão maior que o limite de sobrevivência, ou pouca luz do Sol. Marginal: luz abaixo do nível confortável, ou nota de engenharia abaixo do mínimo para viável. O veredito usa só regras de engenharia; a nota de ciência ordena os locais. O contato com a Terra entra pela nota de engenharia. Inclinação acima do limite rebaixa o veredito em um nível. Melhor compromisso: o local com o maior min(engenharia, ciência) entre os que não são "inviáveis" (e passam no filtro opcional de ciência).',
+
+  'scatter.title': 'Ciência × engenharia',
+  'scatter.legend': '● atende às regras obrigatórias ○ inviável',
+  'scatter.trail': 'anel claro = data planejada, linha = deslocamento com +{d:int} d',
+  'scatter.x': 'Nota de ciência ◆',
+  'scatter.y': 'Nota de engenharia ●▲',
+  'scatter.zone': 'engenharia ≥ mínimo para viável (regras do time)',
+  'scatter.aria': 'Nota de ciência versus nota de engenharia de cada local',
+
+  'strips.title': '{year} num relance: Sol e Terra por dia',
+  'strips.sun': 'fração do dia com o Sol visível',
+  'strips.earth': 'fração do dia com a Terra visível',
+  'strips.planned': 'pouso planejado {date:date}',
+  'strips.delayed': 'pouso com atraso {date:date} + missão',
+  'strips.rowAria': '{site}: visibilidade diária do Sol e da Terra em {year}',
+
+  'map.title2d': 'Polo sul · relevo sombreado (LOLA {px:int} m/pixel, só visualização)',
+  'map.title3d': 'Polo sul · 3D, Sol no instante do pouso (LOLA {px:int} m/pixel, só visualização)',
+  'map.orientation': 'Para cima = 0° L (em direção à Terra) · polo no centro',
+  'map.aria': 'Mapa do polo sul com os locais',
+  'map.select': 'Selecionar {site}',
+  'map.show2d': 'Ver mapa 2D',
+  'map.show3d': 'Ver 3D',
+  'map.demoNote':
+    '○ Parede interna do Shackleton, mantida para mostrar o quanto a posição exata importa.',
+  'map.how3d':
+    'Arraste para girar, role para aproximar (ou setas, +/−, R). A luz vem do Sol visto do local selecionado no instante do pouso.',
+  'map.how2d': 'Luz fixa.',
+  'map.numbersNote': 'Os números vêm do cálculo com o contorno do horizonte, não desta imagem.',
+  'scene.vertical': 'Vertical ×{n:int}',
+  'scene.verticalAria': 'Exagero vertical',
+  'scene.reset': 'Reiniciar vista',
+  'scene.sun': 'Sol {el:deg1}',
+  'scene.at': 'em {site}',
+  'scene.earth': 'Terra',
+  'scene.curvature': 'curvatura ligada',
+  'scene.visualOnly': 'só visualização',
+  'scene.aria': 'Vista 3D do polo sul. Setas giram e inclinam, mais e menos aproximam, R reinicia.',
+  'scene.loading': 'Carregando a vista 3D…',
+  'scene.youAreHere': 'Você está aqui',
+
+  'facts.pick': 'Clique num local no mapa, num cartão ou na dispersão.',
+  'facts.site': 'Local',
+  'facts.point': 'Ponto',
+  'facts.published': 'Ponto publicado (NASA Lunar Surface Data Book)',
+  'facts.derived': 'Derivado: pixel de 60 m mais iluminado da região da NASA (melhor caso)',
+  'facts.position': 'Posição',
+  'facts.positionValue': '{lat:dec1}°, {lon:dec1}° L',
+  'facts.terrain': 'Terreno',
+  'facts.terrainValue': '{h:int} m · inclinação {s:deg1}',
+  'facts.psr': 'Sombra permanente',
+  'facts.psrValue': '{km:km1} · região de {a:dec1} km²',
+  'facts.nasa': 'Médias da NASA em 18,6 anos',
+
+  'unit.km': '{n} km',
+  'unit.hours': '{n} h',
+  'unit.days': '{n} dias',
+  'unit.beyondData': 'além dos dados',
+  'unit.na': 'n/d',
+};

@@ -1,39 +1,40 @@
 /**
  * What: "Today / With this tool" comparison (D27): factual, names the existing NASA tools as the
- *   sources and the tools for detailed analysis. Static text.
+ *   sources and the tools for detailed analysis. Text from the dictionaries.
  * Roadmap stage: 5 — Interface (see docs/ROTEIRO.md).
  */
-const ROWS: [string, string][] = [
-  ['One scenario at a time', 'Several sites side by side'],
-  ['Raw data', 'A verdict with its reason'],
-  ['Three interfaces', 'One screen'],
-  ['Engineering only', 'Science and engineering'],
-  ['Redo everything when the date changes', 'A delay control'],
+import { useI18n } from '../i18n/I18nProvider';
+import type { MessageKey } from '../i18n/messages';
+
+const ROWS: [MessageKey, MessageKey][] = [
+  ['adds.r1a', 'adds.r1b'],
+  ['adds.r2a', 'adds.r2b'],
+  ['adds.r3a', 'adds.r3b'],
+  ['adds.r4a', 'adds.r4b'],
+  ['adds.r5a', 'adds.r5b'],
 ];
 
 export function WhatThisAddsTable() {
+  const { t } = useI18n();
   return (
     <>
       <table className="compare">
         <thead>
           <tr>
-            <th scope="col">Today</th>
-            <th scope="col">With this tool</th>
+            <th scope="col">{t('adds.today')}</th>
+            <th scope="col">{t('adds.withTool')}</th>
           </tr>
         </thead>
         <tbody>
           {ROWS.map(([today, tool]) => (
             <tr key={today}>
-              <td>{today}</td>
-              <td>{tool}</td>
+              <td>{t(today)}</td>
+              <td>{t(tool)}</td>
             </tr>
           ))}
         </tbody>
       </table>
-      <p className="note">
-        JPL Horizons, LROC Quickmap and NASA Moon Trek remain the sources and the tools for detailed
-        analysis.
-      </p>
+      <p className="note">{t('adds.note')}</p>
     </>
   );
 }

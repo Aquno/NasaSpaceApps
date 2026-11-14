@@ -1,16 +1,16 @@
 /**
- * What: One strip per site across 2027: daily share of hours with the Sun (top) and with the
- *   Earth (bottom) visible, with the planned and delayed landing dates and the mission span.
+ * What: One strip per site across the data year: daily share of hours with the Sun (top) and with
+ *   the Earth (bottom) visible, with the planned and delayed landing dates and the mission span.
  *   Display only (fractions come from calc/annual.ts).
  * Roadmap stage: 5 — Interface (see docs/ROTEIRO.md).
  */
 import type { DailyFractions } from '../calc/annual';
 import type { SiteSummary } from '../data/contract';
-import { fmtDate } from '../ui/format';
+import { useI18n } from '../i18n/I18nProvider';
 
 const DAY_MS = 86_400_000;
 const ROW_H = 10;
-const MONTHS = ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'];
+const MONTHS = 12;
 
 interface Props {
   sites: SiteSummary[];
@@ -22,25 +22,24 @@ interface Props {
 }
 
 export function AnnualStrips({ sites, daily, plannedMs, landingMs, durationH, selectedId }: Props) {
+  const { t, locale } = useI18n();
   const first = daily.values().next().value?.firstDayMs ?? 0;
   const dayOf = (ms: number) => (ms - first) / DAY_MS;
-  const days = daily.values().next().value?.sun.length ?? 365;
+  const days = daily.values().next().value?.sun.length ?? 0;
   const missionDays = durationH / 24;
   const year = new Date(first).getUTCFullYear();
+  const monthName = new Intl.DateTimeFormat(locale, { month: 'narrow', timeZone: 'UTC' });
   return (
-    <section className="panel strips" aria-label={`${year} at a glance`}>
-      <h2>{year} at a glance: when each site has Sun and Earth</h2>
+    <div className="strips">
       <div className="legend">
         <span>
-          <span className="swatch" style={{ background: 'var(--sun)' }} />● share of the day with
-          the Sun visible
+          <span className="swatch" style={{ background: 'var(--sun)' }} />● {t('strips.sun')}
         </span>
         <span>
-          <span className="swatch" style={{ background: 'var(--earth)' }} />▲ share of the day with
-          the Earth visible
+          <span className="swatch" style={{ background: 'var(--earth)' }} />▲ {t('strips.earth')}
         </span>
-        <span>┆ planned landing {fmtDate(plannedMs)}</span>
-        <span>┃ landing with delay {fmtDate(landingMs)} + mission</span>
+        <span>┆ {t('strips.planned', { date: plannedMs })}</span>
+        <span>┃ {t('strips.delayed', { date: landingMs })}</span>
       </div>
       {sites.map((s) => {
         const d = daily.get(s.id);
@@ -55,7 +54,7 @@ export function AnnualStrips({ sites, daily, plannedMs, landingMs, durationH, se
               preserveAspectRatio="none"
               style={{ width: '100%', height: 26 }}
               role="img"
-              aria-label={`${s.name}: daily Sun and Earth visibility in ${year}`}
+              aria-label={t('strips.rowAria', { site: s.name, year: String(year) })}
             >
               {Array.from(d.sun, (f, i) => (
                 <rect
@@ -105,7 +104,7 @@ export function AnnualStrips({ sites, daily, plannedMs, landingMs, durationH, se
       <div className="strip-row">
         <div />
         <div style={{ position: 'relative', height: 16 }} aria-hidden="true">
-          {MONTHS.map((m, k) => (
+          {Array.from({ length: MONTHS }, (_, k) => (
             <span
               key={k}
               className="caps"
@@ -114,11 +113,11 @@ export function AnnualStrips({ sites, daily, plannedMs, landingMs, durationH, se
                 left: `${(dayOf(Date.UTC(year, k, 1)) / days) * 100}%`,
               }}
             >
-              {m}
+              {monthName.format(Date.UTC(year, k, 1))}
             </span>
           ))}
         </div>
       </div>
-    </section>
+    </div>
   );
 }

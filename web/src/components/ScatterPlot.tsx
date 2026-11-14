@@ -7,6 +7,7 @@
 import type { Evaluation, SiteEvaluation } from '../calc/evaluate';
 import type { MissionRules } from '../config/scoring';
 import type { SiteSummary } from '../data/contract';
+import { useI18n } from '../i18n/I18nProvider';
 import { shortName } from '../ui/format';
 import { placeLabels } from '../ui/labelLayout';
 
@@ -43,6 +44,7 @@ export function ScatterPlot({
   selectedId,
   onSelect,
 }: Props) {
+  const { t } = useI18n();
   const scienceFloor = rules.minScienceEnabled ? rules.minScienceScore : 0;
   const labels = placeLabels(
     sites.flatMap((s) => {
@@ -57,7 +59,7 @@ export function ScatterPlot({
       viewBox={`0 0 ${W} ${H}`}
       className="fill"
       role="img"
-      aria-label="Science score versus engineering score for each site"
+      aria-label={t('scatter.aria')}
       preserveAspectRatio="xMidYMid meet"
     >
       <rect
@@ -75,7 +77,7 @@ export function ScatterPlot({
         textAnchor="start"
         fontSize="11"
       >
-        engineering ≥ viable minimum (team rules)
+        {t('scatter.zone')}
       </text>
       {TICKS.map((t) => (
         <g key={t}>
@@ -98,7 +100,7 @@ export function ScatterPlot({
         fontSize="12"
         style={{ fill: 'var(--science)' }}
       >
-        Science score ◆
+        {t('scatter.x')}
       </text>
       <text
         x={12}
@@ -108,7 +110,7 @@ export function ScatterPlot({
         transform={`rotate(-90 12 ${sy(50)})`}
         style={{ fill: 'var(--sun)' }}
       >
-        Engineering score ●▲
+        {t('scatter.y')}
       </text>
       {sites.map((s) => {
         const a = point(planned.sites.find((e) => e.siteId === s.id));

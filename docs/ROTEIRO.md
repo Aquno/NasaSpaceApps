@@ -143,3 +143,4 @@ Legenda de status: `a fazer` · `em andamento` · `concluído` · `plano B` · `
 | 2026-11-14 | 5 | Vista 3D (three.js) no painel, estável na primeira tentativa (cerca de 10 min do limite de 90); mapa 2D mantido como plano B |
 | 2026-11-14 | 5 | D35: direção visual revisada (limpa, calma, espaçosa; um foco por tela) registrada; aplicação pendente |
 | 2026-11-14 | 5 | D36: pouso na primeira hora do dia que atende às regras; relatórios refeitos (110 trocas com +21 d; cenário 04/03 → 25/03 mantido) |
+| 2026-11-14 | 5 | D38: idiomas inglês e português do Brasil, seletor salvo, motivos dos vereditos como chaves com parâmetros |

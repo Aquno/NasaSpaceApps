@@ -1,6 +1,6 @@
 /**
- * What: Mission dashboard (main screen): controls, map, science x engineering scatter, five
- *   ranked cards, 2027 strips and mission rules. Composes components; no calculation.
+ * What: Mission dashboard (main screen): controls, map/3D, science x engineering scatter, five
+ *   ranked cards, data-year strips and mission rules. Composes components; no calculation.
  * Roadmap stage: 5 — Interface (see docs/ROTEIRO.md).
  */
 import { lazy, Suspense, useMemo, useState } from 'react';
@@ -14,11 +14,12 @@ import { ScatterPlot } from '../components/ScatterPlot';
 import { ShadedMap } from '../components/ShadedMap';
 import { SiteCard } from '../components/SiteCard';
 import { SiteFacts } from '../components/SiteFacts';
-const SouthPole3D = lazy(() => import('../components/SouthPole3D'));
 import type { SiteData, SiteSummary, Terrain } from '../data/contract';
+import { useI18n } from '../i18n/I18nProvider';
 import { useEvaluations, usePrecomputed, type MissionInputs } from '../state/useMission';
-import { fmtDate } from '../ui/format';
 import { useFlip } from '../ui/useFlip';
+
+const SouthPole3D = lazy(() => import('../components/SouthPole3D'));
 
 interface Props {
   sites: SiteSummary[];
@@ -30,6 +31,7 @@ interface Props {
 }
 
 export function Dashboard({ sites, data, terrain, inputs, onInputs, onOpenSite }: Props) {
+  const { t } = useI18n();
   const pre = usePrecomputed(sites, data);
   const d = useEvaluations(pre, data, inputs);
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -43,9 +45,12 @@ export function Dashboard({ sites, data, terrain, inputs, onInputs, onOpenSite }
   );
   const flipRef = useFlip<HTMLLIElement>(d.now.order.join('|'));
   const anyMeta = data.values().next().value?.meta;
+  const year = anyMeta ? String(new Date(anyMeta.startMs).getUTCFullYear()) : '';
   const sample = [...data.values()].some((x) => x.meta.sample);
   const outside = d.now.sites.find((e) => !e.ok);
   const bestName = sites.find((s) => s.id === d.now.bestId)?.name;
+  const earliestName = sites.find((s) => s.id === d.earliest?.siteId)?.name;
+  const px = Math.round(terrain.pixelM);
 
   return (
     <div className="app">
@@ -61,24 +66,24 @@ export function Dashboard({ sites, data, terrain, inputs, onInputs, onOpenSite }
       )}
       {outside && !outside.ok && (
         <p className="warning" role="alert">
-          The mission ({inputs.durationH / 24} days from {fmtDate(d.landingMs)}) runs past the data,
-          which cover {fmtDate(outside.window.dataStartMs)} to {fmtDate(outside.window.dataEndMs)}.
-          Results are not computed with incomplete data.
+          {t('warn.outside', {
+            days: inputs.durationH / 24,
+            date: d.landingMs,
+            start: outside.window.dataStartMs,
+            end: outside.window.dataEndMs,
+          })}
         </p>
       )}
       <p className="visually-hidden" aria-live="polite">
-        {bestName ? `Best compromise: ${bestName}` : 'No site qualifies with these rules.'}
+        {bestName ? t('aria.best', { site: bestName }) : t('aria.noBest')}
       </p>
 
       <div className="top-row">
-        <section className="panel" aria-label="South pole map">
-          <h2>
-            South pole · {view3d ? '3D, Sun at the landing instant' : 'shaded relief'} (LOLA{' '}
-            {terrain.pixelM.toFixed(0)} m/pixel, visual only)
-          </h2>
+        <section className="panel" aria-label={t('section.map')}>
+          <h2>{t(view3d ? 'map.title3d' : 'map.title2d', { px })}</h2>
           <div className={`map-row fill${view3d ? ' wide' : ''}`}>
             {view3d && lightSite && lightDirs ? (
-              <Suspense fallback={<p className="note">Loading the 3D view…</p>}>
+              <Suspense fallback={<p className="note">{t('scene.loading')}</p>}>
                 <SouthPole3D
                   terrain={terrain}
                   sites={sites}
@@ -102,23 +107,18 @@ export function Dashboard({ sites, data, terrain, inputs, onInputs, onOpenSite }
             <div className="map-side">
               <SiteFacts site={sites.find((s) => s.id === (selectedId ?? d.now.bestId))} />
               <p className="note">
-                ○ Shackleton inner wall, kept to show how much the exact position matters.
-                {view3d
-                  ? ' Drag to rotate, scroll to zoom (or arrow keys, +/−, R). Light comes from the Sun as seen from the selected site at the landing instant.'
-                  : ' Static light.'}{' '}
-                Numbers come from the horizon calculation, not from this picture.
+                {t('map.demoNote')} {t(view3d ? 'map.how3d' : 'map.how2d')} {t('map.numbersNote')}
               </p>
               <button type="button" className="linkbtn" onClick={() => setView3d((v) => !v)}>
-                {view3d ? 'Show 2D map' : 'Show 3D view'}
+                {t(view3d ? 'map.show2d' : 'map.show3d')}
               </button>
             </div>
           </div>
         </section>
-        <section className="panel" aria-label="Science versus engineering">
+        <section className="panel" aria-label={t('section.scatter')}>
           <h2>
-            Science × engineering · ● meets the hard rules ○ not viable
-            {inputs.delayDays !== 0 &&
-              ` · faint ring = planned date, line = move with +${inputs.delayDays} d`}
+            {t('scatter.title')} · {t('scatter.legend')}
+            {inputs.delayDays !== 0 && ` · ${t('scatter.trail', { d: inputs.delayDays })}`}
           </h2>
           <ScatterPlot
             sites={d.ranked}
@@ -133,35 +133,31 @@ export function Dashboard({ sites, data, terrain, inputs, onInputs, onOpenSite }
       </div>
 
       <p className={`panel earliest ${d.now.bestId === null ? 'warning' : ''}`} aria-live="polite">
-        {d.now.bestId === null && !outside && (
-          <>No site meets the mission rules on {fmtDate(d.landingMs)}. </>
-        )}
-        <strong>
-          Earliest viable site {inputs.delayDays > 0 ? 'after the slip' : 'from this date'}:
-        </strong>{' '}
-        {d.earliest
-          ? `${sites.find((s) => s.id === d.earliest?.siteId)?.name ?? d.earliest.siteId}, landing ${fmtDate(d.earliest.window.startMs)} (viable for ${d.earliest.window.windowDays} consecutive landing days)`
-          : 'none before the end of the data.'}
+        {d.now.bestId === null && !outside && <>{t('warn.noSite', { date: d.landingMs })} </>}
+        <strong>{t(inputs.delayDays > 0 ? 'earliest.after' : 'earliest.from')}:</strong>{' '}
+        {d.earliest && earliestName
+          ? t('earliest.value', {
+              site: earliestName,
+              date: d.earliest.window.startMs,
+              n: d.earliest.window.windowDays,
+            })
+          : t('earliest.none')}
         <br />
         <span className="census">
-          <strong>
-            Landing days that work in {anyMeta ? new Date(anyMeta.startMs).getUTCFullYear() : ''} (
-            {inputs.durationH / 24}-day mission, current rules):
-          </strong>{' '}
+          <strong>{t('census.title', { year, days: inputs.durationH / 24 })}:</strong>{' '}
           {d.ranked.map((s, k) => (
             <span key={s.id}>
               {k > 0 && ' · '}
-              {s.name} <span className="num">{d.census.perSite.get(s.id)?.viable ?? 0}</span>
+              {t('census.site', { site: s.name, n: d.census.perSite.get(s.id)?.viable ?? 0 })}
             </span>
           ))}
           {' · '}
           <strong>
-            no site: <span className="num">{d.census.noViableDays}</span> of{' '}
-            <span className="num">{d.census.daysInData}</span>
+            {t('census.none', { n: d.census.noViableDays, total: d.census.daysInData })}
           </strong>
         </span>
       </p>
-      <ol className="cards" aria-label="Sites ranked for this mission">
+      <ol className="cards" aria-label={t('cards.aria')}>
         {d.now.order.map((id, k) => {
           const site = d.ranked.find((s) => s.id === id);
           if (!site) return null;
@@ -182,16 +178,21 @@ export function Dashboard({ sites, data, terrain, inputs, onInputs, onOpenSite }
         })}
       </ol>
 
-      <MissionRulesPanel rules={inputs.rules} onChange={(rules) => onInputs({ rules })} />
-
-      <AnnualStrips
-        sites={d.ranked}
-        daily={d.daily}
-        plannedMs={inputs.plannedMs}
-        landingMs={d.landingMs}
-        durationH={inputs.durationH}
-        selectedId={selectedId}
-      />
+      <details className="panel section">
+        <summary>{t('rules.title')}</summary>
+        <MissionRulesPanel rules={inputs.rules} onChange={(rules) => onInputs({ rules })} />
+      </details>
+      <details className="panel section">
+        <summary>{t('strips.title', { year })}</summary>
+        <AnnualStrips
+          sites={d.ranked}
+          daily={d.daily}
+          plannedMs={inputs.plannedMs}
+          landingMs={d.landingMs}
+          durationH={inputs.durationH}
+          selectedId={selectedId}
+        />
+      </details>
       <Footer />
     </div>
   );

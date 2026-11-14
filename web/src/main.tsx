@@ -11,11 +11,14 @@ import '@fontsource/ibm-plex-mono/400.css';
 import '@fontsource/ibm-plex-mono/600.css';
 import './styles/app.css';
 import { App } from './App';
+import { I18nProvider } from './i18n/I18nProvider';
 
 const root = document.getElementById('root');
 if (!root) throw new Error('#root element missing in index.html');
 createRoot(root).render(
   <StrictMode>
-    <App />
+    <I18nProvider>
+      <App />
+    </I18nProvider>
   </StrictMode>,
 );

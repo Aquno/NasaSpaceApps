@@ -10,6 +10,11 @@ import { resolve } from 'node:path';
 import { visibilitySeries, type VisibilitySeries } from '../../src/calc/visibility';
 import type { SiteData, SiteSummary } from '../../src/data/contract';
 import { parseSiteData, parseSites } from '../../src/data/validate';
+import { en } from '../../src/i18n/en';
+import { createTranslator } from '../../src/i18n/translate';
+
+/** English translator for report text (verdict reasons are message keys, D38). */
+export const EN = createTranslator(en, 'en');
 
 export interface AppData {
   sites: SiteSummary[];

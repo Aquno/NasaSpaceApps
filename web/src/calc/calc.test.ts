@@ -10,6 +10,9 @@ import {
   runFrom,
 } from './metrics';
 import { DEFAULT_RULES } from '../config/scoring';
+import { en } from '../i18n/en';
+import { ptBR } from '../i18n/ptBR';
+import { createTranslator } from '../i18n/translate';
 import { linkStatus } from './communication';
 import { bestCompromise, engineeringScore, scienceScore, verdict } from './scores';
 import {
@@ -20,6 +23,8 @@ import {
   visibilitySeries,
 } from './visibility';
 
+const EN = createTranslator(en, 'en');
+const PT = createTranslator(ptBR, 'pt-BR');
 const flat = (h: number) => new Float64Array(360).fill(h);
 const flags = (s: string) => Uint8Array.from(s.split('').map(Number));
 
@@ -168,7 +173,8 @@ describe('scores', () => {
   it('hard rule: Sun visible at landing', () => {
     const v = check({ ...base, sunVisibleAtLanding: false, sunHoursFromLanding: 0 });
     expect(v).toMatchObject({ kind: 'not-viable', rule: 'sunAtLanding' });
-    expect(v.reason).toContain('Dark at landing');
+    expect(v.reason).toEqual({ key: 'reason.darkAtLanding' });
+    expect(EN.msg(v.reason)).toContain('Dark at landing');
   });
   it('a short sunset does not make a well-lit site not viable (old 24 h rule removed)', () => {
     // 95% sunlit, Sun sets 16 h after landing for 5 h: below the 24 h survival limit.
@@ -178,12 +184,16 @@ describe('scores', () => {
   it('hard rule: survival darkness, reason cites rule and measured value', () => {
     const v = check({ ...base, longestDarkHours: 30 });
     expect(v).toMatchObject({ kind: 'not-viable', rule: 'survivalDarkness' });
-    expect(v.reason).toBe('Longest darkness 30 h exceeds the 24 h survival limit.');
+    expect(v.reason).toEqual({ key: 'reason.survivalDarkness', params: { h: 30, limit: 24 } });
+    expect(EN.msg(v.reason)).toBe('Longest darkness 30 h exceeds the 24 h survival limit.');
+    expect(PT.msg(v.reason)).toBe(
+      'A maior escuridão, 30 h, passa do limite de sobrevivência de 24 h.',
+    );
   });
   it('hard rule: minimum sunlit fraction', () => {
     const v = check({ ...base, sunFraction: 0.4 });
     expect(v).toMatchObject({ kind: 'not-viable', rule: 'minSunFraction' });
-    expect(v.reason).toContain('Only 40%');
+    expect(EN.msg(v.reason)).toContain('Only 40%');
   });
   it('marginal: sunlight between minimum and comfort level', () => {
     expect(check({ ...base, sunFraction: 0.6 })).toMatchObject({
@@ -213,7 +223,12 @@ describe('scores', () => {
   it('slope above the limit lowers the verdict by one level and cites the value', () => {
     const v = verdict(base, engineeringScore(base), scienceScore(2), 2, DEFAULT_RULES, 12.3);
     expect(v).toMatchObject({ kind: 'marginal', rule: 'slope' });
-    expect(v.reason).toBe('Terrain slope 12.3° exceeds the 10° limit (would otherwise be viable).');
+    expect(EN.msg(v.reason)).toBe(
+      'Terrain slope 12.3° exceeds the 10.0° limit (would otherwise be Viable).',
+    );
+    expect(PT.msg(v.reason)).toBe(
+      'Inclinação do terreno 12,3° acima do limite de 10,0° (sem isso seria Viável).',
+    );
     const marginal = { ...base, sunFraction: 0.6 };
     expect(
       verdict(marginal, engineeringScore(marginal), scienceScore(2), 2, DEFAULT_RULES, 31).kind,

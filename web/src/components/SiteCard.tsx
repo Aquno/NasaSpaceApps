@@ -1,20 +1,14 @@
 /**
- * What: One site card: scores, verdict (icon + text + border style), reason, key metrics and
- *   how each score is built. Display only.
+ * What: One site card: scores, verdict (icon + text), reason, landing hour, next viable landing,
+ *   direct-link line, key metrics and how each score is built. Display only.
  * Roadmap stage: 5 — Interface (see docs/ROTEIRO.md).
  */
 import type { SiteEvaluation } from '../calc/evaluate';
 import type { ViableWindow } from '../calc/nextViable';
 import type { SiteSummary } from '../data/contract';
-import {
-  fmtDate,
-  fmtDateTime,
-  fmtHours,
-  fmtKm,
-  fmtPct,
-  fmtScore,
-  VERDICT_LABEL,
-} from '../ui/format';
+import { useI18n } from '../i18n/I18nProvider';
+import type { MessageKey } from '../i18n/messages';
+import { VERDICT_ICON } from '../ui/format';
 
 interface Props {
   site: SiteSummary;
@@ -38,91 +32,89 @@ export function SiteCard({
   onSelect,
   onOpen,
 }: Props) {
+  const { t, msg, num } = useI18n();
   if (!evaluation || !evaluation.ok) {
     return (
-      <article className="card not-viable" aria-label={`${site.name}: outside data`}>
+      <article className="card not-viable" aria-label={t('card.outsideAria', { site: site.name })}>
         <h3>{site.name}</h3>
-        <p className="reason">
-          The mission runs past the end of the data interval. Choose an earlier landing date.
-        </p>
+        <p className="reason">{t('card.outside')}</p>
       </article>
     );
   }
-  const { engineering, science, verdict: v, metrics: m } = evaluation;
-  const label = VERDICT_LABEL[v.kind];
+  const { engineering, science, verdict: v, metrics: m, link } = evaluation;
   const classes = ['card', v.kind, best ? 'best' : '', selected ? 'selected' : ''].join(' ');
+  const linkKey: MessageKey =
+    link.kind === 'low'
+      ? 'card.linkLow'
+      : link.kind === 'gaps'
+        ? 'card.linkGaps'
+        : 'card.linkContinuous';
   return (
     <article
       className={classes}
-      aria-label={`${site.name}, rank ${rank}, ${label.text}${best ? ', best compromise' : ''}`}
+      aria-label={t(best ? 'card.ariaBest' : 'card.aria', {
+        site: site.name,
+        rank,
+        verdict: v.kind,
+      })}
       onClick={onSelect}
     >
-      {best && <span className="tag-best">BEST COMPROMISE</span>}
+      {best && <span className="tag-best">{t('card.best')}</span>}
       <h3>
         <span className="rank">{rank}</span>
         {site.name}
       </h3>
       <div className="scores">
         <div className="score">
-          <div className="caps">Engineering</div>
-          <div className="value sun">{fmtScore(engineering.total)}</div>
+          <div className="caps">{t('card.engineering')}</div>
+          <div className="value sun">{num(engineering.total)}</div>
         </div>
         <div className="score">
-          <div className="caps">Science</div>
-          <div className="value science">{science ? fmtScore(science.total) : '–'}</div>
+          <div className="caps">{t('card.science')}</div>
+          <div className="value science">{science ? num(science.total) : '–'}</div>
         </div>
       </div>
       <div className={`verdict ${v.kind}`}>
-        <span aria-hidden="true">{label.icon}</span> {label.text}
+        <span aria-hidden="true">{VERDICT_ICON[v.kind]}</span> {t(`verdict.${v.kind}`)}
       </div>
-      <p className="reason">{v.reason}</p>
+      <p className="reason">{msg(v.reason)}</p>
       <p className="next">
         {evaluation.landingHourFound
-          ? `Landing ${fmtDateTime(evaluation.landingMs)}`
-          : 'No hour of this day meets the landing rules.'}
+          ? t('card.landingAt', { t: evaluation.landingMs })
+          : t('card.noLandingHour')}
       </p>
       {next !== undefined && (
         <p className="next">
-          {next
-            ? `Next viable landing: ${fmtDate(next.startMs)} (window ${next.windowDays} d)`
-            : 'No viable landing left in the data year.'}
+          {next ? t('card.next', { date: next.startMs, n: next.windowDays }) : t('card.noNext')}
         </p>
       )}
-      <p className={evaluation.link.kind === 'low' ? 'link alert' : 'link earth'}>
-        {evaluation.link.kind === 'low'
-          ? `△ Direct link only ${fmtPct(evaluation.link.fraction)} of mission: relay satellite required`
-          : evaluation.link.kind === 'gaps'
-            ? `▲ Direct link ${fmtPct(evaluation.link.fraction)} of mission · longest gap ${fmtHours(evaluation.link.longestGapHours)} (relay needed during gaps)`
-            : `▲ Direct link ${fmtPct(evaluation.link.fraction)} of mission`}
+      <p className={link.kind === 'low' ? 'link alert' : 'link earth'}>
+        {link.kind === 'low' ? '△' : '▲'}{' '}
+        {t(linkKey, { p: link.fraction, g: link.longestGapHours })}
       </p>
       <div className="metrics">
-        <span className="sun" title="Mission hours with some part of the Sun visible">
-          ● {fmtPct(m.sunFraction)} sun
+        <span className="sun" title={t('card.sunTitle')}>
+          ● {t('card.sun', { p: m.sunFraction })}
         </span>
-        <span className="science" title="Distance to the nearest permanently shadowed region">
-          ◆ {fmtKm(site.psrDistanceKm)}
+        <span className="science" title={t('card.psrTitle')}>
+          ◆ {site.psrDistanceKm === null ? t('unit.na') : t('card.psr', { km: site.psrDistanceKm })}
         </span>
-        <span title="Local terrain slope (20 m DEM)">⟋ {site.terrainSlopeDeg.toFixed(1)}°</span>
+        <span title={t('card.slopeTitle')}>⟋ {t('card.slope', { s: site.terrainSlopeDeg })}</span>
       </div>
       <details onClick={(e) => e.stopPropagation()}>
-        <summary>How the scores are built</summary>
+        <summary>{t('card.howBuilt')}</summary>
         <table>
           <tbody>
             {[...engineering.parts, ...(science?.parts ?? [])].map((p) => (
               <tr key={p.key}>
-                <td>{p.label}</td>
-                <td className="num">
-                  {fmtPct(p.value)} × {Math.round(p.weight * 100)}
-                </td>
-                <td className="num">= {p.points.toFixed(1)}</td>
+                <td>{t(`part.${p.key}`)}</td>
+                <td className="num">{t('card.partValue', { v: p.value, w: p.weight * 100 })}</td>
+                <td className="num">{t('card.partPoints', { p: p.points })}</td>
               </tr>
             ))}
           </tbody>
         </table>
-        <div>
-          Full solar disc: {fmtHours(m.sunHoursFull)}; full Earth disc: {fmtHours(m.earthHoursFull)}
-          . Weights are team choices.
-        </div>
+        <div>{t('card.fullDisc', { s: m.sunHoursFull, e: m.earthHoursFull })}</div>
       </details>
       <button
         type="button"
@@ -132,7 +124,7 @@ export function SiteCard({
           onOpen();
         }}
       >
-        Site details ▸
+        {t('card.details')} ▸
       </button>
     </article>
   );

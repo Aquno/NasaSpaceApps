@@ -1,9 +1,11 @@
 /**
  * What: Dashboard header: product name, context (lunar south pole, real NASA data), SAMPLE DATA
- *   badge when any file is marked as sample, and the "What this adds" dialog. Display only.
+ *   badge when any file is marked as sample, language selector and the "What this adds" dialog.
  * Roadmap stage: 5 — Interface (see docs/ROTEIRO.md).
  */
 import { useRef } from 'react';
+import { useI18n } from '../i18n/I18nProvider';
+import { LanguageSelect } from './LanguageSelect';
 import { WhatThisAddsTable } from './WhatThisAdds';
 import { WhatThisCovers } from './WhatThisCovers';
 
@@ -12,25 +14,27 @@ interface Props {
 }
 
 export function Header({ sample }: Props) {
+  const { t } = useI18n();
   const dialog = useRef<HTMLDialogElement>(null);
   return (
     <header className="header">
-      <h1>Lunar Site Navigator</h1>
-      <span className="context">Lunar south pole · real NASA data (JPL Horizons, LRO LOLA)</span>
-      {sample && <span className="badge-sample">SAMPLE DATA</span>}
+      <h1>{t('header.title')}</h1>
+      <span className="context">{t('header.context')}</span>
+      {sample && <span className="badge-sample">{t('header.sample')}</span>}
       <span className="spacer" />
       <a href="#/" className="linkbtn">
-        Start
+        {t('header.start')}
       </a>
       <button type="button" className="linkbtn" onClick={() => dialog.current?.showModal()}>
-        What this adds · scope ▸
+        {t('header.whatThisAdds')} ▸
       </button>
-      <dialog ref={dialog} aria-label="What this tool adds">
+      <LanguageSelect />
+      <dialog ref={dialog} aria-label={t('header.whatThisAdds')}>
         <WhatThisAddsTable />
         <WhatThisCovers />
         <form method="dialog">
           <button className="linkbtn" type="submit">
-            Close
+            {t('header.close')}
           </button>
         </form>
       </dialog>

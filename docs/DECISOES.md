@@ -223,6 +223,13 @@ Formato: data, decisão, motivo, consequências. Decisões novas vão no fim. N�
 - **Decisão:** o cartão mostra uma única linha: "Direct link X% of mission · longest gap Y (relay needed during gaps)"; sem intervalos, só "Direct link X% of mission". O alerta "relay satellite required" aparece **só** quando a cobertura direta fica abaixo de um limite em "Mission rules" (`lowLinkBelowEarthFraction`, padrão **50%** da missão, escolha do time). Não altera o veredito. Substitui o texto "No direct link: relay satellite required" baseado só no instante do pouso, que parecia contradizer "Earth in view 86%".
 - Código: `web/src/calc/communication.ts` (testado).
 
+### D38 — 2026-11-14 — Internacionalização sem biblioteca externa
+- **Decisão:** inglês (padrão) e português do Brasil, com seletor no cabeçalho e na abertura; a escolha fica salva no navegador (`localStorage`, melhor esforço) e pode ser forçada por `?lang=pt-BR` na URL.
+- **Como:** núcleo próprio e pequeno (`web/src/i18n/`): dicionários tipados (`en.ts` define as chaves; `ptBR.ts` precisa ter as mesmas, verificado pelo TypeScript e por teste que compara os marcadores), marcadores com tipo (`{n:pct}`, `{h:hours}`, `{km:km1}`, `{date:date}`, `{t:datetime}`, `{would:verdict}`…) formatados com a API `Intl` do navegador (vírgula decimal, datas, porcentagens). Sem biblioteca: o caso é pequeno e o `Intl` resolve números e datas.
+- **Vereditos:** o módulo de cálculo devolve o motivo como **chave + parâmetros** (`{ key: 'reason.survivalDarkness', params: { h: 30, limit: 24 } }`), nunca frase pronta; a interface traduz. Os relatórios em linha de comando usam o dicionário em inglês.
+- **Não traduzidos:** nomes próprios dos locais e das fontes (JPL Horizons, LRO LOLA, PGDA, Lunar Surface Data Book).
+- **Regra daqui em diante:** nenhum texto de interface fixo no código; todo texto novo entra nos dois dicionários. As mensagens técnicas do validador de dados (arquivo e campo) ficam em inglês, dentro de um título traduzido.
+
 ### Pendências abertas após a etapa 2
 - Nenhuma pendência de dados da etapa 2.
 

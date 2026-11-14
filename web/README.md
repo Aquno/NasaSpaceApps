@@ -43,7 +43,8 @@ npm run report:delay   # cenários em que um atraso muda o melhor compromisso ou
 | `src/screens/Intro.tsx` | abertura (`#/`) |
 | `src/screens/Dashboard.tsx` | painel de missão (`#/mission`) |
 | `src/components/` | cartões, dispersão, mapa 2D, faixas anuais, controles, "Mission rules", cabeçalho, rodapé |
-| `src/styles/app.css` | tokens visuais aprovados |
+| `src/i18n/` | idiomas (D38): `en.ts` (chaves), `ptBR.ts`, `translate.ts` (formatação com `Intl`), `I18nProvider.tsx` (seletor salvo; `?lang=pt-BR`) |
+| `src/styles/app.css` | tokens visuais |
 | Detalhe do local (`#/site/<id>`), vista 3D, "Small move, big change" | a fazer |
 
 ## Dependências e motivo

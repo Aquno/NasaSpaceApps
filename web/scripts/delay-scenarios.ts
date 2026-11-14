@@ -19,7 +19,7 @@ import {
   type SiteEvaluation,
 } from '../src/calc/evaluate';
 import { earliestViableSite, nextViableWindow } from '../src/calc/nextViable';
-import { DAY_MS, isoDay, loadAppData } from './lib/app-data';
+import { DAY_MS, EN, isoDay, loadAppData } from './lib/app-data';
 
 const delayDays = Number(process.argv[2] ?? 21);
 const duration = Number(process.argv[3] ?? 336);
@@ -74,7 +74,7 @@ for (let k = 0; k < 365; k++) {
       kind: `best compromise changes: ${b0 ?? 'none'} -> ${b1 ?? 'none'}`,
       clarity,
       lines: [
-        `${b0 ?? 'none'}: before ${fmt(prevBefore)}; after ${fmt(prevAfter)}${prevAfter ? ` — ${prevAfter.verdict.reason}` : ''}`,
+        `${b0 ?? 'none'}: before ${fmt(prevBefore)}; after ${fmt(prevAfter)}${prevAfter ? ` — ${EN.msg(prevAfter.verdict.reason)}` : ''}`,
         `${b1 ?? 'none'}: before ${fmt(newBefore)}; after ${fmt(newAfter)}`,
       ],
     });
@@ -85,7 +85,7 @@ for (let k = 0; k < 365; k++) {
       kind: `best site ${b0} changes verdict`,
       clarity: Math.abs(minScore(prevBefore) - minScore(prevAfter)),
       lines: [
-        `${b0}: before ${fmt(prevBefore)}; after ${fmt(prevAfter)} — ${prevAfter.verdict.reason}`,
+        `${b0}: before ${fmt(prevBefore)}; after ${fmt(prevAfter)} — ${EN.msg(prevAfter.verdict.reason)}`,
       ],
     });
   }

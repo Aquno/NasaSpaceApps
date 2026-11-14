@@ -1,37 +1,37 @@
 /**
- * What: "What this tool covers" block: scope of the planning tool (static text).
- * Roadmap stage: 5 — Interface (see docs/ROTEIRO.md).
+ * What: "What this tool covers" block: scope of the planning tool. Text from the dictionaries.
+ * Roadmap stage: 5 — Interface (see docs/ROTEIRO.md); decisions D31, D34.
  */
+import { useI18n } from '../i18n/I18nProvider';
+import type { MessageKey } from '../i18n/messages';
+
+const COVERS: MessageKey[] = ['covers.c1', 'covers.c2', 'covers.c3', 'covers.c4'];
+const NOT_COVERS: MessageKey[] = ['covers.n1', 'covers.n2', 'covers.n3', 'covers.n4'];
+
 export function WhatThisCovers() {
+  const { t } = useI18n();
   return (
-    <section aria-label="What this tool covers">
-      <h2 className="caps">What this tool covers</h2>
+    <section aria-label={t('covers.title')}>
+      <h2 className="caps">{t('covers.title')}</h2>
+      <p className="note">{t('covers.planning')}</p>
       <p className="note">
-        A planning tool, used on Earth before launch. Verdicts come from fixed decision rules and
-        scoring, shown on screen.
-      </p>
-      <p className="note">
-        <strong>Best case per region, not a landing area:</strong> each site point is the
-        most-illuminated 60 m pixel of its NASA region on NASA&apos;s average-illumination map;
-        neighbouring pixels can get much less light.
+        <strong>{t('covers.bestCaseTitle')}</strong> {t('covers.bestCase')}
       </p>
       <div className="covers">
         <div>
-          <strong>Covers</strong>
+          <strong>{t('covers.covers')}</strong>
           <ul>
-            <li>Sunlight at the site (power)</li>
-            <li>Direct line of sight to Earth (communication)</li>
-            <li>Terrain slope at the site</li>
-            <li>Proximity to permanently shadowed regions (science)</li>
+            {COVERS.map((k) => (
+              <li key={k}>{t(k)}</li>
+            ))}
           </ul>
         </div>
         <div>
-          <strong>Does not cover</strong>
+          <strong>{t('covers.notCovers')}</strong>
           <ul>
-            <li>Trajectory and propellant</li>
-            <li>Thermal environment</li>
-            <li>Obstacles on the ground (rocks, craters below the map resolution)</li>
-            <li>Relay satellite networks</li>
+            {NOT_COVERS.map((k) => (
+              <li key={k}>{t(k)}</li>
+            ))}
           </ul>
         </div>
       </div>

@@ -1,7 +1,8 @@
 /**
  * What: Engineering and science scores (with their breakdown), verdict with a one-sentence
- *   reason, and the best compromise between the two scores. Pure functions.
- * Roadmap stage: 5 — Interface (see docs/ROTEIRO.md); rules in docs/DECISOES.md D25.
+ *   reason (as a message key + parameters, translated by the interface, D38), and the best
+ *   compromise between the two scores. Pure functions.
+ * Roadmap stage: 5 — Interface (see docs/ROTEIRO.md); rules in docs/DECISOES.md D25, D31, D32.
  * Inputs: MissionMetrics; distance to the nearest PSR (km); constants in config/scoring.ts.
  * Outputs: scores 0-100 with named parts, verdict, ranking.
  * NASA data source: none directly. Weights and thresholds are TEAM CHOICES, not NASA criteria.
@@ -13,11 +14,12 @@ import {
   SCIENCE_ZERO_SCORE_KM,
   type MissionRules,
 } from '../config/scoring';
+import type { Msg } from '../i18n/translate';
 import type { MissionMetrics } from './metrics';
 
+/** Score term; its label is the message `part.<key>`. */
 export interface ScorePart {
-  key: string;
-  label: string;
+  key: 'sunlight' | 'sunlightFromLanding' | 'earthContact' | 'contactGaps' | 'psrProximity';
   /** Value of the term in [0, 1]. */
   value: number;
   weight: number;
@@ -35,29 +37,19 @@ const toScore = (parts: ScorePart[]): Score => ({
   total: parts.reduce((s, p) => s + p.points, 0),
   parts,
 });
-const part = (key: string, label: string, value: number, weight: number): ScorePart => {
+const part = (key: ScorePart['key'], value: number, weight: number): ScorePart => {
   const v = clamp01(value);
-  return { key, label, value: v, weight, points: v * weight * 100 };
+  return { key, value: v, weight, points: v * weight * 100 };
 };
 
 /** Engineering score 0-100 from mission metrics (weights: ENGINEERING_WEIGHTS). */
 export function engineeringScore(m: MissionMetrics): Score {
   const w = ENGINEERING_WEIGHTS;
   return toScore([
-    part('sunlight', 'Sunlight during mission', m.sunFraction, w.sunlight),
-    part(
-      'sunlightFromLanding',
-      'Continuous sunlight from landing',
-      m.sunHoursFromLanding / m.durationHours,
-      w.sunlightFromLanding,
-    ),
-    part('earthContact', 'Earth in view during mission', m.earthFraction, w.earthContact),
-    part(
-      'contactGaps',
-      'Short gaps without Earth contact',
-      1 - m.longestNoContactHours / m.durationHours,
-      w.contactGaps,
-    ),
+    part('sunlight', m.sunFraction, w.sunlight),
+    part('sunlightFromLanding', m.sunHoursFromLanding / m.durationHours, w.sunlightFromLanding),
+    part('earthContact', m.earthFraction, w.earthContact),
+    part('contactGaps', 1 - m.longestNoContactHours / m.durationHours, w.contactGaps),
   ]);
 }
 
@@ -67,20 +59,16 @@ export function scienceScore(psrDistanceKm: number | null): Score | null {
   const value =
     (SCIENCE_ZERO_SCORE_KM - Math.max(psrDistanceKm, SCIENCE_FULL_SCORE_KM)) /
     (SCIENCE_ZERO_SCORE_KM - SCIENCE_FULL_SCORE_KM);
-  return toScore([part('psrProximity', 'Proximity to permanent shadow', value, 1)]);
+  return toScore([part('psrProximity', value, 1)]);
 }
 
 export type VerdictKind = 'viable' | 'marginal' | 'not-viable';
 
 export interface Verdict {
   kind: VerdictKind;
-  reason: string;
+  /** Reason as a message key + parameters (fractions 0-1, hours, degrees, km). */
+  reason: Msg;
 }
-
-const pct = (x: number) => `${Math.round(x * 100)}%`;
-const hours = (h: number) => (h >= 48 ? `${Math.round(h / 24)} days` : `${Math.round(h)} h`);
-/** One decimal, rounded down, so a score just below a threshold never prints as equal. */
-const floor1 = (x: number) => (Math.floor(x * 10) / 10).toFixed(1);
 
 /** Which rule decided the verdict (for the interface to highlight it). */
 export type RuleKey =
@@ -121,7 +109,10 @@ export function verdict(
   return {
     kind: LOWER[base.kind],
     rule: 'slope',
-    reason: `Terrain slope ${slopeDeg.toFixed(1)}° exceeds the ${rules.maxSlopeDeg}° limit (would otherwise be ${base.kind}).`,
+    reason: {
+      key: 'reason.slope',
+      params: { slope: slopeDeg, limit: rules.maxSlopeDeg, would: base.kind },
+    },
   };
 }
 
@@ -133,46 +124,64 @@ function baseVerdict(
   rules: MissionRules,
 ): Verdict & { rule: RuleKey } {
   if (rules.requireSunAtLanding && !m.sunVisibleAtLanding) {
-    return {
-      kind: 'not-viable',
-      rule: 'sunAtLanding',
-      reason: 'Dark at landing: the Sun is behind the terrain (rule: Sun visible at landing).',
-    };
+    return { kind: 'not-viable', rule: 'sunAtLanding', reason: { key: 'reason.darkAtLanding' } };
   }
   if (m.longestDarkHours >= rules.survivalDarknessHours) {
     return {
       kind: 'not-viable',
       rule: 'survivalDarkness',
-      reason: `Longest darkness ${hours(m.longestDarkHours)} exceeds the ${hours(rules.survivalDarknessHours)} survival limit.`,
+      reason: {
+        key: 'reason.survivalDarkness',
+        params: { h: m.longestDarkHours, limit: rules.survivalDarknessHours },
+      },
     };
   }
   if (m.sunFraction < rules.minSunFraction) {
     return {
       kind: 'not-viable',
       rule: 'minSunFraction',
-      reason: `Only ${pct(m.sunFraction)} of the mission in sunlight (minimum ${pct(rules.minSunFraction)}).`,
+      reason: {
+        key: 'reason.minSunFraction',
+        params: { p: m.sunFraction, min: rules.minSunFraction },
+      },
     };
   }
-  void sci; // science never changes the verdict (D32); kept in the signature for the reason
-  const distance = psrDistanceKm === null ? 'unknown' : `${psrDistanceKm.toFixed(1)} km`;
+  void sci; // science never changes the verdict (D32)
   if (m.sunFraction < rules.marginalBelowSunFraction) {
     return {
       kind: 'marginal',
       rule: 'marginalSunFraction',
-      reason: `${pct(m.sunFraction)} of the mission in sunlight, below the ${pct(rules.marginalBelowSunFraction)} comfort level.`,
+      reason: {
+        key: 'reason.marginalSunFraction',
+        params: { p: m.sunFraction, comfort: rules.marginalBelowSunFraction },
+      },
     };
   }
   if (eng.total < rules.viableMinEngineering) {
     return {
       kind: 'marginal',
       rule: 'engineering',
-      reason: `Engineering score ${floor1(eng.total)} below ${rules.viableMinEngineering}: Earth in view ${pct(m.earthFraction)}, longest contact gap ${hours(m.longestNoContactHours)}.`,
+      reason: {
+        key: 'reason.engineering',
+        params: {
+          score: eng.total,
+          min: rules.viableMinEngineering,
+          earth: m.earthFraction,
+          gap: m.longestNoContactHours,
+        },
+      },
     };
   }
   return {
     kind: 'viable',
     rule: 'allPassed',
-    reason: `${pct(m.sunFraction)} sunlit, Earth in view ${pct(m.earthFraction)}, permanent shadow ${distance} away.`,
+    reason:
+      psrDistanceKm === null
+        ? { key: 'reason.viableNoPsr', params: { p: m.sunFraction, earth: m.earthFraction } }
+        : {
+            key: 'reason.viable',
+            params: { p: m.sunFraction, earth: m.earthFraction, km: psrDistanceKm },
+          },
   };
 }
 
