@@ -15,6 +15,7 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import {
   cavityShade,
+  edgeFade,
   exaggerateDirection,
   sceneHeightM,
   terrainPositions,
@@ -31,10 +32,10 @@ import { MoonGlobe } from './MoonGlobe';
 const DEFAULT_EXAGGERATION = 3;
 const MIN_EXAGGERATION = 1;
 const MAX_EXAGGERATION = 10;
-// Start view: from the Earth side (+y), about 55° down, aimed between the sites so the terrain
-// fills the frame (km).
-const CAMERA_TARGET: Vec3 = [-20, 72, 0];
-const CAMERA_START: Vec3 = [-20, 250, 205];
+// Start view (km): from the 90° W side (-x), about 55° down, so the sites (spread mostly along
+// the pole-Earth axis) run across the wide frame and the terrain fills it.
+const CAMERA_TARGET: Vec3 = [-5, 52, 0];
+const CAMERA_START: Vec3 = [-175, 52, 255];
 const LIGHT_DISTANCE_KM = 400;
 const SHADOW_HALF_EXTENT_KM = 165;
 const SHADOW_MAP_SIZE = 2048;
@@ -49,6 +50,8 @@ const REGOLITH_RGB: Vec3 = [0.62, 0.58, 0.53];
 const CAVITY_RADIUS_PX = 12;
 const CAVITY_RELIEF_M = 1800;
 const CAVITY_CONTRAST = 0.9;
+/** Width of the fade at the terrain block's edges, grid pixels (~35 km of 300). */
+const EDGE_FADE_PX = 60;
 const LABEL_GAP_PX = 14;
 const GLOBE_PX = 116;
 
@@ -223,15 +226,23 @@ export function SouthPole3D(props: Props) {
     );
     geometry.computeVertexNormals();
     const shade = cavityShade(terrain.heights, w, h, CAVITY_RADIUS_PX, CAVITY_RELIEF_M);
-    const colors = new Float32Array(w * h * 3);
+    const fade = edgeFade(w, h, EDGE_FADE_PX);
+    // RGBA per vertex: regolith x cavity shading, alpha fading the block's edges to the background.
+    const colors = new Float32Array(w * h * 4);
     for (let k = 0; k < w * h; k++) {
       const f = 1 + CAVITY_CONTRAST * ((shade[k] as number) - 0.5);
-      for (let j = 0; j < 3; j++) colors[k * 3 + j] = Math.min(1, (REGOLITH_RGB[j] as number) * f);
+      for (let j = 0; j < 3; j++) colors[k * 4 + j] = Math.min(1, (REGOLITH_RGB[j] as number) * f);
+      colors[k * 4 + 3] = fade[k] as number;
     }
-    geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+    geometry.setAttribute('color', new THREE.BufferAttribute(colors, 4));
     const mesh = new THREE.Mesh(
       geometry,
-      new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 1, metalness: 0 }),
+      new THREE.MeshStandardMaterial({
+        vertexColors: true,
+        transparent: true,
+        roughness: 1,
+        metalness: 0,
+      }),
     );
     mesh.castShadow = true;
     mesh.receiveShadow = true;

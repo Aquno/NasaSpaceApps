@@ -193,3 +193,21 @@ export function cavityShade(
   }
   return out;
 }
+
+/**
+ * Opacity per grid pixel (0-1) that fades the terrain block toward its edges: 1 inside, falling
+ * smoothly to 0 over the last `fadePx` pixels of each side (the two sides multiply, so corners
+ * fade too). Visual only.
+ */
+export function edgeFade(width: number, height: number, fadePx: number): Float32Array {
+  const smooth = (d: number) => {
+    const x = Math.min(1, Math.max(0, d / fadePx));
+    return x * x * (3 - 2 * x);
+  };
+  const out = new Float32Array(width * height);
+  for (let r = 0; r < height; r++) {
+    const fr = smooth(Math.min(r, height - 1 - r));
+    for (let c = 0; c < width; c++) out[r * width + c] = fr * smooth(Math.min(c, width - 1 - c));
+  }
+  return out;
+}

@@ -37,8 +37,13 @@ export const ptBR: Messages = {
   'intro.f2': 'Compare os locais de uma vez, com nota de ciência e nota de engenharia.',
   'intro.f3Title': 'Replaneje o atraso',
   'intro.f3': 'Mude a data do lançamento e veja na hora qual local ainda serve.',
-  'intro.statPoints': 'pontos de referência avaliados',
-  'intro.statHours': 'horas de dados do Sol e da Terra por local, {year}',
+  'intro.statShackValue': '{a:pct} · {b:pct}',
+  'intro.statShack':
+    'luz do Sol média da NASA no ponto da borda do Shackleton e na sua parede interna, a apenas {km:km1} um do outro',
+  'intro.statBest':
+    'dias de {year} em que o melhor local do ano, {site}, aceita pouso (de {total:int})',
+  'intro.dataScope':
+    '{n:int} pontos de referência avaliados · {h:int} horas de dados do Sol e da Terra por local, {year}.',
   'intro.statNone': 'dias de {year} em que nenhum local serve (de {total:int})',
   'intro.statDelay': 'datas em que um atraso de {d:int} dias leva o melhor local para outro',
   'intro.statsNote':

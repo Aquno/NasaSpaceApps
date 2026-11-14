@@ -31,7 +31,13 @@ export function App() {
 
   if (hash === '#/' || hash === '') {
     return (
-      <Intro ready={state.status === 'ready' ? { sites: state.sites, data: state.data } : null} />
+      <Intro
+        ready={
+          state.status === 'ready'
+            ? { sites: state.sites, data: state.data, sphereRadiusM: state.terrain.sphereRadiusM }
+            : null
+        }
+      />
     );
   }
   if (hash === '#/roadmap') {

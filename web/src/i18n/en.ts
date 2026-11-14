@@ -38,8 +38,13 @@ export const en = {
   'intro.f2': 'Compare the sites at once, with a science score and an engineering score.',
   'intro.f3Title': 'Replan a delay',
   'intro.f3': 'Move the launch date and see at once which site still works.',
-  'intro.statPoints': 'reference points evaluated',
-  'intro.statHours': 'hours of Sun and Earth data per site, {year}',
+  'intro.statShackValue': '{a:pct} · {b:pct}',
+  'intro.statShack':
+    'NASA average sunlight on the Shackleton rim point and on its inner wall, only {km:km1} apart',
+  'intro.statBest':
+    'days of {year} when the best site of the year, {site}, accepts a landing (of {total:int})',
+  'intro.dataScope':
+    '{n:int} reference points evaluated · {h:int} hours of Sun and Earth data per site, {year}.',
   'intro.statNone': 'days of {year} when no site works (of {total:int})',
   'intro.statDelay': 'dates where a {d:int}-day slip moves the best site to a different one',
   'intro.statsNote':
