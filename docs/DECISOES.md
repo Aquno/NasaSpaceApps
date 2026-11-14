@@ -71,5 +71,23 @@ Formato: data, decisão, motivo, consequências. Decisões novas vão no fim. N�
 - **Decisão:** diâmetro angular convertido de segundos de arco para graus; tempo "UT" do Horizons tratado como UTC; colunas de presença solar/de corpo interferente (`*`, `i`) ignoradas, pois usam o horizonte ideal (visibilidade é da interface, D9).
 - **Limite registrado:** para 2027 o Horizons mantém constante o último segundo bissexto conhecido (deslocamento possível de 1 s).
 
-### Pendências abertas após a etapa 1
+### D16 — 2026-11-14 — Fonte do relevo do horizonte
+- **Decisão:** PGDA produto 90, `LDEM_80S_20MPP_ADJ.TIF` (COG de 20 m, 80°S ao polo), **lido por partes** com requisições HTTP `Range` (opção a do plano; b e c não foram necessárias). Altura interpretada como metros sobre a esfera de 1737,4 km (datum declarado no arquivo, a mesma esfera do Horizons).
+- **Motivo:** dado oficial de alta resolução sem baixar 2,7 GB; georreferenciamento conferido contra o produto 78 (≤ 1,2 m de diferença nas alturas dos locais).
+
+### D17 — 2026-11-14 — Raio de busca, resolução por faixa e borda
+- **Decisão:** raio de 200 km; 20 m até 5 km, 80 m até 40 km, 320 m até 200 km (visões reduzidas do COG). Quando o raio sai do DEM, a busca para naquele azimute e o trecho além é tratado como **desconhecido** (nem liso nem altura zero); a fração de azimutes cortados e as distâncias de corte ficam registradas por local.
+
+### D18 — 2026-11-14 — Altura do observador
+- **Decisão:** terreno do DEM de 20 m no local + **mastro de 2 m**. O mastro é uma **escolha do time**, não um requisito da NASA; configurável (`--mast-m`).
+
+### D19 — 2026-11-14 — Discretização do contorno
+- **Decisão:** cálculo a cada 0,1° de azimute; `horizon[i]` guarda o **máximo** dos azimutes em [i − 0,5, i + 0,5). Contorno não limitado a zero.
+- **Consequência para a etapa 5:** a regra de visibilidade deve usar o azimute **arredondado** ao grau mais próximo (`round(az) mod 360`) para casar com essa convenção. Decisão final do método fica para a etapa 5 (pendência em `CONTRATO_DE_DADOS.md`).
+
+### Pendências abertas após a etapa 2
+- `PENDENTE:` (revisão do time) o ponto de referência do **Shackleton rim** (centro da região Site04 publicado pela NASA) fica na **parede interna** da cratera, em encosta de ~31°: o horizonte calculado chega a 31,9° (média 12,5°). O valor está correto para esse ponto, mas o ponto não representa a crista. Ver opções no `ROTEIRO.md`.
+- `PENDENTE:` (etapa 3) arquivo de sombra permanente do produto 90.
+
+### Pendências abertas após a etapa 1 (histórico)
 Resolvidas na etapa 1: coordenadas (D12), referencial (D14), convenção de azimute (`DADOS.md`). Continua aberta para a etapa 2: formato e resolução do produto PGDA usado no horizonte (produto 90 ou 78) e a altura do observador a partir do DEM.

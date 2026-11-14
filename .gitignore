@@ -26,6 +26,8 @@ data/horizon/*
 !data/ephemeris/.gitkeep
 !data/ephemeris/REPORT.md
 !data/horizon/.gitkeep
+!data/horizon/REPORT.md
+!data/horizon/plots/
 
 # Large binary / archive formats anywhere
 *.tif

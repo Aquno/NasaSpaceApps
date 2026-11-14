@@ -61,15 +61,31 @@ Observações: o README do produto 78 chama o Site11 de "de Gerlache rim"; a tab
 
 ## 2. Relevo e sombra permanente do LOLA (PGDA produto 90)
 
-- **Fornece:** modelo de elevação do polo sul (para o horizonte, etapa 2) e mapa de sombra permanente (para o valor científico, etapa 3).
-- **Endereço:** https://pgda.gsfc.nasa.gov/products/90
-- **Formato:** `PENDENTE:` confirmar (provavelmente raster georreferenciado; verificar na página).
-- **Resolução:** `PENDENTE:` listar as resoluções disponíveis e qual versão leve usaremos.
-- **Projeção / referencial:** `PENDENTE:` confirmar projeção (estereográfica polar?) e referencial (MOON_ME?).
-- **Limites:** uma versão leve (reduzida) perde obstáculos pequenos e próximos; o erro será declarado.
+- **Fornece:** modelo de elevação do polo sul (horizonte, etapa 2 — **em uso**) e mapa de sombra permanente (valor científico, etapa 3 — `PENDENTE:` escolher o arquivo).
+- **Endereço:** https://pgda.gsfc.nasa.gov/products/90 ; arquivos em https://pgda.gsfc.nasa.gov/data/LOLA_20mpp/
+- **Arquivo usado no horizonte:** `LDEM_80S_20MPP_ADJ.TIF` — "LOLA Digital Elevation Model (LDEM) giving surface height (in meters)" (página do produto). 2.696.082.051 bytes no servidor; **lido por partes** (requisições HTTP com `Range`), ~41 MB lidos para os cinco locais, em cache em `data/raw/pgda90/`.
+- **Formato:** "All TIF files are cloud-optimized GeoTiffs (COGs) with south polar stereographic X/Y coordinates in meters and in the MOON_ME reference frame of the JPL DE421 ephemeris" (página). Lido do cabeçalho: BigTIFF, float32, DEFLATE com preditor de ponto flutuante, blocos de 512 × 512, valor ausente `nan`.
+- **Projeção (GeoKeys):** estereográfica polar, latitude de origem −90°, meridiano central 0°, escala 1, esfera de 1.737.400 m ("Moon (2015) - Sphere"). Extensão −304 a +304 km em X e Y (30.400 × 30.400 px de 20 m). O metadado GMT dentro do arquivo diz ±310 km; as tags GeoTIFF foram confirmadas pela comparação com o produto 78 (abaixo).
+- **Níveis (visões reduzidas):** 20 (cheia), 40, 80, 160, 320, 640, 1280 m por pixel.
+- **Usamos:** 20 m até 5 km do local, 80 m até 40 km, 320 m até 200 km (D17).
+- **Altura:** metros sobre a esfera de 1737,4 km (D16); faixa no arquivo −7296,8 a +7027,2 m. Raio do ponto = 1.737.400 m + valor.
+- **Conferência:** altura no local (bilinear, 20 m) contra o DEM de 5 m do produto 78: diferenças de −0,5 a +1,2 m nos cinco locais.
+
+| Local | Altura do terreno no DEM de 20 m | DEM de 5 m (produto 78) |
+|---|---|---|
+| Shackleton rim | 770,9 m | 769,7 m |
+| Connecting ridge | 1942,5 m | 1942,2 m |
+| de Gerlache rim | 1793,6 m | 1793,7 m |
+| Malapert massif | 4784,2 m | 4783,8 m |
+| Haworth | 1628,1 m | 1628,5 m |
+
+- **Limites:**
+  - **Visões reduzidas:** não se sabe como as visões reduzidas do COG foram geradas (média, vizinho mais próximo ou outro método); picos distantes podem estar um pouco rebaixados no horizonte.
+  - **Superfície de referência da altura:** foi **inferida do datum declarado no arquivo** (esfera de 1.737.400 m), não de uma frase explícita da página do produto, que diz apenas "surface height (in meters)".
+  - Obstáculos menores que o pixel de cada faixa podem ser perdidos.
+  - O DEM é um quadrado de ±304 km; além da borda, o horizonte é desconhecido. Com raio de 200 km, isso afeta só o Malapert massif (50 de 360 direções, cortadas entre 181 e 199 km).
 - **Pendências:**
-  - `PENDENTE:` escolher o arquivo exato e registrar nome, tamanho e data de download.
-  - `PENDENTE:` raio de busca do horizonte (até que distância o terreno é considerado).
+  - `PENDENTE:` (etapa 3) escolher o arquivo de sombra permanente e registrar nome, tamanho e formato.
 
 ## 3. Recortes de 5 m do LOLA (PGDA produto 78)
 
@@ -79,7 +95,7 @@ Observações: o README do produto 78 chama o Site11 de "de Gerlache rim"; a tab
 - **Projeção (lida das GeoKeys, etapa 1):** estereográfica polar, latitude de origem -90°, meridiano central 0°, escala 1, esfera a = b = 1.737.400 m; `PixelIsArea`.
 - **Recortes dos nossos locais:** Site01 (Connecting ridge), Site04 (Shackleton rim), Site11 (de Gerlache rim), Site23 (Malapert massif), Haworth. Site01/04/11: 3200 × 3200 px (16 km); Site23: 4200 × 4200 px (21 km); Haworth: 5960 × 5960 px (29,8 km).
 - **Tamanho:** 41 MB (Site01/04/11), 71 MB (Site23), 142 MB (Haworth) por arquivo de superfície. O servidor aceita requisições com `Range`.
-- **Uso na etapa 2:** candidato para o relevo próximo e para a altura do observador (`PENDENTE:` decidir na etapa 2).
+- **Uso na etapa 2:** só como conferência das alturas do produto 90 nos locais (não entra no cálculo do horizonte).
 
 ## 4. Iluminação média (PGDA produto 69)
 
@@ -103,3 +119,5 @@ Observações: o README do produto 78 chama o Site11 de "de Gerlache rim"; a tab
 |------|-------|---------|---------|-----------|------------|
 | 2026-11-14 | PGDA produto 78 | cabeçalhos (64 KB) de `Site01/04/11/23` e `Haworth` `_surf.tif` | 64 KB cada | `data/raw/pgda78/` | só georreferenciamento, conferência de coordenadas |
 | 2026-11-14 | JPL Horizons API | tabelas de observador Sol e Terra, 5 locais, 2027 | ~640 KB cada | `data/raw/horizons/` | etapa 1 |
+| 2026-11-14 | PGDA produto 90 | `LDEM_80S_20MPP_ADJ.TIF`: cabeçalho (1 MB) e blocos dos níveis 20, 80 e 320 m | ~41 MB no total | `data/raw/pgda90/` | etapa 2, leitura por faixa de bytes |
+| 2026-11-14 | PGDA produto 78 | duas linhas do `_surf.tif` de cada recorte no local | 13–24 KB cada | `data/raw/pgda78/` | conferência das alturas |

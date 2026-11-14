@@ -70,7 +70,7 @@ Um arquivo por local.
 
 | Campo | Tipo | Descrição |
 |-------|------|-----------|
-| `horizon` | number[360] | elevação do terreno em graus, uma por grau de azimute; `horizon[i]` é o azimute `i°` |
+| `horizon` | number[360] | elevação do terreno em graus, uma por grau de azimute; `horizon[i]` é o **máximo** do terreno nos azimutes [i − 0,5°, i + 0,5°) (D19); pode ser negativo |
 | `series` | object[] | registros horários (ver abaixo), ordenados por `t` |
 | `meta` | object | metadados (ver abaixo) |
 
@@ -125,11 +125,11 @@ Exemplo de **estrutura** (valores fictícios):
 Implementada em **um único módulo TypeScript** de funções puras com testes (D9); não é exportada pelo pipeline. A validação da etapa 6 usa o mesmo módulo. Forma conceitual:
 
 ```
-sun_visible(t)   = sun_el(t)   > horizon[floor(sun_az(t))   mod 360]
-earth_visible(t) = earth_el(t) > horizon[floor(earth_az(t)) mod 360]
+sun_visible(t)   = sun_el(t)   > horizon[round(sun_az(t))   mod 360]
+earth_visible(t) = earth_el(t) > horizon[round(earth_az(t)) mod 360]
 ```
 
-`PENDENTE:` decidir, na etapa 5, entre truncar/arredondar o azimute ou interpolar entre graus vizinhos; registrar em `DECISOES.md` e cobrir com testes no módulo de visibilidade.
+Arredondar casa com a discretização do horizonte (cada `horizon[i]` cobre [i − 0,5°, i + 0,5°), D19). `PENDENTE:` confirmar na etapa 5 (ou trocar por interpolação), registrar em `DECISOES.md` e cobrir com testes no módulo de visibilidade.
 
 ## Tamanho
 

@@ -63,7 +63,7 @@ Diagrama completo em `docs/ARQUITETURA.md`.
 |---|-------|-------|
 | 0 | Base do repositório e documentação | raiz, `docs/` |
 | 1 | Efemérides (Horizons) — **concluída** | `pipeline/ephemeris/` |
-| 2 | Horizonte (LOLA) | `pipeline/horizon/` |
+| 2 | Horizonte (LOLA) — **concluída** | `pipeline/horizon/` |
 | 3 | Valor científico (sombra permanente) | `pipeline/science/` |
 | 4 | Exportação para a interface | `pipeline/export/` |
 | 5 | Interface | `web/` |

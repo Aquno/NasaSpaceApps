@@ -4,14 +4,14 @@
 
 Legenda de status: `a fazer` · `em andamento` · `concluído` · `plano B` · `cortado`. Nas listas, `[~]` = item dispensado.
 
-Última atualização: 2026-11-14 — etapa 1 concluída (decisões D12–D15).
+Última atualização: 2026-11-14 — etapa 2 concluída, aguardando aprovação (decisões D16–D19).
 
 ## Pontos de controle
 
 | Quando | O que precisa estar pronto | Status |
 |--------|---------------------------|--------|
 | Sábado 14/11, 18h | Etapa 1 pronta para **um** local | **cumprido** (etapa 1 pronta para os cinco locais, 14/11 à tarde) |
-| Fim de sábado 14/11 | Etapa 2 pronta **ou** decisão pelo plano B (horizonte liso) | a fazer |
+| Fim de sábado 14/11 | Etapa 2 pronta **ou** decisão pelo plano B (horizonte liso) | **cumprido** (etapa 2 pronta com relevo do LOLA, 14/11) |
 | Domingo 15/11, meio-dia | **Congelar funcionalidades** (daí em diante só correção, validação e entrega) | a fazer |
 
 ## Etapas
@@ -43,16 +43,20 @@ Legenda de status: `a fazer` · `em andamento` · `concluído` · `plano B` · `
 
 ### 2. Horizonte
 - Responsável:
-- Status: a fazer
-- O que é: calcular o contorno de 360 graus de cada local a partir de uma versão leve do relevo do LOLA.
-- Pasta: `pipeline/horizon/` → `data/horizon/`
+- Status: **concluído** (2026-11-14), branch `stage-2-horizon` — aguardando aprovação
+- O que é: calcular o contorno de 360 graus de cada local a partir do relevo do LOLA.
+- Pasta: `pipeline/horizon/` → `data/horizon/` (relatório e figuras versionados)
+- Como rodar: `python -m pipeline.horizon.run_horizon` (ver `pipeline/horizon/README.md`)
 - Critério de pronto:
-  - [ ] Produto LOLA escolhido; formato, projeção, referencial e resolução registrados em `DADOS.md`
-  - [ ] 360 valores de elevação do terreno por local (um por grau de azimute)
-  - [ ] Convenção de azimute igual à do Horizons: a partir do norte, sentido horário (ver `DADOS.md`)
-  - [ ] Altura do observador tirada do DEM (D13)
-  - [ ] Verificação visual de ao menos um local (ex.: comparação qualitativa com Quickmap/Moon Trek)
-- **Plano B:** horizonte liso (360 zeros), com o limite declarado no README e na interface. Decidir até o fim de sábado.
+  - [x] Produto LOLA escolhido; formato, projeção, referencial e resolução registrados em `DADOS.md` (D16, D17)
+  - [x] 360 valores de elevação do terreno por local (um por grau de azimute), com distâncias do obstáculo e de corte
+  - [x] Convenção de azimute igual à do Horizons: a partir do norte, sentido horário (testada)
+  - [x] Altura do observador tirada do DEM (D13) + mastro de 2 m (D18)
+  - [x] Sanidade: contornos dentro de [−10°, +35°], não constantes, sem direções sem dado (`data/horizon/REPORT.md`)
+  - [x] Verificação visual: figuras com o contorno e a trajetória de um mês do Sol e da Terra (`data/horizon/plots/`)
+  - [ ] Comparação qualitativa com Quickmap/Moon Trek — **não feita** (precisa de navegador; fica para o time, opcional)
+- **Plano B** (horizonte liso): não foi necessário.
+- **Atenção — Shackleton rim:** o ponto de referência (centro da região Site04, D12) fica na parede interna da cratera, em encosta de ~31°; horizonte de 0,1° a 31,9° (média 12,5°). O cálculo está correto para o ponto, mas o ponto não representa a crista. Opções em discussão: (a) manter e declarar; (b) usar o LM1 "Shackleton Rim B" da mesma tabela da NASA (−89,5244; 56,30993) — testado: encosta de ~12°, horizonte −1,4° a 14,2°; (c) derivar um ponto na crista dentro do recorte Site04 (ponto derivado por nós, não publicado).
 
 ### 3. Valor científico
 - Responsável:
@@ -120,3 +124,4 @@ Legenda de status: `a fazer` · `em andamento` · `concluído` · `plano B` · `
 | 2026-11-14 | 0 | Revisão aprovada (D7 e campos de `meta`); decisões D8–D11: intervalo 2027, visibilidade na interface, sync-data, página do desafio |
 | 2026-11-14 | 1 | Efemérides dos cinco locais (8.760 registros cada), todas as verificações OK; coordenadas do Data Book da NASA conferidas contra os GeoTIFFs do PGDA 78; decisões D12–D15 |
 | 2026-11-14 | 1 | Etapa aprovada; comparação com a interface web do Horizons dispensada; branch juntada à `main` |
+| 2026-11-14 | 2 | Horizonte dos cinco locais a partir do LDEM 20 m do PGDA 90 lido por partes; sanidade OK; Malapert com 13,9% das direções cortadas pela borda do DEM; ponto do Shackleton rim em encosta (pendência); decisões D16–D19 |

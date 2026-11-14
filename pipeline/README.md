@@ -6,7 +6,7 @@ Pipeline Python **offline** que transforma dados da NASA nos arquivos que a inte
 |-------|-------|-------|-----|
 | `sites.json`, `sites/` | 1 — Locais | Data Book da NASA, cabeçalhos PGDA 78 | lista de locais validada |
 | `ephemeris/` | 1 — Efemérides (**concluída**) | `sites.json`, intervalo D8 | `data/ephemeris/` |
-| `horizon/` | 2 — Horizonte | relevo LOLA (`data/raw/`) | `data/horizon/` |
+| `horizon/` | 2 — Horizonte (**concluída**) | LDEM 20 m do PGDA 90 (por partes) | `data/horizon/` |
 | `science/` | 3 — Valor científico | mapa de sombra permanente (`data/raw/`) | distância por local |
 | `export/` | 4 — Exportação | saídas das etapas 1–3 | `data/app/` |
 | `tests/` | — | — | testes automáticos (pytest) |
@@ -31,6 +31,7 @@ Rodar sempre a partir da raiz do repositório, como módulos:
 ```bash
 python -m pipeline.ephemeris.run_ephemeris     # etapa 1
 python -m pipeline.sites.verify_site_points    # conferência das coordenadas
+python -m pipeline.horizon.run_horizon         # etapa 2
 ```
 
-Etapas 2–4: a definir.
+Etapas 3–4: a definir.

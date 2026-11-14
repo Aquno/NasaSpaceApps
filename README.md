@@ -79,6 +79,7 @@ python -m venv .venv
 .venv/Scripts/activate        # Windows; use `source .venv/bin/activate` on Linux/macOS
 pip install -r pipeline/requirements.txt
 python -m pipeline.ephemeris.run_ephemeris     # stage 1: Sun/Earth ephemerides from JPL Horizons
+python -m pipeline.horizon.run_horizon         # stage 2: 360-degree terrain horizon from LOLA (PGDA 90)
 python -m pipeline.sites.verify_site_points    # cross-check site coordinates against PGDA tiles
 ruff check . && pytest                          # lint and tests
 # later stages: TBD
@@ -91,7 +92,10 @@ cd web
 
 ## Limits (declared)
 
-- **Terrain resolution:** the horizon is computed from a downsampled LOLA product; small nearby obstacles may be missed. Exact resolution: **[PLACEHOLDER]**.
+- **Terrain resolution:** the horizon uses the LOLA 20 m south polar DEM (PGDA product 90) at 20 m up to 5 km from the site, and its 80 m and 320 m overviews up to 40 km and 200 km. Obstacles smaller than those pixels may be missed, and how the overviews were generated is not documented (distant peaks may be slightly lowered).
+- **Search radius and DEM edge:** 200 km. Where a ray leaves the DEM (a ±304 km square), terrain beyond is treated as unknown; this affects 13.9% of directions at Malapert massif.
+- **Observer:** DEM terrain height plus a 2 m mast (a team choice, not a NASA requirement). Heights are taken as metres above the 1737.4 km sphere, inferred from the datum declared in the DEM file.
+- **Shackleton rim reference point:** the NASA-published region centre lies on the crater's inner wall (~31° slope), so its horizon is very high; it does not represent the rim crest. Under team review.
 - **Closed list of sites:** only the five sites above.
 - **Date range:** January 1 to December 31, 2027 (UTC), one-hour steps. Launch-slip comparisons only work within this year.
 - **Observer height:** ephemerides use an observer at 0 km above the 1737.4 km reference sphere; the effect on Sun/Earth angles is negligible.
