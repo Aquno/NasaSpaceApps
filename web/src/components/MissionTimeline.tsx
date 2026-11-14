@@ -1,11 +1,13 @@
 /**
  * What: Mission timeline of one site: Sunlight and Direct-contact bands hour by hour (any part
  *   of the disc visible), a cursor at the selected hour, day ticks, and the count to the next
- *   sunset / loss of contact (or next rise when the body is down). Display only.
+ *   sunset / loss of contact (or next rise when the body is down). The current-instant marker
+ *   matches the time control and moves with play; a click on the bands moves it. Display only.
  * Roadmap stage: 5 — Interface (see docs/ROTEIRO.md); decision D42.
  * Inputs: visibility flags (calc/visibility.ts), mission window start/length (records = hours),
  *   cursor offset.
  */
+import type { MouseEvent } from 'react';
 import { recordsToNextRise, recordsToNextSet } from '../calc/metrics';
 import { flagRuns } from '../calc/panorama';
 import { useI18n } from '../i18n/I18nProvider';
@@ -16,6 +18,10 @@ const ROW_H = 22;
 const HOURS_PER_DAY = 24;
 
 interface Props {
+  /** Time of the cursor (ms UTC), shown on the marker. */
+  nowMs: number;
+  /** Moves the cursor when the timeline is clicked (record offset). */
+  onSeek?: (offset: number) => void;
   sunAny: Uint8Array;
   earthAny: Uint8Array;
   start: number;
@@ -30,7 +36,7 @@ function untilChange(flags: Uint8Array, index: number, end: number): number | nu
   return n !== null && index + n <= end ? n : null;
 }
 
-export function MissionTimeline({ sunAny, earthAny, start, length, cursor }: Props) {
+export function MissionTimeline({ nowMs, onSeek, sunAny, earthAny, start, length, cursor }: Props) {
   const { t } = useI18n();
   const sx = (k: number) => (k / length) * W;
   const end = start + length;
@@ -45,40 +51,63 @@ export function MissionTimeline({ sunAny, earthAny, start, length, cursor }: Pro
   const earthUp = earthAny[index] === 1;
   const days = Math.floor(length / HOURS_PER_DAY);
 
+  const seek = (e: MouseEvent<HTMLDivElement>) => {
+    if (!onSeek) return;
+    const box = e.currentTarget.getBoundingClientRect();
+    const f = Math.min(1, Math.max(0, (e.clientX - box.left) / box.width));
+    onSeek(Math.round(f * (length - 1)));
+  };
+
   return (
     <div className="timeline">
-      {rows.map((r) => (
-        <div key={r.cls} className="timeline-row">
-          <span className="caps">{t(r.label)}</span>
-          <svg viewBox={`0 0 ${W} ${ROW_H}`} preserveAspectRatio="none" aria-hidden="true">
-            {flagRuns(r.flags, start, length).map((run) => (
+      <div className="timeline-grid">
+        <div className="timeline-labels">
+          {rows.map((r) => (
+            <span key={r.cls} className="caps">
+              {t(r.label)}
+            </span>
+          ))}
+        </div>
+        <div className="timeline-bars" onClick={seek}>
+          {rows.map((r) => (
+            <svg
+              key={r.cls}
+              viewBox={`0 0 ${W} ${ROW_H}`}
+              preserveAspectRatio="none"
+              aria-hidden="true"
+            >
+              {flagRuns(r.flags, start, length).map((run) => (
+                <rect
+                  key={run.from}
+                  x={sx(run.from)}
+                  width={sx(run.from + run.length) - sx(run.from)}
+                  y={0}
+                  height={ROW_H}
+                  className={run.on ? `tl-on ${r.cls}` : 'tl-off'}
+                />
+              ))}
+            </svg>
+          ))}
+          <svg viewBox={`0 0 ${W} 8`} preserveAspectRatio="none" aria-hidden="true">
+            {Array.from({ length: days + 1 }, (_, d) => (
               <rect
-                key={run.from}
-                x={sx(run.from)}
-                width={sx(run.from + run.length) - sx(run.from)}
+                key={d}
+                x={sx(d * HOURS_PER_DAY)}
+                width={1}
                 y={0}
-                height={ROW_H}
-                className={run.on ? `tl-on ${r.cls}` : 'tl-off'}
+                height={6}
+                className="tl-tick"
               />
             ))}
-            <rect x={sx(cursor) - 1} width={2} y={0} height={ROW_H} className="tl-cursor" />
           </svg>
+          {/* Current instant: the same marker as the time control above (D51). */}
+          <div
+            className="now-marker"
+            style={{ left: `${(cursor / Math.max(1, length - 1)) * 100}%` }}
+          >
+            <span className="now-chip">{t('detail.now', { t: nowMs })}</span>
+          </div>
         </div>
-      ))}
-      <div className="timeline-row">
-        <span />
-        <svg viewBox={`0 0 ${W} 16`} preserveAspectRatio="none" aria-hidden="true">
-          {Array.from({ length: days + 1 }, (_, d) => (
-            <rect
-              key={d}
-              x={sx(d * HOURS_PER_DAY)}
-              width={1}
-              y={0}
-              height={6}
-              className="tl-tick"
-            />
-          ))}
-        </svg>
       </div>
       <p className="timeline-counts" aria-live="polite">
         <span className="sun">

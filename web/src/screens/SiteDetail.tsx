@@ -9,7 +9,7 @@
  */
 import { useEffect, useMemo, useState } from 'react';
 import { evaluateSite } from '../calc/evaluate';
-import { trackSegments } from '../calc/panorama';
+import { trackEvents, trackRuns } from '../calc/panorama';
 import { visibilitySeries } from '../calc/visibility';
 import { indexAtOrAfter, type SiteData, type SiteSummary } from '../data/contract';
 import { Footer } from '../components/Footer';
@@ -72,10 +72,12 @@ export function SiteDetail({ site, data, inputs }: Props) {
 
   const paths = useMemo(
     () => ({
-      sun: trackSegments(s.sunAz, s.sunEl, start, length),
-      earth: trackSegments(s.earthAz, s.earthEl, start, length),
+      sun: trackRuns(s.sunAz, s.sunEl, vis.sunAny, start, length),
+      earth: trackRuns(s.earthAz, s.earthEl, vis.earthAny, start, length),
+      sunEvents: trackEvents(s.sunAz, s.sunEl, vis.sunAny, start, length),
+      earthEvents: trackEvents(s.earthAz, s.earthEl, vis.earthAny, start, length),
     }),
-    [s, start, length],
+    [s, vis, start, length],
   );
 
   if (!ev.ok) {
@@ -132,12 +134,14 @@ export function SiteDetail({ site, data, inputs }: Props) {
           bodies={[
             {
               kind: 'sun',
-              path: paths.sun,
+              runs: paths.sun,
+              events: paths.sunEvents,
               now: { az: at(s.sunAz), el: at(s.sunEl), diam: at(s.sunDiam) },
             },
             {
               kind: 'earth',
-              path: paths.earth,
+              runs: paths.earth,
+              events: paths.earthEvents,
               now: { az: at(s.earthAz), el: at(s.earthEl), diam: at(s.earthDiam) },
             },
           ]}
@@ -186,6 +190,11 @@ export function SiteDetail({ site, data, inputs }: Props) {
       <section className="glass detail-block" aria-label={t('detail.timeline')}>
         <h2 className="caps">{t('detail.timeline')}</h2>
         <MissionTimeline
+          nowMs={nowMs}
+          onSeek={(k) => {
+            setPlaying(false);
+            setCursor(k);
+          }}
           sunAny={vis.sunAny}
           earthAny={vis.earthAny}
           start={start}

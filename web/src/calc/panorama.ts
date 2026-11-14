@@ -95,3 +95,69 @@ export function flagRuns(flags: ArrayLike<number>, start: number, length: number
   }
   return runs;
 }
+
+export interface TrackRun {
+  /** True where the body (any part of the disc) is above the terrain horizon. */
+  visible: boolean;
+  points: AzEl[];
+}
+
+/**
+ * Path of a body over records [start, start + length), split into runs of equal visibility
+ * (flags: 1 visible, 0 hidden; from calc/visibility.ts) and wherever it crosses azimuth 0/360.
+ * A run that starts because the visibility changed repeats the previous point, so the line is
+ * continuous. Degrees.
+ */
+export function trackRuns(
+  az: ArrayLike<number>,
+  el: ArrayLike<number>,
+  flags: ArrayLike<number>,
+  start: number,
+  length: number,
+): TrackRun[] {
+  const runs: TrackRun[] = [];
+  let current: TrackRun | null = null;
+  let prev: AzEl | null = null;
+  for (let i = start; i < start + length && i < az.length; i++) {
+    const p = { az: az[i] as number, el: el[i] as number };
+    const visible = flags[i] === 1;
+    const wrapped = prev !== null && Math.abs(p.az - prev.az) > WRAP_JUMP_DEG;
+    if (!current || wrapped || current.visible !== visible) {
+      current = { visible, points: prev && !wrapped ? [prev, p] : [p] };
+      runs.push(current);
+    } else {
+      current.points.push(p);
+    }
+    prev = p;
+  }
+  return runs;
+}
+
+export interface TrackEvent {
+  kind: 'rise' | 'set';
+  /** Record offset from the mission start. */
+  offset: number;
+  az: number;
+  el: number;
+}
+
+/** Rises (0 -> 1) and sets (1 -> 0) of a body inside records (start, start + length). */
+export function trackEvents(
+  az: ArrayLike<number>,
+  el: ArrayLike<number>,
+  flags: ArrayLike<number>,
+  start: number,
+  length: number,
+): TrackEvent[] {
+  const events: TrackEvent[] = [];
+  for (let i = start + 1; i < start + length && i < flags.length; i++) {
+    if (flags[i] === flags[i - 1]) continue;
+    events.push({
+      kind: flags[i] === 1 ? 'rise' : 'set',
+      offset: i - start,
+      az: az[i] as number,
+      el: el[i] as number,
+    });
+  }
+  return events;
+}

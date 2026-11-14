@@ -248,7 +248,7 @@ export const en = {
   'detail.panorama': 'Horizon, 360°',
   'detail.vertical': 'Vertical ×{n:int}',
   'detail.realSize':
-    'Sun ({s:deg1}) and Earth ({e:deg1}) at their real angular size, stretched by the vertical scale; rings mark their position; lines show their paths during the mission.',
+    'Sun ({s:deg1}) and Earth ({e:deg1}) drawn as circles at their real angular size on the vertical scale; the horizontal scale is compressed, so widths are not to scale. Strong line: visible; faint line: behind the terrain; dots: rise and set.',
   'detail.astroHorizon': '0° (flat horizon)',
   'detail.sun': 'Sun',
   'detail.earth': 'Earth',

@@ -79,7 +79,10 @@ export function SmallMove({ sites, data, landingDayMs, durationH, rules, sphereR
           { values: a.d.horizon, className: 'main' },
           { values: b.d.horizon, className: 'alt' },
         ]}
-        bodies={[{ kind: 'sun', path: sunPath, now: null }]}
+        // The two points see the Sun differently, so the shared path is drawn in one style.
+        bodies={[
+          { kind: 'sun', runs: sunPath.map((points) => ({ visible: true, points })), now: null },
+        ]}
         ariaLabel={t('small.aria', { a: a.site.name, b: b.site.name })}
       />
       <p className="legend">

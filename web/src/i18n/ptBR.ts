@@ -234,7 +234,7 @@ export const ptBR: Messages = {
   'detail.panorama': 'Horizonte, 360°',
   'detail.vertical': 'Vertical ×{n:int}',
   'detail.realSize':
-    'Sol ({s:deg1}) e Terra ({e:deg1}) no tamanho angular real, esticados pela escala vertical; os anéis marcam a posição; as linhas, a trajetória durante a missão.',
+    'Sol ({s:deg1}) e Terra ({e:deg1}) desenhados como círculos no tamanho angular real na escala vertical; a escala horizontal é comprimida, então as larguras não estão em escala. Traço forte: visível; traço apagado: atrás do relevo; pontos: nascer e ocaso.',
   'detail.astroHorizon': '0° (horizonte plano)',
   'detail.sun': 'Sol',
   'detail.earth': 'Terra',

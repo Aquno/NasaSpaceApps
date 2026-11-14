@@ -1,5 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import { elevationRange, fitExaggeration, flagRuns, trackSegments } from './panorama';
+import {
+  elevationRange,
+  fitExaggeration,
+  flagRuns,
+  trackEvents,
+  trackRuns,
+  trackSegments,
+} from './panorama';
 
 describe('panorama helpers', () => {
   it('splits a path where it crosses azimuth 0/360', () => {
@@ -21,6 +28,27 @@ describe('panorama helpers', () => {
     expect(flagRuns([0, 1, 1, 0, 0, 1], 1, 4)).toEqual([
       { from: 0, length: 2, on: true },
       { from: 2, length: 2, on: false },
+    ]);
+  });
+});
+
+describe('visible and hidden runs, rises and sets', () => {
+  const az = [10, 20, 30, 40, 50];
+  const el = [1, 2, 3, 2, 1];
+  const flags = [1, 1, 0, 0, 1];
+  it('splits the path where the visibility changes, keeping it continuous', () => {
+    const runs = trackRuns(az, el, flags, 0, 5);
+    expect(runs.map((r) => [r.visible, r.points.length])).toEqual([
+      [true, 2],
+      [false, 3],
+      [true, 2],
+    ]);
+    expect(runs[1]?.points[0]).toEqual({ az: 20, el: 2 });
+  });
+  it('marks one set and one rise with their offsets', () => {
+    expect(trackEvents(az, el, flags, 0, 5).map((e) => [e.kind, e.offset])).toEqual([
+      ['set', 2],
+      ['rise', 4],
     ]);
   });
 });
