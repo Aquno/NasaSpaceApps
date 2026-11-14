@@ -1,0 +1,100 @@
+{
+  "_about": "Pipeline site list. Fields id, name, lat, lon, description, psr_distance_km and nasa_avg_illumination_pct follow docs/CONTRATO_DE_DADOS.md (sites.json). The other fields record provenance. Coordinates are regional reference points, NOT NASA-designated landing sites. lat/lon: degrees, MOON_ME (DE421 mean Earth/polar axis), east-positive longitude in [-180, 180).",
+  "sites": [
+    {
+      "id": "shackleton-rim",
+      "name": "Shackleton rim",
+      "lat": -89.7668,
+      "lon": -171.87,
+      "alt_km": 0.0,
+      "description": "Regional reference point: centre of the LOLA 5 m DEM region 'Shackleton Rim' (Site04). Not a NASA-designated landing site.",
+      "psr_distance_km": null,
+      "nasa_avg_illumination_pct": null,
+      "point_role": "regional_reference_point",
+      "source_type": "published_point",
+      "source": {
+        "document": "NASA M2M-30044 Moon to Mars Lunar Surface Data Book, Baseline, effective 2025-03-18 (NASA/TP-20250002845)",
+        "url": "https://ntrs.nasa.gov/api/citations/20250002845/downloads/M2M-30044%20Lunar%20Surface%20Data%20Book%20Baseline_Final.pdf",
+        "location": "Appendix A2.1, Table A2.1-1 Lunar South Pole Features, page 75 of 93",
+        "quote": "R04 or Site04 Shackleton Rim -89.7668 -171.87"
+      },
+      "cross_check": "Matches the centre of PGDA product 78 Site04_final_adj_5mpp_surf.tif (pipeline/sites/verify_site_points.py)."
+    },
+    {
+      "id": "connecting-ridge",
+      "name": "Connecting ridge",
+      "lat": -89.468,
+      "lon": -137.4,
+      "alt_km": 0.0,
+      "description": "Regional reference point: point CR1/C1 on the Shackleton - de Gerlache connecting ridge used in NASA Lunar Surface Data Book traverse examples. Not a NASA-designated landing site.",
+      "psr_distance_km": null,
+      "nasa_avg_illumination_pct": null,
+      "point_role": "regional_reference_point",
+      "source_type": "published_point",
+      "source": {
+        "document": "NASA ACD-50044 Lunar Surface Data Book, Initial Release, effective 2022-10-06",
+        "url": "https://ntrs.nasa.gov/api/citations/20220015275/downloads/ACD-50044%20Lunar%20Surface%20Data%20Book_100622.pdf",
+        "location": "Page 26 of 43, figure caption (HEOMD-410 Example 6), and page 32 of 43, section 7.3.3; repeated in M2M-30044 (2025), figure 7.3.2.7-1, page 54 of 93",
+        "quote": "C1 (89.468° S, 222.6° E) ... CR1 (89.468° S, 222.6° E)"
+      },
+      "cross_check": "Published as 222.6° E (0-360); stored here as 222.6 - 360 = -137.4. About 150 m from the Site01 region centre (-89.4632, -137.49) in Table A2.1-1 of M2M-30044 (pipeline/sites/verify_site_points.py)."
+    },
+    {
+      "id": "de-gerlache-rim",
+      "name": "de Gerlache rim",
+      "lat": -88.6834,
+      "lon": -67.9321,
+      "alt_km": 0.0,
+      "description": "Regional reference point: centre of the LOLA 5 m DEM region 'de Gerlache Rim 1' (Site11). Not a NASA-designated landing site.",
+      "psr_distance_km": null,
+      "nasa_avg_illumination_pct": null,
+      "point_role": "regional_reference_point",
+      "source_type": "published_point",
+      "source": {
+        "document": "NASA M2M-30044 Moon to Mars Lunar Surface Data Book, Baseline, effective 2025-03-18 (NASA/TP-20250002845)",
+        "url": "https://ntrs.nasa.gov/api/citations/20250002845/downloads/M2M-30044%20Lunar%20Surface%20Data%20Book%20Baseline_Final.pdf",
+        "location": "Appendix A2.1, Table A2.1-1 Lunar South Pole Features, page 75 of 93",
+        "quote": "R11 or Site11 de Gerlache Rim 1 -88.6834 -67.9321"
+      },
+      "cross_check": "Matches the centre of PGDA product 78 Site11_final_adj_5mpp_surf.tif. Site11 is the region the PGDA product 78 README names 'de Gerlache rim'."
+    },
+    {
+      "id": "malapert-massif",
+      "name": "Malapert massif",
+      "lat": -85.9948,
+      "lon": -0.23578,
+      "alt_km": 0.0,
+      "description": "Regional reference point: centre of the LOLA 5 m DEM region 'Malapert Massif' (Site23). Not a NASA-designated landing site.",
+      "psr_distance_km": null,
+      "nasa_avg_illumination_pct": null,
+      "point_role": "regional_reference_point",
+      "source_type": "published_point",
+      "source": {
+        "document": "NASA M2M-30044 Moon to Mars Lunar Surface Data Book, Baseline, effective 2025-03-18 (NASA/TP-20250002845)",
+        "url": "https://ntrs.nasa.gov/api/citations/20250002845/downloads/M2M-30044%20Lunar%20Surface%20Data%20Book%20Baseline_Final.pdf",
+        "location": "Appendix A2.1, Table A2.1-1 Lunar South Pole Features, page 75 of 93",
+        "quote": "R23 or Site23 Malapert Massif -85.9948 -0.23578"
+      },
+      "cross_check": "Matches the centre of PGDA product 78 Site23_final_adj_5mpp_surf.tif."
+    },
+    {
+      "id": "haworth",
+      "name": "Haworth",
+      "lat": -86.7639,
+      "lon": -22.777,
+      "alt_km": 0.0,
+      "description": "Regional reference point: centre of the LOLA 5 m DEM region 'Haworth'. Not a NASA-designated landing site.",
+      "psr_distance_km": null,
+      "nasa_avg_illumination_pct": null,
+      "point_role": "regional_reference_point",
+      "source_type": "published_point",
+      "source": {
+        "document": "NASA M2M-30044 Moon to Mars Lunar Surface Data Book, Baseline, effective 2025-03-18 (NASA/TP-20250002845)",
+        "url": "https://ntrs.nasa.gov/api/citations/20250002845/downloads/M2M-30044%20Lunar%20Surface%20Data%20Book%20Baseline_Final.pdf",
+        "location": "Appendix A2.1, Table A2.1-1 Lunar South Pole Features, page 75 of 93",
+        "quote": "Haworth (Haworth is its name) -86.7639 -22.777"
+      },
+      "cross_check": "Matches the centre of PGDA product 78 Haworth_final_adj_5mpp_surf.tif."
+    }
+  ]
+}
