@@ -7,13 +7,13 @@
  * NASA data source: files built from JPL Horizons and PGDA products 69/90.
  */
 import { useEffect, useState } from 'react';
-import type { SiteData, SiteSummary } from './contract';
-import { DataError, loadSiteData, loadSites } from './load';
+import type { SiteData, SiteSummary, Terrain } from './contract';
+import { DataError, loadSiteData, loadSites, loadTerrain } from './load';
 
 export type LoadState =
   | { status: 'loading' }
   | { status: 'error'; details: string[] }
-  | { status: 'ready'; sites: SiteSummary[]; data: Map<string, SiteData> };
+  | { status: 'ready'; sites: SiteSummary[]; data: Map<string, SiteData>; terrain: Terrain };
 
 export function useSites(): LoadState {
   const [state, setState] = useState<LoadState>({ status: 'loading' });
@@ -25,7 +25,8 @@ export function useSites(): LoadState {
         const entries = await Promise.all(
           sites.map(async (s) => [s.id, await loadSiteData(s.id)] as const),
         );
-        if (!cancelled) setState({ status: 'ready', sites, data: new Map(entries) });
+        const terrain = await loadTerrain();
+        if (!cancelled) setState({ status: 'ready', sites, data: new Map(entries), terrain });
       } catch (err) {
         const details = err instanceof DataError ? err.details : [String(err)];
         if (!cancelled) setState({ status: 'error', details });

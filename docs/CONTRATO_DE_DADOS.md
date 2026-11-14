@@ -4,7 +4,7 @@
 
 O pipeline exporta **apenas** o contorno do horizonte, as séries do Sol e da Terra e dados de referência; visibilidade e métricas são calculadas na interface (D9).
 
-Qualquer mudança neste contrato precisa ser registrada em `DECISOES.md` e refletida no pipeline e na interface ao mesmo tempo. **Versão atual: 2** (D23: série em colunas, campos de locais e de horizonte acrescentados). O validador do pipeline está em `pipeline/export/contract.py`.
+Qualquer mudança neste contrato precisa ser registrada em `DECISOES.md` e refletida no pipeline e na interface ao mesmo tempo. **Versão atual: 3** (D23: série em colunas, campos de locais e de horizonte; D29: mapa de alturas `terrain.json` + `terrain.bin`). O validador do pipeline está em `pipeline/export/contract.py`.
 
 ## Convenções
 
@@ -27,6 +27,8 @@ Mesma estrutura em `data/app/` (origem, gerada pelo pipeline) e em `web/public/d
 ```
 data/app/
 ├── sites.json          lista dos locais
+├── terrain.json        descritor do mapa de alturas (v3)
+├── terrain.bin         mapa de alturas int16 (v3)
 └── sites/
     ├── shackleton-rim.json
     ├── connecting-ridge.json
@@ -111,7 +113,7 @@ Cada campo é um array com `meta.count` valores, todos na mesma ordem. O instant
 
 | Campo | Tipo | Descrição |
 |-------|------|-----------|
-| `contract_version` | number | `2` — *v2* |
+| `contract_version` | number | `3` |
 | `site_id` | string | igual ao `id` em `sites.json` — *v2* |
 | `sources` | string[] | fontes usadas (nome + URL) |
 | `dem_resolution_m` | number \| null | resolução do relevo perto do local (20 m), em metros (`null` no plano B) |
@@ -140,7 +142,7 @@ Exemplo de **estrutura** (valores fictícios):
     "earth_az": [0.0], "earth_el": [0.0], "earth_diam": [1.9]
   },
   "meta": {
-    "contract_version": 2,
+    "contract_version": 3,
     "site_id": "example-site",
     "sources": ["EXAMPLE"],
     "dem_resolution_m": null,
@@ -158,6 +160,25 @@ Exemplo de **estrutura** (valores fictícios):
   }
 }
 ```
+
+## `terrain.json` + `terrain.bin` (v3, D29)
+
+Mapa de alturas pequeno do polo sul para as vistas de mapa (mapa 2D sombreado e vista 3D, D28). **Só visualização**: nenhum número da interface vem dele.
+
+`terrain.bin`: `width × height` inteiros de 16 bits little-endian (`int16le`), metros sobre a esfera de 1737,4 km, por linhas; linha 0 = borda norte do mapa (+y), coluna 0 = borda oeste (−x). Projeção estereográfica polar sul (x = ρ·sen(lon), y = ρ·cos(lon); longitude 0 para cima).
+
+| Campo de `terrain.json` | Tipo | Descrição |
+|---|---|---|
+| `contract_version` | number | `3` |
+| `width`, `height` | number | 512 × 512 |
+| `pixel_m` | number | tamanho do pixel (≈ 585,9 m) |
+| `x_min_m`, `x_max_m`, `y_min_m`, `y_max_m` | number | extensão (±150 km em torno do polo) |
+| `dtype` | string | `"int16le"` |
+| `height_unit`, `row_order`, `projection`, `source` | string | descrições |
+| `sphere_radius_m` | number | 1737400 |
+| `min_height_m`, `max_height_m` | number | faixa de alturas |
+
+Origem: visão de 320 m do LDEM de 20 m (PGDA produto 90), amostragem bilinear (`python -m pipeline.export.terrain`).
 
 ## Regra de visibilidade (implementada só na interface)
 

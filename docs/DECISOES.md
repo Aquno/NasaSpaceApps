@@ -145,6 +145,11 @@ Formato: data, decisão, motivo, consequências. Decisões novas vão no fim. N�
 - **Plano B:** se em 90 minutos de trabalho não estiver estável, mapa 2D sombreado do mesmo relevo.
 - **Status:** enquadramento e posição na tela aguardando aprovação.
 
+### D29 — 2026-11-14 — Contrato v3: mapa de alturas para as vistas de mapa
+- **Decisão:** o pipeline exporta `data/app/terrain.bin` (512 × 512, int16 little-endian, metros sobre a esfera de 1737,4 km, linha 0 ao norte) e `terrain.json` (descritor), cobrindo ±150 km em torno do polo (≈ 586 m/pixel), a partir da visão de 320 m do LDEM (`python -m pipeline.export.terrain`). Todos os arquivos passam a `contract_version = 3`.
+- **Uso:** só visualização (mapa 2D sombreado provisório no painel; vista 3D, D28). Nenhum número exibido vem dele.
+- **Tamanho:** 512 KB.
+
 ### Pendências abertas após a etapa 2
 - Nenhuma pendência de dados da etapa 2.
 

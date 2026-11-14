@@ -8,7 +8,7 @@
  * distances in km, heights in m, times in UTC. Frame: MOON_ME (DE421 mean Earth/polar axis).
  */
 
-export const CONTRACT_VERSION = 2;
+export const CONTRACT_VERSION = 3;
 export const HORIZON_LENGTH = 360;
 
 export type SourceType = 'published_point' | 'derived_point';
@@ -101,4 +101,23 @@ export function indexAtOrAfter(
   timeMs: number,
 ): number {
   return Math.ceil((timeMs - meta.startMs) / (meta.stepMinutes * 60_000));
+}
+
+/** Small south polar height map for the map views (terrain.json + terrain.bin, v3). Visual only. */
+export interface Terrain {
+  width: number;
+  height: number;
+  /** Pixel size, m. */
+  pixelM: number;
+  /** Extent in polar stereographic metres (x = rho sin lon, y = rho cos lon). */
+  xMinM: number;
+  xMaxM: number;
+  yMinM: number;
+  yMaxM: number;
+  sphereRadiusM: number;
+  minHeightM: number;
+  maxHeightM: number;
+  /** Heights, m above the 1737.4 km sphere; row 0 = north edge (+y), column 0 = west (-x). */
+  heights: Int16Array;
+  source: string;
 }

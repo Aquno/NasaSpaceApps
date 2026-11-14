@@ -89,7 +89,7 @@ def test_round_azimuth_wraps():
             "series.earth_az outside [0, 360)",
         ),
         (lambda d: d["meta"].__setitem__("end", "2027-01-01T05:00:00Z"), "start + (count - 1)"),
-        (lambda d: d["meta"].__setitem__("contract_version", 1), "contract_version must be 2"),
+        (lambda d: d["meta"].__setitem__("contract_version", 2), "contract_version must be 3"),
     ],
 )
 def test_validator_names_file_and_field(mutate, message):

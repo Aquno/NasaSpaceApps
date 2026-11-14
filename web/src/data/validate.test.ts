@@ -1,7 +1,7 @@
 import { readFileSync, readdirSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { parseSiteData, parseSites } from './validate';
+import { parseSiteData, parseSites, parseTerrain } from './validate';
 
 // The real exported files (data/app) must pass the validator.
 const APP = resolve(import.meta.dirname, '../../../data/app');
@@ -24,6 +24,21 @@ describe('real data/app files', () => {
       }
     });
   }
+});
+
+describe('terrain', () => {
+  it('terrain.json + terrain.bin are valid', () => {
+    const bin = readFileSync(resolve(APP, 'terrain.bin'));
+    const buf = bin.buffer.slice(bin.byteOffset, bin.byteOffset + bin.byteLength);
+    const r = parseTerrain(read('terrain.json'), buf);
+    expect(r.ok ? [] : r.errors).toEqual([]);
+    if (r.ok) expect(r.value.heights.length).toBe(512 * 512);
+  });
+  it('wrong binary size is reported', () => {
+    const r = parseTerrain(read('terrain.json'), new ArrayBuffer(10));
+    expect(r.ok).toBe(false);
+    if (!r.ok) expect(r.errors.join()).toContain('terrain.bin: 10 bytes');
+  });
 });
 
 describe('errors name file and field', () => {

@@ -5,8 +5,8 @@
  * Outputs: SiteSummary[] and SiteData per id, or an error naming the file and field.
  * NASA data source: files built from JPL Horizons and PGDA products 69/90.
  */
-import type { SiteData, SiteSummary } from './contract';
-import { parseSiteData, parseSites } from './validate';
+import type { SiteData, SiteSummary, Terrain } from './contract';
+import { parseSiteData, parseSites, parseTerrain } from './validate';
 
 export class DataError extends Error {
   constructor(readonly details: string[]) {
@@ -37,6 +37,16 @@ export async function loadSites(): Promise<SiteSummary[]> {
 export async function loadSiteData(id: string): Promise<SiteData> {
   const file = `sites/${id}.json`;
   const result = parseSiteData(await fetchJson(file), file, id);
+  if (!result.ok) throw new DataError(result.errors);
+  return result.value;
+}
+
+/** Load and validate terrain.json + terrain.bin (map views only). */
+export async function loadTerrain(): Promise<Terrain> {
+  const json = await fetchJson('terrain.json');
+  const response = await fetch(dataUrl('terrain.bin'));
+  if (!response.ok) throw new DataError([`terrain.bin: HTTP ${response.status}`]);
+  const result = parseTerrain(json, await response.arrayBuffer());
   if (!result.ok) throw new DataError(result.errors);
   return result.value;
 }

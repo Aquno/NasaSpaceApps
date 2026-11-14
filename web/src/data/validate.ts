@@ -13,6 +13,7 @@ import {
   type SiteData,
   type SiteSummary,
   type SourceType,
+  type Terrain,
 } from './contract';
 
 export type Result<T> = { ok: true; value: T } | { ok: false; errors: string[] };
@@ -227,4 +228,40 @@ export function parseSiteData(json: unknown, file: string, expectedId?: string):
       meta: m,
     },
   };
+}
+
+/** Validate terrain.json and its binary companion (int16le, width x height). */
+export function parseTerrain(
+  json: unknown,
+  bytes: ArrayBuffer,
+  file = 'terrain.json',
+): Result<Terrain> {
+  if (!isObj(json)) return { ok: false, errors: [`${file}: must be an object`] };
+  const r = new Reader(file);
+  const t = {
+    width: r.num(json, 'width'),
+    height: r.num(json, 'height'),
+    pixelM: r.num(json, 'pixel_m'),
+    xMinM: r.num(json, 'x_min_m'),
+    xMaxM: r.num(json, 'x_max_m'),
+    yMinM: r.num(json, 'y_min_m'),
+    yMaxM: r.num(json, 'y_max_m'),
+    sphereRadiusM: r.num(json, 'sphere_radius_m'),
+    minHeightM: r.num(json, 'min_height_m'),
+    maxHeightM: r.num(json, 'max_height_m'),
+    source: r.str(json, 'source'),
+  };
+  if (r.num(json, 'contract_version') !== CONTRACT_VERSION) {
+    r.errors.push(`${file}: contract_version must be ${CONTRACT_VERSION}`);
+  }
+  if (r.str(json, 'dtype') !== 'int16le') r.errors.push(`${file}: dtype must be 'int16le'`);
+  const expected = t.width * t.height * 2;
+  if (bytes.byteLength !== expected) {
+    r.errors.push(`terrain.bin: ${bytes.byteLength} bytes, expected ${expected} from ${file}`);
+  }
+  if (r.errors.length) return { ok: false, errors: r.errors };
+  const view = new DataView(bytes);
+  const heights = new Int16Array(t.width * t.height);
+  for (let i = 0; i < heights.length; i++) heights[i] = view.getInt16(i * 2, true);
+  return { ok: true, value: { ...t, heights } };
 }
