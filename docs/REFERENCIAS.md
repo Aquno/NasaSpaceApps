@@ -47,6 +47,7 @@ Lista de fontes para a página de submissão. **Toda fonte externa usada no proj
 | 15 | Mazarico, E. et al., "Illumination conditions of the lunar polar regions using LOLA topography", Icarus 211 (2011) 1066–1081 | https://doi.org/10.1016/j.icarus.2010.10.030 | Numeração dos locais (citada pelo PGDA 78) | — |
 | 16 | Barker, M. K. et al., "Improved LOLA Elevation Maps for South Pole Landing Sites", Planetary & Space Science 203 (2021) 105119 | https://doi.org/10.1016/j.pss.2020.105119 | Referência do PGDA produto 78 | — |
 | 18 | ESRI Shapefile Technical Description (1998) | — | Leitura do shapefile de PSRs | — |
+| 19 | NASA Scientific Visualization Studio — CGI Moon Kit (LRO LROC color, `lroc_color_poles_1k.jpg`) | https://svs.gsfc.nasa.gov/4720 | Textura do globo de orientação (só visual; crédito no rodapé) | 2026-11-14 |
 | 17 | Adobe Photoshop TIFF Technical Note 3 (preditor de ponto flutuante, `Predictor = 3`) | — | Decodificação dos blocos do COG | — |
 
 ## Bibliotecas de software

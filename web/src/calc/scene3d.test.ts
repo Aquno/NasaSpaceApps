@@ -6,6 +6,7 @@ import {
   sceneHeightM,
   shadowLength,
   terrainPositions,
+  cavityShade,
 } from './scene3d';
 
 const R = 1_737_400;
@@ -67,5 +68,23 @@ describe('terrain positions', () => {
     };
     const p = terrainPositions(t, 2, false);
     close(Array.from(p), [-0.5, 0, 0.2, 0.5, 0, 0.4]);
+  });
+});
+
+describe('cavity shade', () => {
+  it('crater floor darker than rim, flat ground neutral', () => {
+    const w = 21;
+    const heights: number[] = [];
+    for (let r = 0; r < w; r++) {
+      for (let c = 0; c < w; c++) {
+        const d = Math.hypot(r - 10, c - 10);
+        heights.push(d < 4 ? -500 : d < 6 ? 300 : 0);
+      }
+    }
+    const s = cavityShade(heights, w, w, 5, 1000);
+    const at = (r: number, c: number) => s[r * w + c] as number;
+    expect(at(10, 10)).toBeLessThan(0.5);
+    expect(at(10, 15)).toBeGreaterThan(0.5);
+    expect(cavityShade([7, 7, 7, 7], 2, 2, 1, 100)[0]).toBeCloseTo(0.5);
   });
 });

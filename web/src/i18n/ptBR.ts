@@ -17,7 +17,6 @@ export const ptBR: Messages = {
   'header.title': 'Lunar Site Navigator',
   'header.context': 'Polo sul da Lua · dados reais da NASA',
   'header.sample': 'DADOS DE EXEMPLO',
-  'header.start': 'Início',
   'header.whatThisAdds': 'O que a ferramenta acrescenta',
   'header.language': 'Idioma',
   'header.close': 'Fechar',
@@ -65,7 +64,7 @@ export const ptBR: Messages = {
   'covers.n4': 'Redes de satélites de retransmissão',
 
   'footer.sources':
-    'Fontes: JPL Horizons (posições do Sol e da Terra); produtos de topografia, iluminação e sombra permanente do LRO LOLA, NASA Goddard PGDA (produtos 69, 78, 90); NASA Lunar Surface Data Book (regiões dos locais).',
+    'Fontes: JPL Horizons (posições do Sol e da Terra); produtos de topografia, iluminação e sombra permanente do LRO LOLA, NASA Goddard PGDA (produtos 69, 78, 90); NASA Lunar Surface Data Book (regiões dos locais); textura do globo da Lua: NASA Scientific Visualization Studio, CGI Moon Kit (cor LRO LROC).',
   'footer.points': 'Pontos de referência regionais, não locais de pouso designados pela NASA.',
   'footer.independent': 'Projeto independente de hackathon, não é um produto da NASA.',
   'footer.event': 'NASA Space Apps Challenge 2026.',
@@ -90,8 +89,7 @@ export const ptBR: Messages = {
   'earliest.none': 'nenhum antes do fim dos dados.',
   'census.title':
     'Dias de pouso que funcionam em {year} (missão de {days:int} dias, regras atuais)',
-  'census.site': '{site} {n:int}',
-  'census.none': 'nenhum local: {n:int} de {total:int}',
+  'census.noneShort': 'dias sem nenhum local (de {total:int})',
   'aria.best': 'Melhor compromisso: {site}',
   'aria.noBest': 'Nenhum local se qualifica com estas regras.',
   'cards.aria': 'Locais ordenados para esta missão',

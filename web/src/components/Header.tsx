@@ -18,13 +18,12 @@ export function Header({ sample }: Props) {
   const dialog = useRef<HTMLDialogElement>(null);
   return (
     <header className="header">
-      <h1>{t('header.title')}</h1>
+      <h1>
+        <a href="#/">{t('header.title')}</a>
+      </h1>
       <span className="context">{t('header.context')}</span>
       {sample && <span className="badge-sample">{t('header.sample')}</span>}
       <span className="spacer" />
-      <a href="#/" className="linkbtn">
-        {t('header.start')}
-      </a>
       <button type="button" className="linkbtn" onClick={() => dialog.current?.showModal()}>
         {t('header.whatThisAdds')} ▸
       </button>

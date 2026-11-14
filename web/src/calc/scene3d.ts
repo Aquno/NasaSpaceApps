@@ -152,3 +152,44 @@ export function bodyDirectionsAt(
     index,
   };
 }
+
+/**
+ * Cavity shading factor per pixel (0-1): heights compared with the mean of a square window of
+ * `radiusPx` around each pixel (integral image). Crater floors (below the local mean) get lower
+ * values, rims higher; `reliefScaleM` is the relief that maps to the full range. Visual only.
+ */
+export function cavityShade(
+  heights: ArrayLike<number>,
+  width: number,
+  height: number,
+  radiusPx: number,
+  reliefScaleM: number,
+): Float32Array {
+  const iw = width + 1;
+  const integral = new Float64Array(iw * (height + 1));
+  for (let r = 0; r < height; r++) {
+    let rowSum = 0;
+    for (let c = 0; c < width; c++) {
+      rowSum += heights[r * width + c] as number;
+      integral[(r + 1) * iw + c + 1] = (integral[r * iw + c + 1] as number) + rowSum;
+    }
+  }
+  const out = new Float32Array(width * height);
+  for (let r = 0; r < height; r++) {
+    const r0 = Math.max(0, r - radiusPx);
+    const r1 = Math.min(height, r + radiusPx + 1);
+    for (let c = 0; c < width; c++) {
+      const c0 = Math.max(0, c - radiusPx);
+      const c1 = Math.min(width, c + radiusPx + 1);
+      const sum =
+        (integral[r1 * iw + c1] as number) -
+        (integral[r0 * iw + c1] as number) -
+        (integral[r1 * iw + c0] as number) +
+        (integral[r0 * iw + c0] as number);
+      const mean = sum / ((r1 - r0) * (c1 - c0));
+      const relief = (heights[r * width + c] as number) - mean;
+      out[r * width + c] = Math.min(1, Math.max(0, 0.5 + relief / reliefScaleM));
+    }
+  }
+  return out;
+}

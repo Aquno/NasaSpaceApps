@@ -144,3 +144,4 @@ Legenda de status: `a fazer` · `em andamento` · `concluído` · `plano B` · `
 | 2026-11-14 | 5 | D35: direção visual revisada (limpa, calma, espaçosa; um foco por tela) registrada; aplicação pendente |
 | 2026-11-14 | 5 | D36: pouso na primeira hora do dia que atende às regras; relatórios refeitos (110 trocas com +21 d; cenário 04/03 → 25/03 mantido) |
 | 2026-11-14 | 5 | D38: idiomas inglês e português do Brasil, seletor salvo, motivos dos vereditos como chaves com parâmetros |
+| 2026-11-14 | 5 | D39: painel em camadas (3D grande + cinco cartões compactos, seções recolhíveis), 3D com regolito e crateras, rótulos sem sobreposição, globo de orientação (textura NASA SVS); D35 aplicada ao painel |

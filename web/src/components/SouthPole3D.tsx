@@ -1,7 +1,9 @@
 /**
  * What: 3D view of the lunar south pole (D28): LOLA height map as a lit mesh with the Moon's
- *   curvature, light from the real Sun direction at the chosen instant (shadows move with the
- *   date and the delay), Earth direction arrow, clickable sites, declared vertical exaggeration.
+ *   curvature, regolith tone with cavity shading (craters read at a glance), light from the real
+ *   Sun direction at the chosen instant (shadows move with the date and the delay), Earth
+ *   direction arrow, site markers with non-overlapping labels and leader lines, an orientation
+ *   globe in the corner, declared vertical exaggeration.
  *   VISUAL ONLY: numbers come from the horizon calculation, not from these shadows.
  * Roadmap stage: 5 — Interface (see docs/ROTEIRO.md).
  * Inputs: Terrain, sites, Sun/Earth directions in the pole frame (from calc/scene3d.ts).
@@ -11,19 +13,28 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import { exaggerateDirection, sceneHeightM, terrainPositions, type Vec3 } from '../calc/scene3d';
+import {
+  cavityShade,
+  exaggerateDirection,
+  sceneHeightM,
+  terrainPositions,
+  type Vec3,
+} from '../calc/scene3d';
 import { toMapXY, toPixel } from '../calc/mapGeometry';
 import type { SiteSummary, Terrain } from '../data/contract';
 import { useI18n } from '../i18n/I18nProvider';
 import { shortName } from '../ui/format';
+import { placeBoxes } from '../ui/labelLayout';
+import { MoonGlobe } from './MoonGlobe';
 
 /** Visual parameters (presentation only). */
 const DEFAULT_EXAGGERATION = 3;
 const MIN_EXAGGERATION = 1;
 const MAX_EXAGGERATION = 10;
-// Start view: from the Earth side (+y), 60° down, aimed at the middle of the sites (km).
-const CAMERA_TARGET: Vec3 = [-15, 55, 0];
-const CAMERA_START: Vec3 = [-15, 205, 315];
+// Start view: from the Earth side (+y), about 55° down, aimed between the sites so the terrain
+// fills the frame (km).
+const CAMERA_TARGET: Vec3 = [-20, 72, 0];
+const CAMERA_START: Vec3 = [-20, 250, 205];
 const LIGHT_DISTANCE_KM = 400;
 const SHADOW_HALF_EXTENT_KM = 165;
 const SHADOW_MAP_SIZE = 2048;
@@ -33,11 +44,19 @@ const KEY_ROTATE_RAD = Math.PI / 36;
 // frame from slightly below (high terrain can still see it).
 const AMBIENT_INTENSITY = 0.22;
 const SUN_INTENSITY = 4.5;
+// Regolith tone (warm grey) modulated by cavity shading: window ~7 km, ±900 m of local relief.
+const REGOLITH_RGB: Vec3 = [0.62, 0.58, 0.53];
+const CAVITY_RADIUS_PX = 12;
+const CAVITY_RELIEF_M = 1800;
+const CAVITY_CONTRAST = 0.9;
+const LABEL_GAP_PX = 14;
+const GLOBE_PX = 116;
 
 interface Props {
   terrain: Terrain;
   sites: SiteSummary[];
   selectedId: string | null;
+  bestId: string | null;
   onSelect: (id: string) => void;
   sun: Vec3;
   earth: Vec3;
@@ -63,6 +82,7 @@ export function SouthPole3D(props: Props) {
     terrain,
     sites,
     selectedId,
+    bestId,
     onSelect,
     sun,
     earth,
@@ -73,6 +93,9 @@ export function SouthPole3D(props: Props) {
   const host = useRef<HTMLDivElement>(null);
   const stage = useRef<Stage | null>(null);
   const labelRefs = useRef(new Map<string, HTMLButtonElement>());
+  const dotRefs = useRef(new Map<string, HTMLSpanElement>());
+  const lineRefs = useRef(new Map<string, SVGLineElement>());
+  const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [exaggeration, setExaggeration] = useState(DEFAULT_EXAGGERATION);
   const exagRef = useRef(exaggeration);
 
@@ -89,6 +112,12 @@ export function SouthPole3D(props: Props) {
     [sites, terrain],
   );
 
+  /** Label shown in full (the demo point shows only its marker until selected or hovered). */
+  const expanded = (id: string) =>
+    sites.find((x) => x.id === id)?.purpose !== 'sensitivity_demo' ||
+    id === selectedId ||
+    id === hoveredId;
+
   const render = () => {
     const st = stage.current;
     const el = host.current;
@@ -96,13 +125,53 @@ export function SouthPole3D(props: Props) {
     st.renderer.render(st.scene, st.camera);
     const w = el.clientWidth;
     const h = el.clientHeight;
+    const anchors = new Map<string, { x: number; y: number }>();
     for (const a of siteAnchors) {
-      const label = labelRefs.current.get(a.id);
-      if (!label) continue;
       const z = sceneHeightM(a.heightM, a.rho, terrain.sphereRadiusM, exagRef.current, true) / 1000;
       const p = new THREE.Vector3(a.x / 1000, a.y / 1000, z).project(st.camera);
-      label.style.transform = `translate(${((p.x + 1) / 2) * w}px, ${((1 - p.y) / 2) * h}px)`;
-      label.style.visibility = p.z < 1 ? 'visible' : 'hidden';
+      const visible = p.z < 1 && Math.abs(p.x) <= 1 && Math.abs(p.y) <= 1;
+      const pt = { x: ((p.x + 1) / 2) * w, y: ((1 - p.y) / 2) * h };
+      const dot = dotRefs.current.get(a.id);
+      if (dot) {
+        dot.style.transform = `translate(${pt.x}px, ${pt.y}px)`;
+        dot.style.visibility = visible ? 'visible' : 'hidden';
+      }
+      if (visible) anchors.set(a.id, pt);
+    }
+    // Priority: selected, best compromise, then the others top to bottom.
+    const rank = (id: string) => (id === selectedId ? 0 : id === bestId ? 1 : 2);
+    const boxes = [...anchors.entries()]
+      .filter(([id]) => expanded(id))
+      .sort(([a, pa], [b, pb]) => rank(a) - rank(b) || pa.y - pb.y)
+      .map(([id, pt]) => {
+        const label = labelRefs.current.get(id);
+        return { id, x: pt.x, y: pt.y, w: label?.offsetWidth ?? 0, h: label?.offsetHeight ?? 0 };
+      });
+    const placed = new Map(
+      placeBoxes(boxes, w, h, LABEL_GAP_PX, [...anchors.values()]).map((b) => [b.id, b]),
+    );
+    for (const a of siteAnchors) {
+      const label = labelRefs.current.get(a.id);
+      const line = lineRefs.current.get(a.id);
+      const pt = anchors.get(a.id);
+      const box = placed.get(a.id);
+      const size = boxes.find((x) => x.id === a.id);
+      if (label) {
+        if (box) label.style.transform = `translate(${box.left}px, ${box.top}px)`;
+        else if (pt) label.style.transform = `translate(${pt.x}px, ${pt.y}px)`;
+        label.style.visibility = pt ? 'visible' : 'hidden';
+      }
+      if (!line) continue;
+      if (!pt || !box || !size) {
+        line.style.visibility = 'hidden';
+        continue;
+      }
+      // Leader line from the marker to the nearest point of the label box.
+      line.setAttribute('x1', String(pt.x));
+      line.setAttribute('y1', String(pt.y));
+      line.setAttribute('x2', String(Math.min(Math.max(pt.x, box.left), box.left + size.w)));
+      line.setAttribute('y2', String(Math.min(Math.max(pt.y, box.top), box.top + size.h)));
+      line.style.visibility = 'visible';
     }
   };
   const renderRef = useRef(render);
@@ -125,7 +194,7 @@ export function SouthPole3D(props: Props) {
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-    renderer.setClearColor(0x0b0f14);
+    renderer.setClearColor(0x0d1117);
     el.prepend(renderer.domElement);
 
     const scene = new THREE.Scene();
@@ -153,9 +222,16 @@ export function SouthPole3D(props: Props) {
       new THREE.BufferAttribute(terrainPositions(terrain, exagRef.current, true), 3),
     );
     geometry.computeVertexNormals();
+    const shade = cavityShade(terrain.heights, w, h, CAVITY_RADIUS_PX, CAVITY_RELIEF_M);
+    const colors = new Float32Array(w * h * 3);
+    for (let k = 0; k < w * h; k++) {
+      const f = 1 + CAVITY_CONTRAST * ((shade[k] as number) - 0.5);
+      for (let j = 0; j < 3; j++) colors[k * 3 + j] = Math.min(1, (REGOLITH_RGB[j] as number) * f);
+    }
+    geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
     const mesh = new THREE.Mesh(
       geometry,
-      new THREE.MeshStandardMaterial({ color: 0xa7adb5, roughness: 1, metalness: 0 }),
+      new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 1, metalness: 0 }),
     );
     mesh.castShadow = true;
     mesh.receiveShadow = true;
@@ -258,7 +334,7 @@ export function SouthPole3D(props: Props) {
 
   useEffect(() => {
     renderRef.current();
-  }, [selectedId]);
+  }, [selectedId, bestId, hoveredId]);
 
   const rotate = (dAz: number, dTilt: number, zoom = 1) => {
     const st = stage.current;
@@ -310,25 +386,60 @@ export function SouthPole3D(props: Props) {
           }
         }}
       >
-        {sites.map((s) => (
-          <button
-            key={s.id}
-            type="button"
-            ref={(b) => {
-              if (b) labelRefs.current.set(s.id, b);
-              else labelRefs.current.delete(s.id);
-            }}
-            className={`scene3d-label${s.id === selectedId ? ' selected' : ''}${s.purpose === 'sensitivity_demo' ? ' demo' : ''}`}
-            onClick={() => onSelect(s.id)}
-            aria-pressed={s.id === selectedId}
-          >
-            {s.purpose === 'sensitivity_demo'
-              ? s.id === selectedId
-                ? `○ ${shortName(s.name)}`
-                : '○'
-              : `● ${shortName(s.name)}`}
-          </button>
-        ))}
+        <svg className="scene3d-lines" aria-hidden="true">
+          {sites.map((s) => (
+            <line
+              key={s.id}
+              ref={(l) => {
+                if (l) lineRefs.current.set(s.id, l);
+                else lineRefs.current.delete(s.id);
+              }}
+            />
+          ))}
+        </svg>
+        {sites.map((s) => {
+          const cls = [
+            s.purpose === 'sensitivity_demo' ? 'demo' : '',
+            s.id === selectedId ? 'selected' : '',
+            s.id === bestId ? 'best' : '',
+          ].join(' ');
+          const hover = {
+            onMouseEnter: () => setHoveredId(s.id),
+            onMouseLeave: () => setHoveredId(null),
+          };
+          return (
+            <span key={s.id}>
+              <span
+                className={`scene3d-dot ${cls}`}
+                ref={(d) => {
+                  if (d) dotRefs.current.set(s.id, d);
+                  else dotRefs.current.delete(s.id);
+                }}
+                onClick={() => onSelect(s.id)}
+                aria-hidden="true"
+                {...hover}
+              />
+              <button
+                type="button"
+                ref={(b) => {
+                  if (b) labelRefs.current.set(s.id, b);
+                  else labelRefs.current.delete(s.id);
+                }}
+                className={`scene3d-label ${cls}${expanded(s.id) ? '' : ' collapsed'}`}
+                onClick={() => onSelect(s.id)}
+                onFocus={() => setHoveredId(s.id)}
+                onBlur={() => setHoveredId(null)}
+                aria-pressed={s.id === selectedId}
+                {...hover}
+              >
+                {shortName(s.name)}
+              </button>
+            </span>
+          );
+        })}
+        <div className="scene3d-globe">
+          <MoonGlobe size={GLOBE_PX} />
+        </div>
       </div>
       <div className="scene3d-bar">
         <label>

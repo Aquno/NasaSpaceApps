@@ -211,7 +211,7 @@ Formato: data, decisão, motivo, consequências. Decisões novas vão no fim. N�
   - Movimento suave e discreto.
   - Abertura: título, uma frase, o globo da Lua e um botão; abaixo, três blocos curtos do que a ferramenta faz e poucos números de destaque reais, vindos dos dados.
 - **Mantém:** paleta funcional (Sol âmbar, Terra azul-céu, ciência lilás), contraste AA, vereditos com ícone e texto (nunca só cor), tipografia IBM Plex.
-- **Status:** registrada; aplicação pendente (junto com a reorganização do painel e a melhoria do 3D).
+- **Status:** aplicada no painel de missão junto com a D39 (2026-11-14); a abertura é refeita na D40.
 
 ### D36 — 2026-11-14 — Hora do pouso: a data é o dia do pouso
 - **Problema:** a data virava pouso às 00:00 UTC, e locais eram reprovados ("Dark at landing") por uma hora arbitrária.
@@ -229,6 +229,14 @@ Formato: data, decisão, motivo, consequências. Decisões novas vão no fim. N�
 - **Vereditos:** o módulo de cálculo devolve o motivo como **chave + parâmetros** (`{ key: 'reason.survivalDarkness', params: { h: 30, limit: 24 } }`), nunca frase pronta; a interface traduz. Os relatórios em linha de comando usam o dicionário em inglês.
 - **Não traduzidos:** nomes próprios dos locais e das fontes (JPL Horizons, LRO LOLA, PGDA, Lunar Surface Data Book).
 - **Regra daqui em diante:** nenhum texto de interface fixo no código; todo texto novo entra nos dois dicionários. As mensagens técnicas do validador de dados (arquivo e campo) ficam em inglês, dentro de um título traduzido.
+
+### D39 — 2026-11-14 — Painel em camadas e 3D mais legível
+
+- **Contexto:** o painel mostrava tudo ao mesmo tempo (mapa, painel lateral de fatos, dispersão, censo, cinco cartões completos); em 1920 × 1080 era preciso rolar e o 3D ficava pequeno.
+- **Decisão:** primeira tela sem rolagem: controles no topo, 3D à esquerda (cerca de 60% da largura), cinco cartões compactos empilhados à direita (posição, nome, ícone do veredito, duas notas, motivo em uma linha). O cartão selecionado (ou o melhor compromisso, se nenhum foi escolhido) abre a segunda camada: hora do pouso, próxima janela viável, linha do link direto, porcentagens, inclinação, "How the scores are built" e botão de detalhes. O melhor compromisso se destaca por tamanho e posição. Censo (números grandes com legenda), dispersão, faixas de 2027 e regras da missão ficam em seções recolhíveis abaixo, fechadas por padrão. Saem o painel lateral de fatos (vai para o detalhe do local) e o botão "Start" (o nome do produto no cabeçalho leva à abertura).
+- **3D:** tom de regolito com sombreamento de cavidade (relevo comparado com a média de uma janela de cerca de 7 km; crateras mais escuras, bordas mais claras); enquadramento inicial que mostra os cinco locais e preenche a área; marcadores distintos (melhor compromisso maior, selecionado em âmbar, ponto de demonstração vazado); rótulos sem sobreposição e dentro da área, com linhas de chamada, que também evitam cobrir outros marcadores; o rótulo do ponto de demonstração só aparece ao passar o mouse, ao focar ou ao selecionar.
+- **Globo de orientação:** Lua inteira com a calota do polo sul (cerca de 85° S ao polo) destacada e "You are here", no canto do 3D; o mesmo globo maior na abertura. Textura: NASA SVS CGI Moon Kit, versão de baixa resolução (1024 × 512); se falhar, esfera cinza. Feito em cerca de 15 minutos (limite de 40).
+- **Status:** aplicada (2026-11-14). Tudo isso é apresentação; nenhum número vem da imagem.
 
 ### Pendências abertas após a etapa 2
 - Nenhuma pendência de dados da etapa 2.

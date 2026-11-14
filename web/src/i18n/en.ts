@@ -17,7 +17,6 @@ export const en = {
   'header.title': 'Lunar Site Navigator',
   'header.context': 'Lunar south pole · real NASA data',
   'header.sample': 'SAMPLE DATA',
-  'header.start': 'Start',
   'header.whatThisAdds': 'What this adds',
   'header.language': 'Language',
   'header.close': 'Close',
@@ -69,7 +68,7 @@ export const en = {
 
   // footer
   'footer.sources':
-    'Sources: JPL Horizons (Sun and Earth positions); LRO LOLA topography, illumination and permanent-shadow products, NASA Goddard PGDA (products 69, 78, 90); NASA Lunar Surface Data Book (site regions).',
+    'Sources: JPL Horizons (Sun and Earth positions); LRO LOLA topography, illumination and permanent-shadow products, NASA Goddard PGDA (products 69, 78, 90); NASA Lunar Surface Data Book (site regions); Moon globe texture: NASA Scientific Visualization Studio, CGI Moon Kit (LRO LROC color).',
   'footer.points': 'Regional reference points, not NASA-designated landing sites.',
   'footer.independent': 'Independent hackathon project, not a NASA product.',
   'footer.event': 'NASA Space Apps Challenge 2026.',
@@ -95,8 +94,7 @@ export const en = {
   'earliest.value': '{site}, landing {date:date} (viable for {n:int} landing days in a row)',
   'earliest.none': 'none before the end of the data.',
   'census.title': 'Landing days that work in {year} ({days:int}-day mission, current rules)',
-  'census.site': '{site} {n:int}',
-  'census.none': 'no site: {n:int} of {total:int}',
+  'census.noneShort': 'days with no site (of {total:int})',
   'aria.best': 'Best compromise: {site}',
   'aria.noBest': 'No site qualifies with these rules.',
   'cards.aria': 'Sites ranked for this mission',
