@@ -13,16 +13,18 @@ Cada fonte com o que fornece, endereço, formato, resolução, limites e pendên
 
 ## Locais
 
-Pontos de **referência regionais**, não locais de pouso designados pela NASA. Latitude/longitude em graus, MOON_ME (DE421), longitude leste positiva em [-180, 180). Altitude 0 km sobre a esfera de 1737,4 km (ver limites do Horizons). Arquivo: `pipeline/sites.json`.
+Pontos de **referência regionais**, não locais de pouso designados pela NASA. Desde a D30, os cinco locais do desafio usam a **mesma regra**: dentro do recorte da NASA de cada região (PGDA produto 78), o pixel de maior iluminação solar média oficial (PGDA produto 69, 60 m), desempate pelo mais próximo do centro publicado (M2M-30044, Tab. A2.1-1). Latitude/longitude em graus, MOON_ME (DE421), longitude leste em [-180, 180). Altitude do observador: terreno do DEM de 20 m + 2 m (etapa 2). Arquivo: `pipeline/sites.json`.
 
-| id | Nome | Lat (°) | Lon (°) | Tipo de fonte | Fonte |
-|----|------|---------|---------|---------------|-------|
-| `shackleton-rim` | Shackleton rim | -89.780445 | -156.168582 | **ponto derivado** na crista, dentro da região Site04 (D20) | regra em D20 sobre [1] Tab. A2.1-1 e PGDA 78/90 |
-| `connecting-ridge` | Connecting ridge | -89.468 | -137.4 (= 222.6° E) | ponto publicado (CR1/C1) | [2] p. 26 (figura) e p. 32 (seção 7.3.3) |
-| `de-gerlache-rim` | de Gerlache rim | -88.6834 | -67.9321 | ponto publicado (centro da região Site11, "de Gerlache Rim 1") | [1] Tab. A2.1-1, p. 75 |
-| `malapert-massif` | Malapert massif | -85.9948 | -0.23578 | ponto publicado (centro da região Site23) | [1] Tab. A2.1-1, p. 75 |
-| `haworth` | Haworth | -86.7639 | -22.777 | ponto publicado (centro da região Haworth) | [1] Tab. A2.1-1, p. 75 |
-| `shackleton-inner-wall` | Shackleton inner wall (Site04 center) | -89.7668 | -171.87 | ponto publicado (centro da região Site04); **demonstração de sensibilidade** | [1] Tab. A2.1-1, p. 75 |
+| Local | Lat | Lon | Tipo | Altura (m) | Inclinação | Dist. ao centro publicado | Dist. à PSR (área) | Iluminação NASA | Terra NASA |
+|---|---|---|---|---|---|---|---|---|---|
+| Shackleton rim (Site04) | −89,686429 | −162,937143 | derivado (D30) | 1729,3 | 1,6° | 2,75 km | 2,657 km (1,96 km²) | 87,06% | 53,75% |
+| Connecting ridge (Site01) | −89,474851 | −137,443138 | derivado (D30) | 1947,5 | 3,4° | 0,35 km | 5,827 km (1,96 km²) | 88,44% | 58,08% |
+| de Gerlache rim (Site11) | −88,664627 | −68,395645 | derivado (D30) | 1815,2 | 1,6° | 0,66 km | 6,873 km (3,49 km²) | 82,69% | 61,42% |
+| Malapert massif (Site23) | −86,001142 | 2,055017 | derivado (D30) | 5156,7 | 7,4° | 4,86 km | 10,202 km (1,37 km²) | 81,89% | 58,70% |
+| Haworth | −86,368514 | −23,276449 | derivado (D30) | 2836,2 | 3,8° | 12,04 km | 9,402 km (3,63 km²) | 70,49% | 60,10% |
+| Shackleton inner wall (demonstração) | −89,7668 | −171,87 | publicado (centro do Site04) | 770,9 | 31,4° | 0 | 0,780 km (233,4 km²) | 10,96% | 11,07% |
+
+Centros publicados usados (M2M-30044, Tab. A2.1-1, p. 75): Site04 −89,7668 / −171,87; Site01 −89,4632 / −137,49; Site11 −88,6834 / −67,9321; Site23 −85,9948 / −0,23578; Haworth −86,7639 / −22,777. Histórico: D12 (centros e CR1) e D20 (crista do Shackleton) foram substituídos pela D30.
 
 Fontes:
 1. NASA **M2M-30044 Moon to Mars Lunar Surface Data Book**, Baseline, 2025-03-18 (NASA/TP-20250002845), Apêndice A2.1, "Table A2.1-1 Lunar South Pole Features", página 75 de 93. https://ntrs.nasa.gov/api/citations/20250002845/downloads/M2M-30044%20Lunar%20Surface%20Data%20Book%20Baseline_Final.pdf — o texto da tabela diz: "Coordinates have been generated from the DEM files on the PGDA website (South Pole LOLA DEM), so the center points of the original polygons are accurate to 5 to 10 meters." A mesma tabela está na ACD-50044 Rev A (2023), p. 57.

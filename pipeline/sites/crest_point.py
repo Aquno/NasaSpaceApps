@@ -2,7 +2,7 @@
 What: Derive a crest point near a published region centre: the nearest local height maximum
     that is higher than the centre, inside the region. Also the local terrain slope at a point.
     Pure functions on a height grid.
-Roadmap stage: 2 — Horizon (site point review, docs/DECISOES.md D20) (see docs/ROTEIRO.md)
+Roadmap stage: 2 — Horizon (site point review, D20; superseded by D30, kept to measure slopes)
 Inputs: north-up height grid (metres) with its map corner and pixel size (polar stereographic
     metres), the published centre (map metres), the region bounds, the local-maximum radius.
 Outputs: CrestPoint (map x/y in metres, height in metres, distance to the centre in metres);

@@ -136,3 +136,4 @@ Legenda de status: `a fazer` · `em andamento` · `concluído` · `plano B` · `
 | 2026-11-14 | 4 | `data/app` gerado e validado (contrato v2, D23): seis arquivos de local de 340–350 KB e `sites.json` de 3,6 KB |
 | 2026-11-14 | 5 | Passos 1–2: base do `web/`, sync-data, tipos/validação do contrato v2, módulo de cálculo com testes (D24, D25); decisões do time D26–D28 (usuário único, primeira impressão, vista 3D) |
 | 2026-11-14 | 5 | Regras de viabilidade novas (D25 revisada), relatórios de censo e de atraso; terreno exportado (contrato v3, D29); painel de missão funcionando com os dados reais |
+| 2026-11-14 | 5 | D30: mesma regra de ponto para as cinco regiões (pixel mais iluminado do produto 69 dentro do recorte do produto 78); pipeline refeito (efemérides, horizonte, PSR, referência, exportação) |

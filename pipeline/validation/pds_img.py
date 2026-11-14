@@ -154,3 +154,35 @@ def value_at(image: PdsImage, url: str, x_m: float, y_m: float, cache_dir: Path,
     rows = [read_line(image, url, ln, cache_dir) for ln in range(line - window, line + window + 1)]
     block = np.array([r[sample - window : sample + window + 1] for r in rows])
     return scale_dn(image, block)
+
+
+def read_lines(image: PdsImage, url: str, first: int, count: int, cache_dir: Path) -> np.ndarray:
+    """Raw DN values of `count` consecutive image lines from `first`, one HTTP range request.
+
+    Returns:
+        (count, lines) int16 array. Cached on disk.
+    """
+    first = max(0, first)
+    count = min(count, image.lines - first)
+    path = cache_dir / f"{image.product_id}_lines{first:05d}_{count:05d}.bin"
+    size = count * image.record_bytes
+    if not path.exists():
+        start = first * image.record_bytes
+        response = requests.get(
+            url, headers={"Range": f"bytes={start}-{start + size - 1}"}, timeout=HTTP_TIMEOUT_S
+        )
+        response.raise_for_status()
+        if response.status_code != 206 or len(response.content) != size:
+            raise PdsReadError(f"{url}: range read of lines {first}+{count} failed")
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(response.content)
+    return np.frombuffer(path.read_bytes(), dtype="<i2").reshape(count, image.lines)
+
+
+def pixel_centre_xy(image: PdsImage, line: int, sample: int) -> tuple[float, float]:
+    """Map x/y (m) of the centre of 0-based (line, sample) (DSMAP_POLAR.CAT, see module doc)."""
+    ns = SOUTH if image.center_latitude < 0 else 1
+    half = image.lines / 2.0
+    x = (sample + 0.5 - half) * image.map_scale_m
+    y = (line + 0.5 - half) * image.map_scale_m * ns
+    return x, y

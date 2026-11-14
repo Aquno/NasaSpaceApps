@@ -150,6 +150,26 @@ Formato: data, decisão, motivo, consequências. Decisões novas vão no fim. N�
 - **Uso:** só visualização (mapa 2D sombreado provisório no painel; vista 3D, D28). Nenhum número exibido vem dele.
 - **Tamanho:** 512 KB.
 
+### D30 — 2026-11-14 — Comparação justa: mesma regra de ponto para as cinco regiões (altera D12 e D20)
+- **Problema:** só o Shackleton rim tinha ponto escolhido (na crista, D20); os demais eram centros de região ou o CR1, o que enviesava o ranking.
+- **Decisão:** em **cada uma das cinco regiões**, dentro do recorte da NASA (produto 78: Site04, Site01, Site11, Site23, Haworth), o ponto de referência é o **pixel de maior iluminação solar média** do mapa oficial (produto 69, `AVGVISIB_85S_060M_201608`, 60 m — a maior resolução que cobre todas as regiões); desempate pelo mais próximo do **centro publicado** (M2M-30044, Tab. A2.1-1, p. 75 — inclusive o Site01 para o Connecting ridge, no lugar do CR1). Tipo de fonte: `derived_point` para todos. `pipeline/sites.json` guarda o centro publicado, a distância até ele e o valor oficial de iluminação no ponto.
+- **Regra reproduzível:** `python -m pipeline.sites.derive_illumination_points --write` (`pipeline/sites/illumination_point.py`, testada). Nenhum empate ocorreu (1 pixel com o máximo em cada região).
+- **Demonstração:** a parede interna do Shackleton (centro publicado do Site04) continua como sexto local, `purpose = sensitivity_demo`.
+- **Substitui:** o ponto na crista da D20 (a regra da crista fica no código só para medir inclinações) e as coordenadas da D12 para os cinco locais.
+- **Inclinações nos pontos novos** (DEM de 20 m): todas baixas (1,6° a 7,4°); nenhuma correção necessária.
+- **Resultado:**
+
+| Local | Lat | Lon | Tipo | Altura (m) | Inclinação | Dist. ao centro publicado | Dist. à PSR (área) | Iluminação NASA | Terra NASA |
+|---|---|---|---|---|---|---|---|---|---|
+| Shackleton rim (Site04) | −89,686429 | −162,937143 | derivado (D30) | 1729,3 | 1,6° | 2,75 km | 2,657 km (1,96 km²) | 87,06% | 53,75% |
+| Connecting ridge (Site01) | −89,474851 | −137,443138 | derivado (D30) | 1947,5 | 3,4° | 0,35 km | 5,827 km (1,96 km²) | 88,44% | 58,08% |
+| de Gerlache rim (Site11) | −88,664627 | −68,395645 | derivado (D30) | 1815,2 | 1,6° | 0,66 km | 6,873 km (3,49 km²) | 82,69% | 61,42% |
+| Malapert massif (Site23) | −86,001142 | 2,055017 | derivado (D30) | 5156,7 | 7,4° | 4,86 km | 10,202 km (1,37 km²) | 81,89% | 58,70% |
+| Haworth | −86,368514 | −23,276449 | derivado (D30) | 2836,2 | 3,8° | 12,04 km | 9,402 km (3,63 km²) | 70,49% | 60,10% |
+| Shackleton inner wall (demonstração) | −89,7668 | −171,87 | publicado (centro do Site04) | 770,9 | 31,4° | 0 | 0,780 km (233,4 km²) | 10,96% | 11,07% |
+
+- **Observação:** como o ponto é o pixel mais iluminado de 60 m, os vizinhos 3 × 3 chegam a ter só 20–52% (ver `data/validation/REPORT.md`): a iluminação varia muito em poucas dezenas de metros.
+
 ### Pendências abertas após a etapa 2
 - Nenhuma pendência de dados da etapa 2.
 

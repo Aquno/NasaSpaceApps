@@ -10,7 +10,8 @@ Lista de locais em `pipeline/sites.json` e código para lê-la e conferi-la.
 | `geotiff_header.py` | Lê o georreferenciamento de um GeoTIFF só pelos primeiros 64 KB (requisição HTTP com `Range`). |
 | `verify_site_points.py` | Compara cada coordenada com o centro do recorte do PGDA produto 78 correspondente. |
 | `crest_point.py` | Regra pura do ponto na crista (D20) e inclinação local. |
-| `derive_crest_point.py` | Aplica a regra ao Site04 e imprime a inclinação de cada local (`python -m pipeline.sites.derive_crest_point`). |
+| `derive_crest_point.py` | Regra da crista (D20, substituída pela D30) e inclinação de cada local (`python -m pipeline.sites.derive_crest_point`). |
+| `illumination_point.py`, `derive_illumination_points.py` | Regra D30: pixel de maior iluminação média oficial em cada região (`python -m pipeline.sites.derive_illumination_points --write`). |
 
 ```bash
 python -m pipeline.sites.verify_site_points

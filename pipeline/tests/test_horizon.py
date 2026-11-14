@@ -218,3 +218,18 @@ def test_slope_of_plane():
         return 0.5 * np.asarray(x)  # rises 0.5 m per metre east
 
     assert slope_deg(plane, 0.0, 0.0, 20.0) == pytest.approx(math.degrees(math.atan(0.5)))
+
+
+# ---- D30: brightest pixel in a region ------------------------------------------------------
+
+from pipeline.sites.illumination_point import brightest_pixel  # noqa: E402
+
+
+def test_brightest_pixel_inside_region_with_tie_break_by_centre():
+    values = np.array([[0.9, 0.5, 0.95], [0.95, 0.2, 0.1], [0.99, 0.3, 0.3]])
+    xs, ys = np.meshgrid([0.0, 10.0, 20.0], [20.0, 10.0, 0.0])
+    # 0.99 at (row 2, col 0) is outside the region (y < 5): the max inside is 0.95, tied at
+    # (0, 2) and (1, 0); the one nearest the centre (20, 20) is (0, 2).
+    p = brightest_pixel(values, xs, ys, (0.0, 20.0, 5.0, 20.0), (20.0, 20.0))
+    assert (p.row, p.col, p.value, p.tied_pixels) == (0, 2, 0.95, 2)
+    assert p.distance_to_centre_m == pytest.approx(0.0)

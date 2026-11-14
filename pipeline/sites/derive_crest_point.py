@@ -1,7 +1,7 @@
 """
 What: Derive the "Shackleton rim" crest point from the published Site04 centre (rule in
     pipeline/sites/crest_point.py) and print the local terrain slope at every site.
-Roadmap stage: 2 — Horizon (site point review, docs/DECISOES.md D20) (see docs/ROTEIRO.md)
+Roadmap stage: 2 — Horizon (site point review, D20; superseded by D30, kept to measure slopes)
 Inputs: pipeline/sites.json; LOLA 20 m DEM (PGDA product 90, read by HTTP range, cached);
     PGDA product 78 Site04 GeoTIFF header (region bounds).
 Outputs: printed derived point (lat/lon degrees MOON_ME, height m, distance m) and slopes.
