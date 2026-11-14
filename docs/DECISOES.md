@@ -143,7 +143,14 @@ Formato: data, decisão, motivo, consequências. Decisões novas vão no fim. N�
 - **Decisão:** novo passo da etapa 5, depois do painel de missão e antes do detalhe do local: modelo 3D do terreno a partir do relevo do LOLA já em cache (mapa de alturas pequeno exportado pelo pipeline; formato a aprovar e a registrar no contrato), seis locais clicáveis, luz na direção real do Sol no instante escolhido (sombras mudam com data e atraso), direção da Terra indicada, exagero vertical configurável e declarado, aviso de que o modelo é visualização e os números vêm do cálculo com o contorno do horizonte.
 - **Tecnologia:** three.js (motivo a registrar no `web/README.md`).
 - **Plano B:** se em 90 minutos de trabalho não estiver estável, mapa 2D sombreado do mesmo relevo.
-- **Status:** enquadramento e posição na tela aguardando aprovação.
+- **Status (2026-11-14): implementado** no painel, no lugar do mapa 2D (que continua como plano B automático se o WebGL falhar, e por um botão "Show 2D map").
+  - Malha 512 × 512 do `terrain.bin` (v3, D29), ±150 km, ≈ 586 m/pixel, com **curvatura** (cada vértice rebaixado em R(1 − cos(s/R)), s = arco até o polo, sujeito ao exagero).
+  - **Exagero vertical** de 1× a 10× (padrão 3×), declarado na tela; a **tangente da elevação da luz é multiplicada pelo mesmo fator**, de modo que a sombra cai no mesmo lugar em 1× e 3× (teste automático em `web/src/calc/scene3d.test.ts`).
+  - **Luz:** direção real do Sol vista do local selecionado (ou do melhor compromisso) no instante do pouso com atraso, convertida para o referencial do polo; seta da Terra. Sombras com mapa de sombras de 2048 px (≈ 160 m por texel).
+  - **Enquadramento:** do lado da Terra (+y), câmera a ~60°, mirando o meio da faixa dos locais; arrastar gira, roda dá zoom, teclado (setas, +/−, R) e "Reset view".
+  - **Aviso na tela:** "visual only" — os números vêm do cálculo com o contorno do horizonte, não das sombras.
+  - **Limite:** o painel é largo e baixo (para os cinco cartões caberem sem rolagem em 1920 × 1080), então o terreno visto do lado da Terra ocupa cerca de um terço da largura.
+  - three.js é carregado sob demanda (chunk separado de ~140 kB gzip).
 
 ### D29 — 2026-11-14 — Contrato v3: mapa de alturas para as vistas de mapa
 - **Decisão:** o pipeline exporta `data/app/terrain.bin` (512 × 512, int16 little-endian, metros sobre a esfera de 1737,4 km, linha 0 ao norte) e `terrain.json` (descritor), cobrindo ±150 km em torno do polo (≈ 586 m/pixel), a partir da visão de 320 m do LDEM (`python -m pipeline.export.terrain`). Todos os arquivos passam a `contract_version = 3`.

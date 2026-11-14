@@ -3,7 +3,8 @@
  *   ranked cards, 2027 strips and mission rules. Composes components; no calculation.
  * Roadmap stage: 5 — Interface (see docs/ROTEIRO.md).
  */
-import { useState } from 'react';
+import { lazy, Suspense, useMemo, useState } from 'react';
+import { bodyDirectionsAt } from '../calc/scene3d';
 import { AnnualStrips } from '../components/AnnualStrips';
 import { Footer } from '../components/Footer';
 import { Header } from '../components/Header';
@@ -13,6 +14,7 @@ import { ScatterPlot } from '../components/ScatterPlot';
 import { ShadedMap } from '../components/ShadedMap';
 import { SiteCard } from '../components/SiteCard';
 import { SiteFacts } from '../components/SiteFacts';
+const SouthPole3D = lazy(() => import('../components/SouthPole3D'));
 import type { SiteData, SiteSummary, Terrain } from '../data/contract';
 import { useEvaluations, usePrecomputed, type MissionInputs } from '../state/useMission';
 import { fmtDate } from '../ui/format';
@@ -31,6 +33,14 @@ export function Dashboard({ sites, data, terrain, inputs, onInputs, onOpenSite }
   const pre = usePrecomputed(sites, data);
   const d = useEvaluations(pre, data, inputs);
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [view3d, setView3d] = useState(true);
+  const lightSite =
+    sites.find((s) => s.id === (selectedId ?? d.now.bestId)) ?? d.ranked[0] ?? sites[0];
+  const lightData = lightSite ? data.get(lightSite.id) : undefined;
+  const lightDirs = useMemo(
+    () => (lightSite && lightData ? bodyDirectionsAt(lightSite, lightData, d.landingMs) : null),
+    [lightSite, lightData, d.landingMs],
+  );
   const flipRef = useFlip<HTMLLIElement>(d.now.order.join('|'));
   const anyMeta = data.values().next().value?.meta;
   const sample = [...data.values()].some((x) => x.meta.sample);
@@ -62,21 +72,45 @@ export function Dashboard({ sites, data, terrain, inputs, onInputs, onOpenSite }
 
       <div className="top-row">
         <section className="panel" aria-label="South pole map">
-          <h2>South pole · shaded relief (LOLA, visual only)</h2>
-          <div className="map-row fill">
-            <ShadedMap
-              terrain={terrain}
-              sites={sites}
-              selectedId={selectedId}
-              onSelect={setSelectedId}
-            />
+          <h2>
+            South pole · {view3d ? '3D, Sun at the landing instant' : 'shaded relief'} (LOLA{' '}
+            {terrain.pixelM.toFixed(0)} m/pixel, visual only)
+          </h2>
+          <div className={`map-row fill${view3d ? ' wide' : ''}`}>
+            {view3d && lightSite && lightDirs ? (
+              <Suspense fallback={<p className="note">Loading the 3D view…</p>}>
+                <SouthPole3D
+                  terrain={terrain}
+                  sites={sites}
+                  selectedId={selectedId}
+                  onSelect={setSelectedId}
+                  sun={lightDirs.sun}
+                  earth={lightDirs.earth}
+                  sunElDeg={lightDirs.sunElDeg}
+                  lightSiteName={lightSite.name}
+                  onUnavailable={() => setView3d(false)}
+                />
+              </Suspense>
+            ) : (
+              <ShadedMap
+                terrain={terrain}
+                sites={sites}
+                selectedId={selectedId}
+                onSelect={setSelectedId}
+              />
+            )}
             <div className="map-side">
               <SiteFacts site={sites.find((s) => s.id === (selectedId ?? d.now.bestId))} />
               <p className="note">
-                ○ hollow marker: Shackleton inner wall, kept to show how much the exact position
-                matters. Relief {terrain.pixelM.toFixed(0)} m/pixel, static light; numbers come from
-                the horizon calculation, not from this shading.
+                ○ Shackleton inner wall, kept to show how much the exact position matters.
+                {view3d
+                  ? ' Drag to rotate, scroll to zoom (or arrow keys, +/−, R). Light comes from the Sun as seen from the selected site at the landing instant.'
+                  : ' Static light.'}{' '}
+                Numbers come from the horizon calculation, not from this picture.
               </p>
+              <button type="button" className="linkbtn" onClick={() => setView3d((v) => !v)}>
+                {view3d ? 'Show 2D map' : 'Show 3D view'}
+              </button>
             </div>
           </div>
         </section>

@@ -36,6 +36,9 @@ npm run report:delay   # cenários em que um atraso muda o melhor compromisso ou
 | `src/calc/nextViable.ts` | próxima data de pouso viável e janela; local viável mais cedo (D31) |
 | `src/config/scoring.ts` | pesos e limites (escolhas do time, não da NASA) |
 | `src/calc/annual.ts`, `src/calc/mapGeometry.ts` | frações diárias (faixas de 2027), posição no mapa, relevo sombreado |
+| `src/calc/scene3d.ts` | geometria do 3D: direções do Sol/Terra no referencial do polo, exagero coerente com a luz, curvatura |
+| `src/calc/census.ts` | censo de dias de pouso viáveis (destaque do painel e `report:census`) |
+| `src/components/SouthPole3D.tsx` | vista 3D (three.js, carregada sob demanda); `ShadedMap.tsx` é o plano B |
 | `src/state/useMission.ts` | entradas da missão e avaliações derivadas (agora e sem atraso) |
 | `src/screens/Intro.tsx` | abertura (`#/`) |
 | `src/screens/Dashboard.tsx` | painel de missão (`#/mission`) |
@@ -54,4 +57,5 @@ npm run report:delay   # cenários em que um atraso muda o melhor compromisso ou
 | vitest | testes das funções puras e da validação dos dados reais |
 | @types/node | tipos dos scripts e testes que leem arquivos |
 | tsx | rodar os scripts TypeScript de relatório (`report:*`, comparação da etapa 6) com o mesmo código do app |
+| three (+ @types/three) | vista 3D do polo sul em WebGL (malha, luz direcional com sombras, controles de órbita); sem react-three-fiber para manter uma dependência só (D28) |
 | @fontsource/ibm-plex-sans, @fontsource/ibm-plex-mono | tipografia técnica aprovada, empacotada (funciona sem internet no dia) |

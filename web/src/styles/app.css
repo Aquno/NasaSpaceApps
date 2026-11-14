@@ -459,3 +459,56 @@ svg text {
   color: var(--text);
   font-weight: 600;
 }
+
+/* 3D view */
+.scene3d {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  gap: 4px;
+}
+.scene3d-canvas {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  border-radius: var(--radius);
+}
+.scene3d-canvas canvas {
+  display: block;
+}
+.scene3d-label {
+  position: absolute;
+  left: 0;
+  top: 0;
+  margin: -0.7em 0 0 -0.35em;
+  background: rgb(11 15 20 / 0.75);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 0 5px;
+  font-size: 0.8rem;
+  color: var(--text);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.scene3d-label.selected {
+  border-color: var(--sun);
+  color: var(--sun);
+}
+.scene3d-label.demo {
+  color: var(--muted);
+}
+.scene3d-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.82rem;
+}
+.scene3d-bar input[type='range'] {
+  accent-color: var(--text);
+  vertical-align: middle;
+}
+.map-row.wide {
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+}

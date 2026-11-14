@@ -93,7 +93,7 @@ Legenda de status: `a fazer` · `em andamento` · `concluído` · `plano B` · `
   - [x] 2. Módulo único de cálculo com testes (D9, D24, D25): visibilidade com disco, métricas da missão, notas, veredito (regras "Mission rules" ajustáveis), melhor compromisso; relatórios `report:scores`, `report:census`, `report:delay`
   - [x] 3. Proposta visual aprovada (paleta, tipografia, layout, "Today / With this tool", enquadramento do 3D com ±150 km, sombras coerentes com o exagero e curvatura)
   - [x] 4. Painel de missão com dados reais: controles (data, duração, atraso, "Slip launch 21 days"), mapa 2D sombreado provisório (terrain v3, D29) com ficha do local, dispersão ciência × engenharia com deslocamento pelo atraso, cinco cartões com reordenação animada (cabem sem rolagem em 1920 × 1080), "Mission rules", faixas de 2027, aviso de missão fora dos dados, "What this adds"
-  - [ ] 5. Vista 3D do polo sul (D28; mapa de alturas exportado pelo pipeline; plano B: mapa 2D sombreado)
+  - [x] 5. Vista 3D do polo sul (D28): malha do LOLA com curvatura, luz do Sol no instante do pouso, sombras coerentes com o exagero (testado), seta da Terra, locais clicáveis, aviso "visual only"; mapa 2D como plano B automático
   - [ ] 6. Detalhe do local (panorama com play, linha do tempo, "Data and limits")
   - [ ] 7. "Small move, big change", abertura e rodapé
   - [ ] Selo "SAMPLE DATA" quando `meta.sample = true`; aviso "não é produto da NASA"; acessibilidade (contraste, teclado, nada só por cor)
@@ -140,3 +140,4 @@ Legenda de status: `a fazer` · `em andamento` · `concluído` · `plano B` · `
 | 2026-11-14 | 5 | D31: regra de inclinação (10°), próxima janela viável e "Earliest viable site after the slip", aviso de link direto, "What this tool covers", texto da abertura |
 | 2026-11-14 | 5 | Relatórios refeitos com os pontos da D30 (notas em três datas, censo de 2027, cenários de atraso + "outro local reabre antes do Shackleton rim"); pesos e limites padrão inalterados |
 | 2026-11-14 | 5 | D32 (veredito só de engenharia; filtro de ciência opcional), D33 (cenário padrão 2027-03-04 → +21 d), D34 (limite "melhor caso por região" e censo em destaque no painel) |
+| 2026-11-14 | 5 | Vista 3D (three.js) no painel, estável na primeira tentativa (cerca de 10 min do limite de 90); mapa 2D mantido como plano B |
