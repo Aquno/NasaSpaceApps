@@ -28,13 +28,13 @@ export const ptBR: Messages = {
   'intro.how': 'Como funciona',
   'intro.problem':
     'Perto do polo sul da Lua, o Sol e a Terra ficam rente ao horizonte; o relevo em volta decide se um local tem luz do Sol e ligação direta com a Terra.',
-  'intro.f1Title': 'Sol e Terra',
+  'intro.f1Title': 'Luz do Sol e contato com a Terra',
   'intro.f1':
-    'Veja a luz do Sol e o contato direto com a Terra em cada local e data, com o relevo real no horizonte.',
-  'intro.f2Title': 'Lado a lado',
-  'intro.f2': 'Compare os locais de uma vez, com nota de ciência e nota de engenharia.',
-  'intro.f3Title': 'Replaneje o atraso',
-  'intro.f3': 'Mude a data do lançamento e veja na hora qual local ainda serve.',
+    'Visibilidade hora a hora do Sol e da Terra em cada local, contra o horizonte do relevo.',
+  'intro.f2Title': 'Comparação de locais',
+  'intro.f2': 'Notas de ciência e de engenharia de todos os locais, lado a lado.',
+  'intro.f3Title': 'Replanejamento por atraso',
+  'intro.f3': 'Resultados para a nova data de pouso quando o lançamento muda.',
   'intro.statShackValue': '{a:pct} · {b:pct}',
   'intro.statShack':
     'Luz do Sol média da NASA: ponto da borda e parede interna do Shackleton, a {km:km1}',
@@ -64,8 +64,7 @@ export const ptBR: Messages = {
     'JPL Horizons, LROC Quickmap e NASA Moon Trek continuam sendo as fontes e as ferramentas de análise detalhada.',
 
   'covers.title': 'Escopo',
-  'covers.planning':
-    'Uma ferramenta de planejamento, usada na Terra antes do lançamento. Os vereditos vêm de regras de decisão e pontuação fixas, mostradas na tela.',
+  'covers.planning': 'Ferramenta de planejamento, usada na Terra antes do lançamento.',
   'covers.bestCaseTitle': 'Melhor caso de cada região, não uma área de pouso.',
   'covers.bestCase':
     'Cada ponto é o pixel de 60 m mais iluminado da sua região da NASA no mapa de iluminação média da NASA; pixels vizinhos podem receber bem menos luz.',
@@ -123,10 +122,9 @@ export const ptBR: Messages = {
   'card.noLandingHour': 'Nenhuma hora deste dia atende às regras de pouso.',
   'card.next': 'Próximo viável: {date:date} ({n:int} {n:plural:dia seguido|dias seguidos})',
   'card.noNext': 'Nenhum pouso viável até o fim dos dados.',
-  'card.linkContinuous': 'Linha direta {p:pct} da missão',
-  'card.linkGaps':
-    'Linha direta {p:pct} da missão · maior intervalo {g:hours} (retransmissão necessária nos intervalos)',
-  'card.linkLow': 'Linha direta só {p:pct} da missão: satélite de retransmissão necessário',
+  'card.linkContinuous': 'Contato direto {p:pct} da missão',
+  'card.linkGaps': 'Contato direto {p:pct} da missão · maior intervalo {g:hours}',
+  'card.linkLow': 'Contato direto só {p:pct} da missão: satélite de retransmissão necessário',
   'card.sun': 'Sol {p:pct}',
   'card.sunTitle': 'Horas da missão com alguma parte do Sol visível',
   'card.psr': '{km:km1} até a sombra permanente',
@@ -147,8 +145,7 @@ export const ptBR: Messages = {
   'part.contactGaps': 'Intervalos sem contato',
   'part.psrProximity': 'Proximidade da sombra permanente',
 
-  'reason.darkAtLanding':
-    'Escuro no pouso: o Sol está atrás do relevo (regra: Sol visível no pouso).',
+  'reason.darkAtLanding': 'Sol atrás do relevo no pouso.',
   'reason.survivalDarkness':
     'A maior escuridão, {h:hours}, passa do limite de sobrevivência de {limit:hours}.',
   'reason.minSunFraction': 'Só {p:pct} da missão com Sol (mínimo {min:pct}).',
@@ -171,11 +168,11 @@ export const ptBR: Messages = {
   'rules.scienceFilter': 'Filtro de nota mínima de ciência',
   'rules.scienceFilterEnable': 'Ativar o filtro de nota mínima de ciência',
   'rules.scienceFilterValue': 'Nota mínima de ciência',
-  'rules.relay': 'Alerta de retransmissão abaixo de linha direta (%)',
+  'rules.relay': 'Alerta de retransmissão abaixo de contato direto (%)',
   'rules.slope': 'Inclinação máxima do terreno (°)',
   'rules.reset': 'Voltar aos padrões',
   'rules.explain':
-    'Inviável: nenhuma hora do dia do pouso com o Sol visível, escuridão maior que o limite de sobrevivência, ou pouca luz do Sol. Marginal: luz abaixo do nível confortável, ou nota de engenharia abaixo do mínimo para viável. O veredito usa só regras de engenharia; a nota de ciência ordena os locais. O contato com a Terra entra pela nota de engenharia. Inclinação acima do limite rebaixa o veredito em um nível. Melhor compromisso: o local com o maior min(engenharia, ciência) entre os que não são "inviáveis" (e passam no filtro opcional de ciência).',
+    'O veredito usa só regras de engenharia; a ciência ordena os locais, e o melhor no conjunto tem o maior mín(engenharia, ciência).',
 
   'scatter.title': 'Ciência × engenharia',
   'scatter.legend': '● atende às regras obrigatórias ○ inviável',
@@ -297,7 +294,6 @@ export const ptBR: Messages = {
   // roadmap (D44)
   'header.roadmap': 'Roteiro',
   'roadmap.title': 'Roteiro',
-  'roadmap.lead': 'O que a ferramenta faz hoje e ideias para depois. Só a primeira coluna existe.',
   'roadmap.now': 'Agora',
   'roadmap.m3': 'Em 3 meses',
   'roadmap.m6': 'Em 6 meses',
@@ -352,4 +348,14 @@ export const ptBR: Messages = {
   'detail.limitLink': 'Ligação com a Terra',
   'detail.limitSignal': 'Atraso do sinal',
   'detail.limitRules': 'Notas',
+
+  // text review decisions (D50)
+  'card.linkTip': 'Nos intervalos sem contato direto, é preciso um satélite de retransmissão.',
+  'card.rule': 'Regra: {rule}',
+  'rule.sunAtLanding': 'Sol visível no pouso',
+  'rule.survivalDarkness': 'Maior escuridão de no máximo {h:hours}',
+  'rule.minSunFraction': 'Luz do Sol em pelo menos {p:pct} da missão',
+  'rule.marginalSunFraction': 'Luz do Sol em pelo menos {p:pct} da missão para viável',
+  'rule.engineering': 'Nota de engenharia de pelo menos {n:int} para viável',
+  'rule.slope': 'Inclinação do terreno de no máximo {s:deg1}',
 };

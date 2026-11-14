@@ -155,3 +155,4 @@ Legenda de status: `a fazer` · `em andamento` · `concluído` · `plano B` · `
 | 2026-11-14 | — | D47: repositório privado; GitHub Pages só manual; fluxo de verificação (`ci.yml`) a cada push; build portátil documentado. D48: regra permanente de fluxo de git. Junção de `stage-5-interface` na `main` |
 | 2026-11-14 | 5 | D49: acabamentos da revisão visual (anel do polo no globo, números que contam a história, 3D preenchendo a área com bordas esmaecidas, cartão do melhor compromisso em camadas, ligação mapa–cartões, transição do "Slip 21 days"); capturas refeitas |
 | 2026-11-14 | 5 | D50: revisão de todos os textos (rótulos curtos, dicas ⓘ, "Sobre", plural), tabela em `docs/REVISAO_DE_TEXTOS.md`; "Data and limits" em tabela; rótulos nas setas do 3D; 10 casos de dúvida aguardando decisão |
+| 2026-11-14 | 5 | D50: decisões dos 10 casos de dúvida aplicadas; capturas refeitas; `polish-visual-review` juntada na `main` |

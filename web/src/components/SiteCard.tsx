@@ -13,6 +13,9 @@ import { useI18n } from '../i18n/I18nProvider';
 import type { MessageKey } from '../i18n/messages';
 import { VERDICT_ICON } from '../ui/format';
 import { ScoreParts } from './ScoreParts';
+import { InfoTip } from './InfoTip';
+import type { MissionRules } from '../config/scoring';
+import { ruleMsg } from '../ui/ruleText';
 
 interface Props {
   site: SiteSummary;
@@ -23,6 +26,8 @@ interface Props {
   best: boolean;
   /** Shows the second layer (the selected card). */
   expanded: boolean;
+  /** Mission rules, to name the rule that decided the verdict (D50). */
+  rules: MissionRules;
   /** Highlighted because its 3D marker is hovered (D49). */
   linked: boolean;
   onHover: (hovered: boolean) => void;
@@ -38,6 +43,7 @@ export function SiteCard({
   best,
   expanded,
   linked,
+  rules,
   onHover,
   onSelect,
   onOpen,
@@ -66,9 +72,11 @@ export function SiteCard({
       : link.kind === 'gaps'
         ? 'card.linkGaps'
         : 'card.linkContinuous';
+  const rule = ruleMsg(v.rule, rules);
   const linkLine = (
     <p className={link.kind === 'low' ? 'link alert' : 'link earth'}>
       {link.kind === 'low' ? '△' : '▲'} {t(linkKey, { p: link.fraction, g: link.longestGapHours })}
+      {link.kind === 'gaps' && <InfoTip>{t('card.linkTip')}</InfoTip>}
     </p>
   );
   return (
@@ -119,6 +127,7 @@ export function SiteCard({
       {(best || expanded) && linkLine}
       {expanded && (
         <div className="card-more">
+          {rule && <p className="rule">{t('card.rule', { rule: msg(rule) })}</p>}
           <p className="next">
             {evaluation.landingHourFound
               ? t('card.landingAt', { t: evaluation.landingMs })

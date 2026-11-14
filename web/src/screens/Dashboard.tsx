@@ -177,6 +177,7 @@ export function Dashboard({ sites, data, terrain, inputs, onInputs, onOpenSite }
                       best={id === d.now.bestId}
                       expanded={id === selectedId}
                       linked={id === hoveredId}
+                      rules={inputs.rules}
                       onHover={(on) => setHoveredId(on ? id : null)}
                       onSelect={() => setSelectedId(id)}
                       onOpen={() => onOpenSite(id)}

@@ -326,7 +326,8 @@ Formato: data, decisão, motivo, consequências. Decisões novas vão no fim. N�
 - **Singular e plural:** marcador `{n:plural:singular|plural}` no tradutor (1 → singular; 0 e demais → plural), com teste; aplicado a todas as contagens de dias.
 - **Ajustes visuais junto:** em "Data and limits", melhor caso por região, ligação com a Terra (só linha direta), atraso do sinal (~1,3 s) e notas (escolhas do time) viraram linhas da tabela; no 3D, rótulos "Sun"/"Earth" na ponta das setas e legenda reduzida ao Sol no local.
 - **Tabela completa e casos de dúvida:** `docs/REVISAO_DE_TEXTOS.md`. Os dez casos de dúvida ficam com o texto atual até decisão do time.
-- **Status:** aplicada (2026-11-14), branch `polish-visual-review`; dúvidas pendentes.
+- **Dez casos de dúvida, decididos pelo time:** "(relay needed during gaps)" saiu do cartão e foi para a dica ⓘ; em português, "Contato direto" na linha de comunicação; mantidos o rótulo da abertura e o link "How it works"; os três cartões da abertura reescritos em tom neutro; "Nothing was adjusted…" foi para a dica da comparação com a NASA (segue na documentação, D45); o motivo virou "Sun behind the terrain at landing." e a regra que decidiu o veredito aparece no cartão expandido e no detalhe ("Rule: …"); o texto dos vereditos em "Mission rules" ficou numa frase; "Only the first column exists." saiu do Roadmap; escopo encurtado para "Planning tool, used on Earth before launch."
+- **Status:** aplicada (2026-11-14), branch `polish-visual-review`, juntada na `main`.
 
 ### Pendências abertas após a etapa 2
 - Nenhuma pendência de dados da etapa 2.

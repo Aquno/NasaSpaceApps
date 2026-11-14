@@ -1509,3 +1509,7 @@ dialog h2 {
 .scene3d-tip.earth {
   color: var(--earth);
 }
+.rule {
+  font-size: 0.85rem;
+  color: var(--muted);
+}

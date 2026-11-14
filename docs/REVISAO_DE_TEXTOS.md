@@ -10,27 +10,27 @@ Nomes próprios (locais, produtos e fontes da NASA) não são traduzidos.
 
 | Ação | Textos |
 |---|---:|
-| mantido | 198 |
-| reescrito | 57 |
-| movido para dica | 6 |
+| mantido | 199 |
+| reescrito | 70 |
+| movido para dica | 7 |
 | movido para Sobre | 2 |
-| removido | 9 |
-| novo | 11 |
-| dúvida | 16 |
-| **total** | **299** |
+| removido | 10 |
+| novo | 19 |
+| dúvida | 0 |
+| **total** | **307** |
 
-## Casos de dúvida (ficam com o texto atual até decisão)
+## Casos de dúvida (decididos pelo time em 2026-11-14)
 
-1. `card.linkGaps` — Tirar "(relay needed during gaps)"? Você pediu esse complemento antes (D37); proposta: "Direct link 86% of mission · longest gap 47 h" com a explicação na dica.
-2. `card.linkContinuous` — Termo em português: "Linha direta" soa como tradução literal; proposta: "Enlace direto" ou "Contato direto" (vale para as três variantes).
-3. `intro.kicker` — Rótulo "Lunar south pole · Real NASA data" na abertura: a regra 6 permite só o nome e a frase. Manter como rótulo ou remover?
-4. `intro.how` — "How it works" é navegação (rola para a seção seguinte), não frase de efeito. Manter, trocar por "Details" / "Detalhes" ou remover?
-5. `intro.f1Title` — Os três cartões da abertura (títulos e frases) são descritivos. Reescrever em tom neutro ("Sun and Earth visibility" / "Hourly, at each site, against the terrain horizon"…) ou remover?
-6. `check.notTuned` — "Nothing was adjusted to bring the numbers closer." é uma garantia importante, mas pode soar defensiva. Manter, mover para a dica ou remover?
-7. `reason.darkAtLanding` — Encurtar para "Sun behind the terrain at landing." tira a referência à regra "(rule: Sun visible at landing)". Manter a referência?
-8. `rules.explain` — Parágrafo que explica os vereditos: deixar visível dentro de "Mission rules" (já recolhido) ou mover para a dica?
-9. `roadmap.lead` — "Only the first column exists." repete os rótulos "Concept, not implemented". Remover?
-10. `covers.planning` — "A planning tool, used on Earth before launch…" em "Scope": manter, encurtar para "Planning tool, for use before launch." ou remover?
+1. `card.linkGaps` — Decisão: retirado "(relay needed during gaps)"; a explicação foi para a dica ⓘ da linha.
+2. `card.linkContinuous` — Decisão: em português, "Contato direto" nas três variantes (e em "Mission rules").
+3. `intro.kicker` — Decisão: mantido.
+4. `intro.how` — Decisão: mantido.
+5. `intro.f1Title` — Decisão: três cartões reescritos em tom neutro (título que nomeia a função + frase descritiva).
+6. `check.notTuned` — Decisão: movido para a dica ⓘ da comparação com a NASA; mantido na documentação (D45).
+7. `reason.darkAtLanding` — Decisão: encurtado para "Sun behind the terrain at landing."; a regra aparece no cartão expandido ("Rule: …").
+8. `rules.explain` — Decisão: mantido visível, reduzido a uma frase.
+9. `roadmap.lead` — Decisão: removido.
+10. `covers.planning` — Decisão: encurtado para "Planning tool, used on Earth before launch."
 
 ## Tabela completa
 
@@ -49,19 +49,19 @@ Nomes próprios (locais, produtos e fontes da NASA) não são traduzidos.
 | Cabeçalho | `header.close` | Close | Fechar | Close | Fechar | mantido |
 | Cabeçalho | `lang.en` | English | English | English | English | mantido |
 | Cabeçalho | `lang.pt-BR` | Português (Brasil) | Português (Brasil) | Português (Brasil) | Português (Brasil) | mantido |
-| Abertura | `intro.kicker` | Lunar south pole · Real NASA data | Polo sul da Lua · Dados reais da NASA | Lunar south pole · Real NASA data | Polo sul da Lua · Dados reais da NASA | dúvida (mantido até decisão) |
+| Abertura | `intro.kicker` | Lunar south pole · Real NASA data | Polo sul da Lua · Dados reais da NASA | Lunar south pole · Real NASA data | Polo sul da Lua · Dados reais da NASA | mantido |
 | Abertura | `intro.question` | Your launch just slipped three weeks. Which site still works? | Seu lançamento acabou de atrasar três semanas. Qual local ainda serve? | — | — | removido |
 | Abertura | `intro.open` | Open mission panel | Abrir painel da missão | Open mission panel | Abrir painel da missão | mantido |
 | Abertura | `intro.whatThisAdds` | What this adds | O que a ferramenta acrescenta | — | — | removido |
 | Abertura | `intro.lead` | Compare landing sites at the Moon's south pole by sunlight, Earth contact and science value, on any date. | Compare locais de pouso no polo sul da Lua por luz do Sol, contato com a Terra e valor científico, em qualquer data. | Compare landing sites at the Moon's south pole by sunlight, Earth contact and science value, on any date. | Compare locais de pouso no polo sul da Lua por luz do Sol, contato com a Terra e valor científico, em qualquer data. | mantido |
-| Abertura | `intro.how` | How it works | Como funciona | How it works | Como funciona | dúvida (mantido até decisão) |
+| Abertura | `intro.how` | How it works | Como funciona | How it works | Como funciona | mantido |
 | Abertura | `intro.problem` | At the Moon's south pole, the Sun and the Earth sit right on the horizon. One ridge can leave a lander without power or contact. See, for each site and date, whether it will have sunlight and a link to Earth, and which site still works when the launch slips. | No polo sul da Lua, o Sol e a Terra ficam rente ao horizonte. Uma única crista pode deixar um módulo de pouso sem energia ou sem contato. Veja, para cada local e data, se haverá luz do Sol e ligação com a Terra, e qual local ainda serve quando o lançamento atrasa. | Near the lunar south pole the Sun and the Earth stay close to the horizon, so the surrounding terrain decides whether a site has sunlight and a direct link to Earth. | Perto do polo sul da Lua, o Sol e a Terra ficam rente ao horizonte; o relevo em volta decide se um local tem luz do Sol e ligação direta com a Terra. | reescrito |
-| Abertura | `intro.f1Title` | Sun and Earth | Sol e Terra | Sun and Earth | Sol e Terra | dúvida (mantido até decisão) |
-| Abertura | `intro.f1` | See sunlight and direct contact with Earth at each site and date, with the real terrain on the horizon. | Veja a luz do Sol e o contato direto com a Terra em cada local e data, com o relevo real no horizonte. | See sunlight and direct contact with Earth at each site and date, with the real terrain on the horizon. | Veja a luz do Sol e o contato direto com a Terra em cada local e data, com o relevo real no horizonte. | dúvida (mantido até decisão) |
-| Abertura | `intro.f2Title` | Side by side | Lado a lado | Side by side | Lado a lado | dúvida (mantido até decisão) |
-| Abertura | `intro.f2` | Compare the sites at once, with a science score and an engineering score. | Compare os locais de uma vez, com nota de ciência e nota de engenharia. | Compare the sites at once, with a science score and an engineering score. | Compare os locais de uma vez, com nota de ciência e nota de engenharia. | dúvida (mantido até decisão) |
-| Abertura | `intro.f3Title` | Replan a delay | Replaneje o atraso | Replan a delay | Replaneje o atraso | dúvida (mantido até decisão) |
-| Abertura | `intro.f3` | Move the launch date and see at once which site still works. | Mude a data do lançamento e veja na hora qual local ainda serve. | Move the launch date and see at once which site still works. | Mude a data do lançamento e veja na hora qual local ainda serve. | dúvida (mantido até decisão) |
+| Abertura | `intro.f1Title` | Sun and Earth | Sol e Terra | Sunlight and Earth contact | Luz do Sol e contato com a Terra | reescrito |
+| Abertura | `intro.f1` | See sunlight and direct contact with Earth at each site and date, with the real terrain on the horizon. | Veja a luz do Sol e o contato direto com a Terra em cada local e data, com o relevo real no horizonte. | Hourly visibility of the Sun and the Earth at each site, against the terrain horizon. | Visibilidade hora a hora do Sol e da Terra em cada local, contra o horizonte do relevo. | reescrito |
+| Abertura | `intro.f2Title` | Side by side | Lado a lado | Site comparison | Comparação de locais | reescrito |
+| Abertura | `intro.f2` | Compare the sites at once, with a science score and an engineering score. | Compare os locais de uma vez, com nota de ciência e nota de engenharia. | Science and engineering scores for all sites, side by side. | Notas de ciência e de engenharia de todos os locais, lado a lado. | reescrito |
+| Abertura | `intro.f3Title` | Replan a delay | Replaneje o atraso | Delay replanning | Replanejamento por atraso | reescrito |
+| Abertura | `intro.f3` | Move the launch date and see at once which site still works. | Mude a data do lançamento e veja na hora qual local ainda serve. | Results for the new landing date when the launch moves. | Resultados para a nova data de pouso quando o lançamento muda. | reescrito |
 | Abertura | `intro.statShackValue` | {a:pct} · {b:pct} | {a:pct} · {b:pct} | {a:pct} · {b:pct} | {a:pct} · {b:pct} | mantido |
 | Abertura | `intro.statShack` | NASA average sunlight on the Shackleton rim point and on its inner wall, only {km:km1} apart | luz do Sol média da NASA no ponto da borda do Shackleton e na sua parede interna, a apenas {km:km1} um do outro | NASA average sunlight: Shackleton rim point and inner wall, {km:km1} apart | Luz do Sol média da NASA: ponto da borda e parede interna do Shackleton, a {km:km1} | reescrito |
 | Abertura | `intro.statBest` | days of {year} when the best site of the year, {site}, accepts a landing (of {total:int}) | dias de {year} em que o melhor local do ano, {site}, aceita pouso (de {total:int}) | viable landing days in {year} at the best site, {site} (of {total:int}) | dias de pouso viáveis em {year} no melhor local, {site} (de {total:int}) | reescrito |
@@ -86,7 +86,7 @@ Nomes próprios (locais, produtos e fontes da NASA) não são traduzidos.
 | Sobre | `adds.r5b` | A delay control | Um controle de atraso | A delay control | Um controle de atraso | mantido |
 | Sobre | `adds.note` | JPL Horizons, LROC Quickmap and NASA Moon Trek remain the sources and the tools for detailed analysis. | JPL Horizons, LROC Quickmap e NASA Moon Trek continuam sendo as fontes e as ferramentas de análise detalhada. | JPL Horizons, LROC Quickmap and NASA Moon Trek remain the sources and the tools for detailed analysis. | JPL Horizons, LROC Quickmap e NASA Moon Trek continuam sendo as fontes e as ferramentas de análise detalhada. | mantido |
 | Sobre | `covers.title` | What this tool covers | O que a ferramenta cobre | Scope | Escopo | reescrito |
-| Sobre | `covers.planning` | A planning tool, used on Earth before launch. Verdicts come from fixed decision rules and scoring, shown on screen. | Uma ferramenta de planejamento, usada na Terra antes do lançamento. Os vereditos vêm de regras de decisão e pontuação fixas, mostradas na tela. | A planning tool, used on Earth before launch. Verdicts come from fixed decision rules and scoring, shown on screen. | Uma ferramenta de planejamento, usada na Terra antes do lançamento. Os vereditos vêm de regras de decisão e pontuação fixas, mostradas na tela. | dúvida (mantido até decisão) |
+| Sobre | `covers.planning` | A planning tool, used on Earth before launch. Verdicts come from fixed decision rules and scoring, shown on screen. | Uma ferramenta de planejamento, usada na Terra antes do lançamento. Os vereditos vêm de regras de decisão e pontuação fixas, mostradas na tela. | Planning tool, used on Earth before launch. | Ferramenta de planejamento, usada na Terra antes do lançamento. | reescrito |
 | Sobre | `covers.bestCaseTitle` | Best case per region, not a landing area. | Melhor caso de cada região, não uma área de pouso. | Best case per region, not a landing area. | Melhor caso de cada região, não uma área de pouso. | mantido |
 | Sobre | `covers.bestCase` | Each site point is the most-illuminated 60 m pixel of its NASA region on NASA's average-illumination map; neighbouring pixels can get much less light. | Cada ponto é o pixel de 60 m mais iluminado da sua região da NASA no mapa de iluminação média da NASA; pixels vizinhos podem receber bem menos luz. | Each site point is the most-illuminated 60 m pixel of its NASA region on NASA's average-illumination map; neighbouring pixels can get much less light. | Cada ponto é o pixel de 60 m mais iluminado da sua região da NASA no mapa de iluminação média da NASA; pixels vizinhos podem receber bem menos luz. | mantido |
 | Sobre | `covers.covers` | Covers | Cobre | Covers | Cobre | mantido |
@@ -138,9 +138,9 @@ Nomes próprios (locais, produtos e fontes da NASA) não são traduzidos.
 | Painel: cartões | `card.noLandingHour` | No hour of this day meets the landing rules. | Nenhuma hora deste dia atende às regras de pouso. | No hour of this day meets the landing rules. | Nenhuma hora deste dia atende às regras de pouso. | reescrito |
 | Painel: cartões | `card.next` | Next viable landing: {date:date} (viable {n:int} days in a row) | Próximo pouso viável: {date:date} (viável {n:int} dias seguidos) | Next viable: {date:date} ({n:int} consecutive {n:plural:day\|days}) | Próximo viável: {date:date} ({n:int} {n:plural:dia seguido\|dias seguidos}) | reescrito |
 | Painel: cartões | `card.noNext` | No viable landing left in the data year. | Nenhum pouso viável até o fim do ano dos dados. | No viable landing before the end of the data. | Nenhum pouso viável até o fim dos dados. | reescrito |
-| Painel: cartões | `card.linkContinuous` | Direct link {p:pct} of mission | Linha direta {p:pct} da missão | Direct link {p:pct} of mission | Linha direta {p:pct} da missão | dúvida (mantido até decisão) |
-| Painel: cartões | `card.linkGaps` | Direct link {p:pct} of mission · longest gap {g:hours} (relay needed during gaps) | Linha direta {p:pct} da missão · maior intervalo {g:hours} (retransmissão necessária nos intervalos) | Direct link {p:pct} of mission · longest gap {g:hours} (relay needed during gaps) | Linha direta {p:pct} da missão · maior intervalo {g:hours} (retransmissão necessária nos intervalos) | dúvida (mantido até decisão) |
-| Painel: cartões | `card.linkLow` | Direct link only {p:pct} of mission: relay satellite required | Linha direta só {p:pct} da missão: satélite de retransmissão necessário | Direct link only {p:pct} of mission: relay satellite required | Linha direta só {p:pct} da missão: satélite de retransmissão necessário | dúvida (mantido até decisão) |
+| Painel: cartões | `card.linkContinuous` | Direct link {p:pct} of mission | Linha direta {p:pct} da missão | Direct link {p:pct} of mission | Contato direto {p:pct} da missão | reescrito |
+| Painel: cartões | `card.linkGaps` | Direct link {p:pct} of mission · longest gap {g:hours} (relay needed during gaps) | Linha direta {p:pct} da missão · maior intervalo {g:hours} (retransmissão necessária nos intervalos) | Direct link {p:pct} of mission · longest gap {g:hours} | Contato direto {p:pct} da missão · maior intervalo {g:hours} | reescrito |
+| Painel: cartões | `card.linkLow` | Direct link only {p:pct} of mission: relay satellite required | Linha direta só {p:pct} da missão: satélite de retransmissão necessário | Direct link only {p:pct} of mission: relay satellite required | Contato direto só {p:pct} da missão: satélite de retransmissão necessário | reescrito |
 | Painel: cartões | `card.sun` | {p:pct} sun | {p:pct} de Sol | Sun {p:pct} | Sol {p:pct} | reescrito |
 | Painel: cartões | `card.sunTitle` | Mission hours with some part of the Sun visible | Horas da missão com alguma parte do Sol visível | Mission hours with some part of the Sun visible | Horas da missão com alguma parte do Sol visível | mantido |
 | Painel: cartões | `card.psr` | {km:km1} to permanent shadow | {km:km1} até a sombra permanente | {km:km1} to permanent shadow | {km:km1} até a sombra permanente | mantido |
@@ -159,7 +159,7 @@ Nomes próprios (locais, produtos e fontes da NASA) não são traduzidos.
 | Cartões/Detalhe: composição | `part.earthContact` | Earth in view during mission | Terra visível durante a missão | Earth in view | Terra visível | reescrito |
 | Cartões/Detalhe: composição | `part.contactGaps` | Short gaps without Earth contact | Intervalos curtos sem contato com a Terra | Contact gaps | Intervalos sem contato | reescrito |
 | Cartões/Detalhe: composição | `part.psrProximity` | Proximity to permanent shadow | Proximidade da sombra permanente | Proximity to permanent shadow | Proximidade da sombra permanente | mantido |
-| Cartões/Detalhe: motivo | `reason.darkAtLanding` | Dark at landing: the Sun is behind the terrain (rule: Sun visible at landing). | Escuro no pouso: o Sol está atrás do relevo (regra: Sol visível no pouso). | Dark at landing: the Sun is behind the terrain (rule: Sun visible at landing). | Escuro no pouso: o Sol está atrás do relevo (regra: Sol visível no pouso). | dúvida (mantido até decisão) |
+| Cartões/Detalhe: motivo | `reason.darkAtLanding` | Dark at landing: the Sun is behind the terrain (rule: Sun visible at landing). | Escuro no pouso: o Sol está atrás do relevo (regra: Sol visível no pouso). | Sun behind the terrain at landing. | Sol atrás do relevo no pouso. | reescrito |
 | Cartões/Detalhe: motivo | `reason.survivalDarkness` | Longest darkness {h:hours} exceeds the {limit:hours} survival limit. | A maior escuridão, {h:hours}, passa do limite de sobrevivência de {limit:hours}. | Longest darkness {h:hours} exceeds the {limit:hours} survival limit. | A maior escuridão, {h:hours}, passa do limite de sobrevivência de {limit:hours}. | mantido |
 | Cartões/Detalhe: motivo | `reason.minSunFraction` | Only {p:pct} of the mission in sunlight (minimum {min:pct}). | Só {p:pct} da missão com Sol (mínimo {min:pct}). | Only {p:pct} of the mission in sunlight (minimum {min:pct}). | Só {p:pct} da missão com Sol (mínimo {min:pct}). | mantido |
 | Cartões/Detalhe: motivo | `reason.marginalSunFraction` | {p:pct} of the mission in sunlight, below the {comfort:pct} comfort level. | {p:pct} da missão com Sol, abaixo do nível confortável de {comfort:pct}. | {p:pct} of the mission in sunlight, below the {comfort:pct} comfort level. | {p:pct} da missão com Sol, abaixo do nível confortável de {comfort:pct}. | mantido |
@@ -177,10 +177,10 @@ Nomes próprios (locais, produtos e fontes da NASA) não são traduzidos.
 | Painel: regras | `rules.scienceFilter` | Minimum science score filter | Filtro de nota mínima de ciência | Minimum science score filter | Filtro de nota mínima de ciência | mantido |
 | Painel: regras | `rules.scienceFilterEnable` | Enable the minimum science score filter | Ativar o filtro de nota mínima de ciência | Enable the minimum science score filter | Ativar o filtro de nota mínima de ciência | mantido |
 | Painel: regras | `rules.scienceFilterValue` | Minimum science score | Nota mínima de ciência | Minimum science score | Nota mínima de ciência | mantido |
-| Painel: regras | `rules.relay` | Relay alert below direct link (%) | Alerta de retransmissão abaixo de linha direta (%) | Relay alert below direct link (%) | Alerta de retransmissão abaixo de linha direta (%) | mantido |
+| Painel: regras | `rules.relay` | Relay alert below direct link (%) | Alerta de retransmissão abaixo de linha direta (%) | Relay alert below direct link (%) | Alerta de retransmissão abaixo de contato direto (%) | reescrito |
 | Painel: regras | `rules.slope` | Max terrain slope (°) | Inclinação máxima do terreno (°) | Max terrain slope (°) | Inclinação máxima do terreno (°) | mantido |
 | Painel: regras | `rules.reset` | Reset to defaults | Voltar aos padrões | Reset to defaults | Voltar aos padrões | mantido |
-| Painel: regras | `rules.explain` | Not viable: no hour of the landing day with the Sun visible, a darkness longer than the survival limit, or too little sunlight. Marginal: sunlight below the comfort share, or an engineering score below the viable minimum. The verdict uses engineering rules only; the science score ranks the sites. Earth contact counts through the engineering score. A terrain slope above the limit lowers the verdict by one level. Best compromise: the site with the highest of min(engineering, science) among sites that are not "not viable" (and pass the optional science filter). | Inviável: nenhuma hora do dia do pouso com o Sol visível, escuridão maior que o limite de sobrevivência, ou pouca luz do Sol. Marginal: luz abaixo do nível confortável, ou nota de engenharia abaixo do mínimo para viável. O veredito usa só regras de engenharia; a nota de ciência ordena os locais. O contato com a Terra entra pela nota de engenharia. Inclinação acima do limite rebaixa o veredito em um nível. Melhor compromisso: o local com o maior min(engenharia, ciência) entre os que não são "inviáveis" (e passam no filtro opcional de ciência). | Not viable: no hour of the landing day with the Sun visible, a darkness longer than the survival limit, or too little sunlight. Marginal: sunlight below the comfort share, or an engineering score below the viable minimum. The verdict uses engineering rules only; the science score ranks the sites. Earth contact counts through the engineering score. A terrain slope above the limit lowers the verdict by one level. Best compromise: the site with the highest of min(engineering, science) among sites that are not "not viable" (and pass the optional science filter). | Inviável: nenhuma hora do dia do pouso com o Sol visível, escuridão maior que o limite de sobrevivência, ou pouca luz do Sol. Marginal: luz abaixo do nível confortável, ou nota de engenharia abaixo do mínimo para viável. O veredito usa só regras de engenharia; a nota de ciência ordena os locais. O contato com a Terra entra pela nota de engenharia. Inclinação acima do limite rebaixa o veredito em um nível. Melhor compromisso: o local com o maior min(engenharia, ciência) entre os que não são "inviáveis" (e passam no filtro opcional de ciência). | dúvida (mantido até decisão) |
+| Painel: regras | `rules.explain` | Not viable: no hour of the landing day with the Sun visible, a darkness longer than the survival limit, or too little sunlight. Marginal: sunlight below the comfort share, or an engineering score below the viable minimum. The verdict uses engineering rules only; the science score ranks the sites. Earth contact counts through the engineering score. A terrain slope above the limit lowers the verdict by one level. Best compromise: the site with the highest of min(engineering, science) among sites that are not "not viable" (and pass the optional science filter). | Inviável: nenhuma hora do dia do pouso com o Sol visível, escuridão maior que o limite de sobrevivência, ou pouca luz do Sol. Marginal: luz abaixo do nível confortável, ou nota de engenharia abaixo do mínimo para viável. O veredito usa só regras de engenharia; a nota de ciência ordena os locais. O contato com a Terra entra pela nota de engenharia. Inclinação acima do limite rebaixa o veredito em um nível. Melhor compromisso: o local com o maior min(engenharia, ciência) entre os que não são "inviáveis" (e passam no filtro opcional de ciência). | The verdict uses engineering rules only; science ranks the sites, and the best overall has the highest min(engineering, science). | O veredito usa só regras de engenharia; a ciência ordena os locais, e o melhor no conjunto tem o maior mín(engenharia, ciência). | reescrito |
 | Painel: ciência × engenharia | `scatter.title` | Science × engineering | Ciência × engenharia | Science × engineering | Ciência × engenharia | mantido |
 | Painel: ciência × engenharia | `scatter.legend` | ● meets the hard rules ○ not viable | ● atende às regras obrigatórias ○ inviável | ● meets the hard rules ○ not viable | ● atende às regras obrigatórias ○ inviável | mantido |
 | Painel: ciência × engenharia | `scatter.trail` | faint ring = planned date, line = move with +{d:int} d | anel claro = data planejada, linha = deslocamento com +{d:int} d | faint ring = planned date, line = move with +{d:int} d | anel claro = data planejada, linha = deslocamento com +{d:int} d | mantido |
@@ -291,7 +291,7 @@ Nomes próprios (locais, produtos e fontes da NASA) não são traduzidos.
 | Painel: sensibilidade à posição | `small.reason` | Reason | Motivo | Reason | Motivo | mantido |
 | Cabeçalho | `header.roadmap` | Roadmap | Roteiro | Roadmap | Roteiro | mantido |
 | Roadmap | `roadmap.title` | Roadmap | Roteiro | Roadmap | Roteiro | mantido |
-| Roadmap | `roadmap.lead` | What the tool does today, and ideas for later. Only the first column exists. | O que a ferramenta faz hoje e ideias para depois. Só a primeira coluna existe. | What the tool does today, and ideas for later. Only the first column exists. | O que a ferramenta faz hoje e ideias para depois. Só a primeira coluna existe. | dúvida (mantido até decisão) |
+| Roadmap | `roadmap.lead` | What the tool does today, and ideas for later. Only the first column exists. | O que a ferramenta faz hoje e ideias para depois. Só a primeira coluna existe. | — | — | removido |
 | Roadmap | `roadmap.now` | Now | Agora | Now | Agora | mantido |
 | Roadmap | `roadmap.m3` | In 3 months | Em 3 meses | In 3 months | Em 3 meses | mantido |
 | Roadmap | `roadmap.m6` | In 6 months | Em 6 meses | In 6 months | Em 6 meses | mantido |
@@ -323,7 +323,7 @@ Nomes próprios (locais, produtos e fontes da NASA) não são traduzidos.
 | Painel: comparação NASA | `check.why2` | NASA uses a 60 m terrain map; this tool uses 20, 80 and 320 m maps by distance, with the observer on a 2 m mast. | A NASA usa um mapa de relevo de 60 m; a ferramenta usa mapas de 20, 80 e 320 m conforme a distância, com o observador num mastro de 2 m. | NASA uses a 60 m terrain map; this tool uses 20, 80 and 320 m maps by distance, with the observer on a 2 m mast. | A NASA usa um mapa de relevo de 60 m; a ferramenta usa mapas de 20, 80 e 320 m conforme a distância, com o observador num mastro de 2 m. | mantido |
 | Painel: comparação NASA | `check.why3` | Each NASA value is one 60 m pixel; within about 90 m it can change by tens of points (see data/validation/COMPARISON.md). | Cada valor da NASA é um pixel de 60 m; em cerca de 90 m ele pode mudar dezenas de pontos (ver data/validation/COMPARISON.md). | Each NASA value is one 60 m pixel; within about 90 m it can change by tens of points (see data/validation/COMPARISON.md). | Cada valor da NASA é um pixel de 60 m; em cerca de 90 m ele pode mudar dezenas de pontos (ver data/validation/COMPARISON.md). | mantido |
 | Painel: comparação NASA | `check.why4` | The tool looks up the horizon at the whole degree of azimuth nearest the disc centre. | A ferramenta consulta o horizonte no grau inteiro de azimute mais próximo do centro do disco. | The tool looks up the horizon at the whole degree of azimuth nearest the disc centre. | A ferramenta consulta o horizonte no grau inteiro de azimute mais próximo do centro do disco. | mantido |
-| Painel: comparação NASA | `check.notTuned` | Nothing was adjusted to bring the numbers closer. | Nada foi ajustado para aproximar os números. | Nothing was adjusted to bring the numbers closer. | Nada foi ajustado para aproximar os números. | dúvida (mantido até decisão) |
+| Painel: comparação NASA | `check.notTuned` | Nothing was adjusted to bring the numbers closer. | Nada foi ajustado para aproximar os números. | Nothing was adjusted to bring the numbers closer. | Nada foi ajustado para aproximar os números. | movido para dica |
 | Painel: mapa/3D | `map.resolution` |  |  | LOLA relief, {px:int} m per pixel; vertical scale exaggerated. Visual only. | Relevo LOLA, {px:int} m por pixel; escala vertical exagerada. Só visualização. | novo |
 | Geral (dica) | `info.label` |  |  | More information | Mais informações | novo |
 | Painel: dias viáveis | `census.tip` |  |  | {days:int}-day mission, current rules. | Missão de {days:int} dias, regras atuais. | novo |
@@ -335,3 +335,11 @@ Nomes próprios (locais, produtos e fontes da NASA) não são traduzidos.
 | Detalhe do local | `detail.limitLink` |  |  | Earth link | Ligação com a Terra | novo |
 | Detalhe do local | `detail.limitSignal` |  |  | Signal delay | Atraso do sinal | novo |
 | Detalhe do local | `detail.limitRules` |  |  | Scores | Notas | novo |
+| Painel: cartões | `card.linkTip` |  |  | During gaps without direct contact, a relay satellite is needed. | Nos intervalos sem contato direto, é preciso um satélite de retransmissão. | novo |
+| Painel: cartões | `card.rule` |  |  | Rule: {rule:msg} | Regra: {rule:msg} | novo |
+| ? | `rule.sunAtLanding` |  |  | Sun visible at landing | Sol visível no pouso | novo |
+| ? | `rule.survivalDarkness` |  |  | Longest darkness at most {h:hours} | Maior escuridão de no máximo {h:hours} | novo |
+| ? | `rule.minSunFraction` |  |  | Sunlight in at least {p:pct} of the mission | Luz do Sol em pelo menos {p:pct} da missão | novo |
+| ? | `rule.marginalSunFraction` |  |  | Sunlight in at least {p:pct} of the mission for viable | Luz do Sol em pelo menos {p:pct} da missão para viável | novo |
+| ? | `rule.engineering` |  |  | Engineering score at least {n:int} for viable | Nota de engenharia de pelo menos {n:int} para viável | novo |
+| ? | `rule.slope` |  |  | Terrain slope at most {s:deg1} | Inclinação do terreno de no máximo {s:deg1} | novo |

@@ -29,13 +29,13 @@ export const en = {
   'intro.how': 'How it works',
   'intro.problem':
     'Near the lunar south pole the Sun and the Earth stay close to the horizon, so the surrounding terrain decides whether a site has sunlight and a direct link to Earth.',
-  'intro.f1Title': 'Sun and Earth',
+  'intro.f1Title': 'Sunlight and Earth contact',
   'intro.f1':
-    'See sunlight and direct contact with Earth at each site and date, with the real terrain on the horizon.',
-  'intro.f2Title': 'Side by side',
-  'intro.f2': 'Compare the sites at once, with a science score and an engineering score.',
-  'intro.f3Title': 'Replan a delay',
-  'intro.f3': 'Move the launch date and see at once which site still works.',
+    'Hourly visibility of the Sun and the Earth at each site, against the terrain horizon.',
+  'intro.f2Title': 'Site comparison',
+  'intro.f2': 'Science and engineering scores for all sites, side by side.',
+  'intro.f3Title': 'Delay replanning',
+  'intro.f3': 'Results for the new landing date when the launch moves.',
   'intro.statShackValue': '{a:pct} · {b:pct}',
   'intro.statShack': 'NASA average sunlight: Shackleton rim point and inner wall, {km:km1} apart',
   'intro.statBest': 'viable landing days in {year} at the best site, {site} (of {total:int})',
@@ -66,8 +66,7 @@ export const en = {
 
   // scope
   'covers.title': 'Scope',
-  'covers.planning':
-    'A planning tool, used on Earth before launch. Verdicts come from fixed decision rules and scoring, shown on screen.',
+  'covers.planning': 'Planning tool, used on Earth before launch.',
   'covers.bestCaseTitle': 'Best case per region, not a landing area.',
   'covers.bestCase':
     "Each site point is the most-illuminated 60 m pixel of its NASA region on NASA's average-illumination map; neighbouring pixels can get much less light.",
@@ -131,8 +130,7 @@ export const en = {
   'card.next': 'Next viable: {date:date} ({n:int} consecutive {n:plural:day|days})',
   'card.noNext': 'No viable landing before the end of the data.',
   'card.linkContinuous': 'Direct link {p:pct} of mission',
-  'card.linkGaps':
-    'Direct link {p:pct} of mission · longest gap {g:hours} (relay needed during gaps)',
+  'card.linkGaps': 'Direct link {p:pct} of mission · longest gap {g:hours}',
   'card.linkLow': 'Direct link only {p:pct} of mission: relay satellite required',
   'card.sun': 'Sun {p:pct}',
   'card.sunTitle': 'Mission hours with some part of the Sun visible',
@@ -156,8 +154,7 @@ export const en = {
   'part.psrProximity': 'Proximity to permanent shadow',
 
   // verdict reasons (built by the calc module as key + parameters)
-  'reason.darkAtLanding':
-    'Dark at landing: the Sun is behind the terrain (rule: Sun visible at landing).',
+  'reason.darkAtLanding': 'Sun behind the terrain at landing.',
   'reason.survivalDarkness': 'Longest darkness {h:hours} exceeds the {limit:hours} survival limit.',
   'reason.minSunFraction': 'Only {p:pct} of the mission in sunlight (minimum {min:pct}).',
   'reason.marginalSunFraction':
@@ -184,7 +181,7 @@ export const en = {
   'rules.slope': 'Max terrain slope (°)',
   'rules.reset': 'Reset to defaults',
   'rules.explain':
-    'Not viable: no hour of the landing day with the Sun visible, a darkness longer than the survival limit, or too little sunlight. Marginal: sunlight below the comfort share, or an engineering score below the viable minimum. The verdict uses engineering rules only; the science score ranks the sites. Earth contact counts through the engineering score. A terrain slope above the limit lowers the verdict by one level. Best compromise: the site with the highest of min(engineering, science) among sites that are not "not viable" (and pass the optional science filter).',
+    'The verdict uses engineering rules only; science ranks the sites, and the best overall has the highest min(engineering, science).',
 
   // scatter
   'scatter.title': 'Science × engineering',
@@ -311,7 +308,6 @@ export const en = {
   // roadmap (D44)
   'header.roadmap': 'Roadmap',
   'roadmap.title': 'Roadmap',
-  'roadmap.lead': 'What the tool does today, and ideas for later. Only the first column exists.',
   'roadmap.now': 'Now',
   'roadmap.m3': 'In 3 months',
   'roadmap.m6': 'In 6 months',
@@ -364,4 +360,14 @@ export const en = {
   'detail.limitLink': 'Earth link',
   'detail.limitSignal': 'Signal delay',
   'detail.limitRules': 'Scores',
+
+  // text review decisions (D50)
+  'card.linkTip': 'During gaps without direct contact, a relay satellite is needed.',
+  'card.rule': 'Rule: {rule}',
+  'rule.sunAtLanding': 'Sun visible at landing',
+  'rule.survivalDarkness': 'Longest darkness at most {h:hours}',
+  'rule.minSunFraction': 'Sunlight in at least {p:pct} of the mission',
+  'rule.marginalSunFraction': 'Sunlight in at least {p:pct} of the mission for viable',
+  'rule.engineering': 'Engineering score at least {n:int} for viable',
+  'rule.slope': 'Terrain slope at most {s:deg1}',
 } as const;

@@ -37,7 +37,6 @@ export function Roadmap({ sample }: { sample: boolean }) {
       <Starfield still maxAlpha={STAR_ALPHA} />
       <Header sample={sample} />
       <h1 className="detail-title">{t('roadmap.title')}</h1>
-      <p className="roadmap-lead">{t('roadmap.lead')}</p>
       <div className="roadmap-cols">
         {COLUMNS.map((col) => (
           <section
