@@ -9,6 +9,7 @@ import { useSites } from './data/useSites';
 import { useI18n } from './i18n/I18nProvider';
 import { Dashboard } from './screens/Dashboard';
 import { Intro } from './screens/Intro';
+import { Roadmap } from './screens/Roadmap';
 import { SiteDetail } from './screens/SiteDetail';
 import { useMissionInputs } from './state/useMission';
 
@@ -32,6 +33,10 @@ export function App() {
     return (
       <Intro ready={state.status === 'ready' ? { sites: state.sites, data: state.data } : null} />
     );
+  }
+  if (hash === '#/roadmap') {
+    const sample = state.status === 'ready' && [...state.data.values()].some((d) => d.meta.sample);
+    return <Roadmap sample={sample} />;
   }
   if (state.status === 'loading') {
     return (

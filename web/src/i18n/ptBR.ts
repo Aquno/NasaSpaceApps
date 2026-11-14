@@ -302,4 +302,26 @@ export const ptBR: Messages = {
   'small.deg': '{s:deg1}',
   'small.slope': 'Inclinação',
   'small.reason': 'Motivo',
+
+  // roadmap (D44)
+  'header.roadmap': 'Roteiro',
+  'roadmap.title': 'Roteiro',
+  'roadmap.lead': 'O que a ferramenta faz hoje e ideias para depois. Só a primeira coluna existe.',
+  'roadmap.now': 'Agora',
+  'roadmap.m3': 'Em 3 meses',
+  'roadmap.m6': 'Em 6 meses',
+  'roadmap.available': 'Funciona hoje',
+  'roadmap.concept': 'Conceito, não implementado',
+  'roadmap.now1': 'Pontos de referência no polo sul da Lua',
+  'roadmap.now2': 'Um ano de dados do Sol e da Terra, hora a hora',
+  'roadmap.now3': 'Regras de decisão ajustáveis',
+  'roadmap.m3_1': 'Qualquer coordenada, e a região inteira avaliada em vez do melhor pixel',
+  'roadmap.m3_2': 'Vários anos de dados',
+  'roadmap.m3_3': 'Cobertura de satélites retransmissores',
+  'roadmap.m3_4': 'Dois pontos por região: o melhor para engenharia e o melhor para ciência',
+  'roadmap.m3_5':
+    'Resumo do resultado escrito por IA, a partir dos números calculados pelo código fixo',
+  'roadmap.m6_1': 'IA para refinar o relevo com novos dados de sondas',
+  'roadmap.m6_2': 'O mesmo método aplicado a Marte e a outros corpos',
+  'roadmap.m6_3': 'Versão educacional',
 };

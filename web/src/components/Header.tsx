@@ -24,6 +24,9 @@ export function Header({ sample }: Props) {
       <span className="context">{t('header.context')}</span>
       {sample && <span className="badge-sample">{t('header.sample')}</span>}
       <span className="spacer" />
+      <a className="linkbtn" href="#/roadmap">
+        {t('header.roadmap')}
+      </a>
       <button type="button" className="linkbtn" onClick={() => dialog.current?.showModal()}>
         {t('header.whatThisAdds')} ▸
       </button>

@@ -149,3 +149,4 @@ Legenda de status: `a fazer` · `em andamento` · `concluído` · `plano B` · `
 | 2026-11-14 | 5 | Itens 1–6 aprovados; D41: abertura mostra 110 trocas de local com +21 d; céu parado e fraco no painel com cartões de vidro |
 | 2026-11-14 | 5 | D42: detalhe do local (panorama 360° com Sol e Terra em tamanho angular real e play, linha do tempo, notas, "Data and limits") |
 | 2026-11-14 | 5 | D43: "Small move, big change" no painel (borda × parede interna do Shackleton, 2,8 km, contornos e números lado a lado) |
+| 2026-11-14 | 5 | D44: tela "Roadmap" (Now / In 3 months / In 6 months), conceitos marcados "Concept, not implemented" |

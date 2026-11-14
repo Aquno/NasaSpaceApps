@@ -269,6 +269,12 @@ Formato: data, decisão, motivo, consequências. Decisões novas vão no fim. N�
 - **Cálculo:** `surfaceDistanceKm` (haversine) em `calc/mapGeometry.ts`, com testes; avaliação pelo módulo único (D9). O par fica em `SMALL_MOVE_SITE_IDS` (`config/scoring.ts`).
 - **Status:** aplicada (2026-11-14).
 
+### D44 — 2026-11-14 — Tela "Roadmap"
+
+- **Decisão:** tela própria (`#/roadmap`), com link no cabeçalho, em três colunas: "Now" (pontos do polo sul lunar, um ano de dados hora a hora, regras de decisão ajustáveis — marcados "Working today"), "In 3 months" (qualquer coordenada e avaliação da região inteira em vez do melhor pixel; vários anos de dados; cobertura de satélites retransmissores; dois pontos por região, melhor para engenharia e melhor para ciência; resumo do resultado escrito por IA a partir dos números calculados pelo código fixo) e "In 6 months" (IA para refinar o relevo com novos dados de sondas; o mesmo método em Marte e outros corpos; versão educacional). Tudo o que não existe leva o rótulo visível "Concept, not implemented". Sem números.
+- **Coerência com os princípios:** a IA aparece só como conceito e nunca faz ou escolhe cálculos; o resumo escrito usaria os números do código fixo.
+- **Status:** aplicada (2026-11-14).
+
 ### Pendências abertas após a etapa 2
 - Nenhuma pendência de dados da etapa 2.
 

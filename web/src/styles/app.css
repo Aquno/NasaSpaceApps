@@ -1283,3 +1283,65 @@ svg text {
 .small-table td.num {
   font-family: var(--font-mono);
 }
+
+/* ---- roadmap (D44) ---- */
+.roadmap {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s5);
+}
+.roadmap-lead {
+  color: var(--muted);
+  font-size: 1.1rem;
+}
+.roadmap-cols {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--s5);
+}
+.roadmap-col {
+  padding: var(--s5);
+}
+.roadmap-col h2 {
+  margin: 0 0 var(--s4);
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+.roadmap-col ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s4);
+}
+.roadmap-col li {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s1);
+}
+.roadmap-col.concept li > span:first-child {
+  color: var(--muted);
+}
+.tag {
+  align-self: flex-start;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border-radius: 999px;
+  padding: 1px var(--s2);
+}
+.tag-now {
+  color: var(--bg);
+  background: var(--text);
+}
+.tag-concept {
+  color: var(--text);
+  border: 1px dashed var(--muted);
+}
+@media (max-width: 900px) {
+  .roadmap-cols {
+    grid-template-columns: 1fr;
+  }
+}
