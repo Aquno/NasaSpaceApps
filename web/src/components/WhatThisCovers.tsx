@@ -10,6 +10,11 @@ export function WhatThisCovers() {
         A planning tool, used on Earth before launch. Verdicts come from fixed decision rules and
         scoring, shown on screen.
       </p>
+      <p className="note">
+        <strong>Best case per region, not a landing area:</strong> each site point is the
+        most-illuminated 60 m pixel of its NASA region on NASA&apos;s average-illumination map;
+        neighbouring pixels can get much less light.
+      </p>
       <div className="covers">
         <div>
           <strong>Covers</strong>

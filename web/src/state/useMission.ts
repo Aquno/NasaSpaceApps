@@ -8,6 +8,7 @@
  */
 import { useMemo, useState } from 'react';
 import { dailyFractions, type DailyFractions } from '../calc/annual';
+import { landingCensus, type LandingCensus } from '../calc/census';
 import { evaluateSites, rankedSites, type Evaluation } from '../calc/evaluate';
 import {
   earliestViableSite,
@@ -55,6 +56,8 @@ export interface Derived {
   next: Map<string, ViableWindow | null>;
   /** Earliest viable site from the (delayed) landing date. */
   earliest: EarliestViable | null;
+  /** Landing-day census for the current duration and rules (headline numbers). */
+  census: LandingCensus;
 }
 
 /** Visibility and daily fractions are computed once per data set. */
@@ -103,5 +106,9 @@ export function useEvaluations(
     () => earliestViableSite(pre.ranked, data, pre.vis, landingMs, inputs.durationH, inputs.rules),
     [pre, data, landingMs, inputs.durationH, inputs.rules],
   );
-  return { ...pre, landingMs, now, planned, next, earliest };
+  const census = useMemo(
+    () => landingCensus(pre.ranked, data, pre.vis, inputs.durationH, inputs.rules),
+    [pre, data, inputs.durationH, inputs.rules],
+  );
+  return { ...pre, landingMs, now, planned, next, earliest, census };
 }

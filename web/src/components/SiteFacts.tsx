@@ -8,7 +8,7 @@ import { fmtKm } from '../ui/format';
 
 const POINT_TYPE: Record<SiteSummary['sourceType'], string> = {
   published_point: 'Published point (NASA Lunar Surface Data Book)',
-  derived_point: 'Derived point (on the rim crest, inside a NASA region)',
+  derived_point: 'Derived: most-illuminated 60 m pixel of its NASA region (best case)',
 };
 
 export function SiteFacts({ site }: { site: SiteSummary | undefined }) {

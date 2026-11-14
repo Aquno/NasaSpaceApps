@@ -24,6 +24,8 @@ Pontos de **referência regionais**, não locais de pouso designados pela NASA. 
 | Haworth | −86,368514 | −23,276449 | derivado (D30) | 2836,2 | 3,8° | 12,04 km | 9,402 km (3,63 km²) | 70,49% | 60,10% |
 | Shackleton inner wall (demonstração) | −89,7668 | −171,87 | publicado (centro do Site04) | 770,9 | 31,4° | 0 | 0,780 km (233,4 km²) | 10,96% | 11,07% |
 
+**Limite (D34):** cada ponto é o pixel de 60 m mais iluminado da sua região no mapa oficial; os pixels vizinhos chegam a ter bem menos luz (no 3 × 3 em volta, de 20% a 52% nos piores casos — `data/validation/REPORT.md`). Os resultados representam o **melhor caso de cada região, não uma área de pouso**.
+
 Centros publicados usados (M2M-30044, Tab. A2.1-1, p. 75): Site04 −89,7668 / −171,87; Site01 −89,4632 / −137,49; Site11 −88,6834 / −67,9321; Site23 −85,9948 / −0,23578; Haworth −86,7639 / −22,777. Histórico: D12 (centros e CR1) e D20 (crista do Shackleton) foram substituídos pela D30.
 
 Fontes:

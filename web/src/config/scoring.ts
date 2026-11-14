@@ -37,11 +37,16 @@ export interface MissionRules {
   minSunFraction: number;
   /** Below this sunlit fraction (but above the minimum) the verdict is at best marginal. */
   marginalBelowSunFraction: number;
-  /** Viable needs both scores at or above these (communication enters via engineering). */
+  /** Viable needs the engineering score at or above this (communication enters through it). */
   viableMinEngineering: number;
-  viableMinScience: number;
   /** Terrain slope (degrees, 20 m DEM) above which the verdict is lowered by one level. */
   maxSlopeDeg: number;
+  /**
+   * Optional filter (off by default): sites whose science score is below `minScienceScore` are
+   * left out of the best compromise. Science never changes the verdict (D25 revised, D32).
+   */
+  minScienceEnabled: boolean;
+  minScienceScore: number;
 }
 
 export const DEFAULT_RULES: MissionRules = {
@@ -50,16 +55,17 @@ export const DEFAULT_RULES: MissionRules = {
   minSunFraction: 0.5,
   marginalBelowSunFraction: 0.7,
   viableMinEngineering: 60,
-  viableMinScience: 40,
   maxSlopeDeg: 10,
+  minScienceEnabled: false,
+  minScienceScore: 40,
 };
 
 /** Mission duration choices offered in the interface (hours). Default: 14 days. */
 export const MISSION_DURATION_OPTIONS_H = [72, 168, 336, 504, 672] as const;
 export const DEFAULT_MISSION_DURATION_H = 336;
 
-/** Default planned landing date (UTC) and delay range offered in the interface (days). */
-export const DEFAULT_LANDING_ISO = '2027-03-01T00:00:00Z';
+/** Default demo scenario (D33): landing 2027-03-04, 14 days, no delay; "Slip launch 21 days" -> 2027-03-25. */
+export const DEFAULT_LANDING_ISO = '2027-03-04T00:00:00Z';
 export const MAX_DELAY_DAYS = 60;
 /** Delay used in the pitch question ("Your launch just slipped three weeks"). */
 export const PITCH_DELAY_DAYS = 21;

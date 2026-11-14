@@ -43,6 +43,7 @@ export function ScatterPlot({
   selectedId,
   onSelect,
 }: Props) {
+  const scienceFloor = rules.minScienceEnabled ? rules.minScienceScore : 0;
   const labels = placeLabels(
     sites.flatMap((s) => {
       const b = point(now.sites.find((e) => e.siteId === s.id));
@@ -60,16 +61,21 @@ export function ScatterPlot({
       preserveAspectRatio="xMidYMid meet"
     >
       <rect
-        x={sx(rules.viableMinScience)}
+        x={sx(scienceFloor)}
         y={sy(100)}
-        width={sx(100) - sx(rules.viableMinScience)}
+        width={sx(100) - sx(scienceFloor)}
         height={sy(rules.viableMinEngineering) - sy(100)}
         fill="rgb(232 238 244 / 0.05)"
         stroke="var(--muted)"
         strokeDasharray="4 4"
       />
-      <text x={sx(100) - 4} y={sy(100) + 14} textAnchor="end" fontSize="11">
-        viable zone (team rules)
+      <text
+        x={sx(scienceFloor) + 4}
+        y={sy(rules.viableMinEngineering) - 5}
+        textAnchor="start"
+        fontSize="11"
+      >
+        engineering ≥ viable minimum (team rules)
       </text>
       {TICKS.map((t) => (
         <g key={t}>

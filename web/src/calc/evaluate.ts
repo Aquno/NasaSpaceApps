@@ -96,9 +96,14 @@ export function evaluateSites(
         ]
       : [],
   );
-  const order = rankCandidates(candidates);
+  const minScience = rules.minScienceEnabled ? rules.minScienceScore : null;
+  const order = rankCandidates(candidates, minScience);
   const missing = evaluations.filter((e) => !e.ok).map((e) => e.siteId);
-  return { sites: evaluations, bestId: bestCompromise(candidates), order: [...order, ...missing] };
+  return {
+    sites: evaluations,
+    bestId: bestCompromise(candidates, minScience),
+    order: [...order, ...missing],
+  };
 }
 
 /** Sites in the main comparison: every site except the sensitivity demo point. */

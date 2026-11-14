@@ -108,6 +108,24 @@ export function Dashboard({ sites, data, terrain, inputs, onInputs, onOpenSite }
         {d.earliest
           ? `${sites.find((s) => s.id === d.earliest?.siteId)?.name ?? d.earliest.siteId}, landing ${fmtDate(d.earliest.window.startMs)} (viable for ${d.earliest.window.windowDays} consecutive landing days)`
           : 'none before the end of the data.'}
+        <br />
+        <span className="census">
+          <strong>
+            Landing days that work in {anyMeta ? new Date(anyMeta.startMs).getUTCFullYear() : ''} (
+            {inputs.durationH / 24}-day mission, current rules):
+          </strong>{' '}
+          {d.ranked.map((s, k) => (
+            <span key={s.id}>
+              {k > 0 && ' · '}
+              {s.name} <span className="num">{d.census.perSite.get(s.id)?.viable ?? 0}</span>
+            </span>
+          ))}
+          {' · '}
+          <strong>
+            no site: <span className="num">{d.census.noViableDays}</span> of{' '}
+            <span className="num">{d.census.daysInData}</span>
+          </strong>
+        </span>
       </p>
       <ol className="cards" aria-label="Sites ranked for this mission">
         {d.now.order.map((id, k) => {

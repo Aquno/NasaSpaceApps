@@ -194,8 +194,20 @@ describe('scores', () => {
     const weak = { ...base, earthFraction: 0.05, longestNoContactHours: 90 };
     expect(check(weak)).toMatchObject({ kind: 'marginal', rule: 'engineering' });
   });
-  it('marginal: far from permanent shadow', () => {
-    expect(check(base, 14)).toMatchObject({ kind: 'marginal', rule: 'science' });
+  it('science never fails or lowers a site (D32): far from permanent shadow is still viable', () => {
+    expect(check(base, 14)).toMatchObject({ kind: 'viable', rule: 'allPassed' });
+    expect(check(base, 50)).toMatchObject({ kind: 'viable', rule: 'allPassed' });
+  });
+  it('optional science filter only affects the best compromise', () => {
+    const c = [
+      { id: 'near', engineering: 60, science: 90, verdict: 'viable' as const },
+      { id: 'far', engineering: 95, science: 30, verdict: 'viable' as const },
+    ];
+    expect(bestCompromise(c)).toBe('near');
+    expect(bestCompromise(c, 95)).toBeNull();
+    const far = c.filter((x) => x.id === 'far');
+    expect(bestCompromise(far, null)).toBe('far');
+    expect(bestCompromise(far, 40)).toBeNull();
   });
   it('slope above the limit lowers the verdict by one level and cites the value', () => {
     const v = verdict(base, engineeringScore(base), scienceScore(2), 2, DEFAULT_RULES, 12.3);

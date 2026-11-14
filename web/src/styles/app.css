@@ -451,3 +451,11 @@ svg text {
   margin: 4px 0;
   padding-left: 18px;
 }
+.census {
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+.census .num {
+  color: var(--text);
+  font-weight: 600;
+}

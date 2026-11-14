@@ -89,7 +89,6 @@ export type RuleKey =
   | 'minSunFraction'
   | 'marginalSunFraction'
   | 'engineering'
-  | 'science'
   | 'slope'
   | 'allPassed';
 
@@ -101,10 +100,11 @@ const LOWER: Record<VerdictKind, VerdictKind> = {
 
 /**
  * Verdict with a one-sentence reason that cites the deciding rule and the measured value
- * (rules: config/scoring.ts MissionRules, team choices, D25, D31).
+ * (rules: config/scoring.ts MissionRules, team choices, D25, D31, D32). ENGINEERING ONLY: the
+ * science score never fails or lowers a site; it enters the ranking and the best compromise.
  * Hard rules (any fails -> not viable): Sun visible at landing; longest darkness below the
  * survival limit; sunlit fraction at least the minimum. Then: sunlit fraction below the
- * marginal threshold, engineering (which includes Earth contact) or science below the viable
+ * marginal threshold, or engineering score (which includes Earth contact) below the viable
  * minimum -> marginal; otherwise viable. Finally, a terrain slope above the limit lowers the
  * verdict by one level (viable -> marginal -> not viable).
  */
@@ -153,7 +153,7 @@ function baseVerdict(
       reason: `Only ${pct(m.sunFraction)} of the mission in sunlight (minimum ${pct(rules.minSunFraction)}).`,
     };
   }
-  const science = sci?.total ?? 0;
+  void sci; // science never changes the verdict (D32); kept in the signature for the reason
   const distance = psrDistanceKm === null ? 'unknown' : `${psrDistanceKm.toFixed(1)} km`;
   if (m.sunFraction < rules.marginalBelowSunFraction) {
     return {
@@ -167,13 +167,6 @@ function baseVerdict(
       kind: 'marginal',
       rule: 'engineering',
       reason: `Engineering score ${floor1(eng.total)} below ${rules.viableMinEngineering}: Earth in view ${pct(m.earthFraction)}, longest contact gap ${hours(m.longestNoContactHours)}.`,
-    };
-  }
-  if (science < rules.viableMinScience) {
-    return {
-      kind: 'marginal',
-      rule: 'science',
-      reason: `Good power and contact, but permanent shadow is ${distance} away (science ${floor1(science)} < ${rules.viableMinScience}).`,
     };
   }
   return {
@@ -191,12 +184,18 @@ export interface Candidate {
 }
 
 /**
- * Best compromise (D25): among sites that are not "not-viable", the one with the highest
+ * Best compromise (D25, D32): among sites that are not "not-viable" (and, when the optional
+ * filter is on, whose science score is at least `minScience`), the one with the highest
  * min(engineering, science) — the weaker side decides; ties broken by the higher sum, then id.
- * Returns null when every site is not viable.
+ * Returns null when no site is eligible.
  */
-export function bestCompromise(candidates: Candidate[]): string | null {
-  const eligible = candidates.filter((c) => c.verdict !== 'not-viable');
+export function bestCompromise(
+  candidates: Candidate[],
+  minScience: number | null = null,
+): string | null {
+  const eligible = candidates.filter(
+    (c) => c.verdict !== 'not-viable' && (minScience === null || c.science >= minScience),
+  );
   if (eligible.length === 0) return null;
   const sorted = [...eligible].sort(
     (a, b) =>
@@ -210,8 +209,11 @@ export function bestCompromise(candidates: Candidate[]): string | null {
 const VERDICT_ORDER: Record<VerdictKind, number> = { viable: 0, marginal: 1, 'not-viable': 2 };
 
 /** Display order: best compromise first, then by verdict, then min score, then sum. */
-export function rankCandidates(candidates: Candidate[]): string[] {
-  const best = bestCompromise(candidates);
+export function rankCandidates(
+  candidates: Candidate[],
+  minScience: number | null = null,
+): string[] {
+  const best = bestCompromise(candidates, minScience);
   return [...candidates]
     .sort(
       (a, b) =>

@@ -74,14 +74,24 @@ export function MissionRulesPanel({ rules, onChange }: Props) {
           />
         </label>
         <label className="control">
-          <span className="caps">Viable: science ≥</span>
-          <input
-            type="number"
-            min={0}
-            max={100}
-            value={rules.viableMinScience}
-            onChange={(e) => set({ viableMinScience: num(e.target.value, 0) })}
-          />
+          <span className="caps">Minimum science score filter</span>
+          <span>
+            <input
+              type="checkbox"
+              checked={rules.minScienceEnabled}
+              onChange={(e) => set({ minScienceEnabled: e.target.checked })}
+              aria-label="Enable the minimum science score filter"
+            />{' '}
+            <input
+              type="number"
+              min={0}
+              max={100}
+              value={rules.minScienceScore}
+              disabled={!rules.minScienceEnabled}
+              onChange={(e) => set({ minScienceScore: num(e.target.value, 0) })}
+              aria-label="Minimum science score"
+            />
+          </span>
         </label>
         <label className="control">
           <span className="caps">Max terrain slope (°)</span>
@@ -99,10 +109,12 @@ export function MissionRulesPanel({ rules, onChange }: Props) {
       </div>
       <p className="note">
         Not viable: dark at landing, a darkness longer than the survival limit, or too little
-        sunlight. Marginal: sunlight below the comfort share, or a score below the viable minimum.
+        sunlight. Marginal: sunlight below the comfort share, or an engineering score below the
+        viable minimum. The verdict uses engineering rules only; the science score ranks the sites.
         Earth contact counts through the engineering score. A terrain slope above the limit lowers
         the verdict by one level. Best compromise: the site with the highest of min(engineering,
-        science) among sites that are not &quot;not viable&quot;.
+        science) among sites that are not &quot;not viable&quot; (and pass the optional science
+        filter).
       </p>
     </details>
   );

@@ -177,6 +177,19 @@ Formato: data, decisão, motivo, consequências. Decisões novas vão no fim. N�
 - **Escopo:** bloco "What this tool covers" (cobre: luz solar, linha direta com a Terra, inclinação, proximidade de sombra permanente; não cobre: trajetória e combustível, ambiente térmico, obstáculos no solo, redes de retransmissão; ferramenta de planejamento, usada na Terra antes do lançamento) na abertura e no diálogo "What this adds · scope".
 - **Texto da abertura** atualizado; nenhuma parte do cálculo é descrita como inteligência artificial ("decision rules", "scoring").
 
+### D32 — 2026-11-14 — Viabilidade separada do valor científico (revisa a D25)
+- **Decisão:** o veredito (viable / marginal / not viable) depende **só das regras de engenharia**: Sol no pouso, maior escuridão contínua, fração de horas com Sol, inclinação (D31) e a nota de engenharia (que inclui a comunicação). A **nota de ciência não reprova nem rebaixa** um local; entra no ranking e no melhor compromisso (max min(engenharia, ciência)).
+- **Filtro opcional** em "Mission rules": "Minimum science score" (padrão 40), **desligado por padrão**; quando ligado, só tira do melhor compromisso os locais abaixo do mínimo — nunca muda o veredito.
+- **Efeito** (missão de 14 dias, 352 dias de pouso com dados completos; `npm run report:census`): viáveis / marginais / inviáveis — Shackleton rim 182 / 15 / 155; Connecting ridge 219 / 0 / 133; de Gerlache rim 200 / 1 / 151; **Malapert massif 226 / 7 / 119**; **Haworth 116 / 1 / 235**; nenhum local viável em 77 dias. Melhor compromisso por dia: Shackleton rim 159, Connecting ridge 68, de Gerlache rim 25, Malapert 16, Haworth 7, nenhum 77 (inalterado, pois locais marginais já eram elegíveis). Com +21 dias, 105 datas trocam o melhor compromisso de um local para outro.
+
+### D33 — 2026-11-14 — Cenário padrão da demonstração
+- **Decisão:** ao abrir o painel: pouso planejado **2027-03-04**, missão de **14 dias**, atraso **0**; o botão "Slip launch 21 days" leva o pouso a **2027-03-25**.
+- **Por quê:** é o caso mais claro do relatório de atraso (`npm run report:delay`), e continua valendo depois da D32: Shackleton rim viável e melhor compromisso (eng 94 / sci 88) → depois do atraso, not viable ("Dark at landing"), e o de Gerlache rim passa a melhor compromisso (viável, eng 80 / sci 58).
+
+### D34 — 2026-11-14 — Limite declarado: melhor caso por região
+- Cada ponto é o pixel de 60 m mais iluminado da sua região no mapa oficial (D30); os pixels vizinhos chegam a ter bem menos luz. Os resultados representam o **melhor caso de cada região, não uma área de pouso**. Declarado no bloco "What this tool covers", no README, em `DADOS.md` e (a fazer) em "Data and limits" do detalhe do local.
+- **Número de destaque no painel:** dias de pouso de 2027 em que cada local é viável e dias em que nenhum local serve, para a duração e as regras atuais (`web/src/calc/census.ts`, mesmo código do relatório).
+
 ### Pendências abertas após a etapa 2
 - Nenhuma pendência de dados da etapa 2.
 
