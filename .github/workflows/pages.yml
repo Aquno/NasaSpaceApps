@@ -1,12 +1,14 @@
-# Publishes the static site (web/) to GitHub Pages on every push to main (D46).
-# Steps: install, lint, format check, tests, build with the repository name as base path
-# (data/app is copied into the build by the prebuild sync-data script), then deploy.
-# Needs Settings -> Pages -> Source: "GitHub Actions".
-name: Deploy to GitHub Pages
+# GitHub Pages publication — MANUAL ONLY (D47).
+# The repository stays private, and free GitHub Pages does not publish private repositories,
+# so this workflow no longer runs on push to main. It is kept so publication can be turned back
+# on if that decision changes: run it from the Actions tab ("Run workflow"), or restore
+#   push:
+#     branches: [main]
+# under "on:" below. It would also need Settings -> Pages -> Source: "GitHub Actions".
+# Verification on every push lives in ci.yml.
+name: Deploy to GitHub Pages (manual)
 
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
 
 permissions:

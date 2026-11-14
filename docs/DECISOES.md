@@ -288,7 +288,26 @@ Formato: data, decisão, motivo, consequências. Decisões novas vão no fim. N�
 - **Decisão:** fluxo do GitHub Actions (`.github/workflows/pages.yml`) que, a cada push na `main` (ou manualmente), instala, roda lint, formatação e testes, gera o build com `BASE_PATH=/<nome do repositório>/` (o `prebuild` copia `data/app` para o site) e publica em `https://aquno.github.io/NasaSpaceApps/`. Só depende de `data/app/` (versionado) e de `web/`.
 - **Conferido localmente:** build com `BASE_PATH=/NasaSpaceApps/` servido nesse caminho: dados, textura e telas carregam. As rotas usam `#/`, então não há página 404 a configurar.
 - **Ativação:** em Settings → Pages, "Source" = "GitHub Actions" (uma vez). O fluxo só roda depois da junção na `main`, que fica para o time decidir.
-- **Status:** preparada (2026-11-14); publicação pendente da junção na `main`.
+- **Status:** preparada (2026-11-14); **publicação automática desativada pela D47** (repositório privado). O fluxo ficou só manual.
+
+### D47 — 2026-11-14 — Repositório privado: sem publicação automática; verificação a cada push
+
+- **Contexto:** o repositório continua **privado**; o GitHub Pages gratuito não publica repositórios privados. Substitui a parte de publicação da D46.
+- **Decisão:** `.github/workflows/pages.yml` passa a rodar **só por acionamento manual** (comentário no arquivo explica como reativar). Novo fluxo `.github/workflows/ci.yml` roda a cada push (qualquer branch, incluindo junções na `main`) e em pull requests para a `main`: na interface, lint, formatação, testes e build; no pipeline, `ruff check`, `ruff format --check` e `pytest`. Não publica nada.
+- **Build portátil:** `BASE_PATH` define o caminho base (padrão `/`, raiz de um domínio; ou uma subpasta, ex.: `/lunar-navigator/`). A pasta `web/dist/` é o site inteiro, pronto para qualquer serviço estático; rotas com `#/` dispensam regra de reescrita. Conferido localmente na raiz e em subpasta. Instruções em `web/README.md`. Nenhum serviço de hospedagem escolhido.
+- **Status:** aplicada (2026-11-14).
+
+### D48 — 2026-11-14 — Regra permanente de fluxo de git
+
+- **Decisão:** o fluxo abaixo vale para toda tarefa, sem precisar ser pedido; registrado em `CLAUDE.md` e `docs/BOAS_PRATICAS.md`.
+- **Fluxo de git em toda tarefa (regra permanente, D48), sem precisar pedir:**
+  1. Começar conferindo `git status` e atualizando a branch a partir do remoto (`git fetch` + `git pull --ff-only`).
+  2. Trabalhar numa branch própria, criada a partir da `main` atualizada, com nome que descreva a tarefa (ex.: `polish-visual-review`).
+  3. Commits pequenos em Conventional Commits e push ao fim de cada passo concluído.
+  4. Antes de juntar na `main`: testes, lint e build passando (web e pipeline). Depois juntar com commit de merge (`git merge --no-ff`) e enviar a `main`.
+  5. **Nunca** usar push forçado, reescrever histórico já enviado, apagar branches remotas, nem mudar a visibilidade ou as configurações do repositório sem perguntar ao time.
+  6. Ao fim de cada tarefa, dizer em uma linha: branch, último commit e se a `main` foi atualizada.
+- **Status:** em vigor (2026-11-14).
 
 ### Pendências abertas após a etapa 2
 - Nenhuma pendência de dados da etapa 2.

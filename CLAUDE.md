@@ -121,7 +121,15 @@ Versão completa, com exemplos e o equilíbrio entre rigor e prazo: **`docs/BOAS
 
 **Git**
 - Commits pequenos em **Conventional Commits** (`feat`, `fix`, `docs`, `refactor`, `test`, `chore`), ex.: `feat(ephemeris): query Horizons for one site`.
-- **Um branch por etapa** (ex.: `stage-1-ephemeris`).
+- **Um branch por etapa** (ex.: `stage-1-ephemeris`); fora das etapas, uma branch por tarefa.
+- **Fluxo de git em toda tarefa (regra permanente, D48), sem precisar pedir:**
+  1. Começar conferindo `git status` e atualizando a branch a partir do remoto (`git fetch` + `git pull --ff-only`).
+  2. Trabalhar numa branch própria, criada a partir da `main` atualizada, com nome que descreva a tarefa (ex.: `polish-visual-review`).
+  3. Commits pequenos em Conventional Commits e push ao fim de cada passo concluído.
+  4. Antes de juntar na `main`: testes, lint e build passando (web e pipeline). Depois juntar com commit de merge (`git merge --no-ff`) e enviar a `main`.
+  5. **Nunca** usar push forçado, reescrever histórico já enviado, apagar branches remotas, nem mudar a visibilidade ou as configurações do repositório sem perguntar ao time.
+  6. Ao fim de cada tarefa, dizer em uma linha: branch, último commit e se a `main` foi atualizada.
+- Verificação automática a cada push: `.github/workflows/ci.yml` (D47). Repositório **privado**; sem publicação automática.
 - Nada de segredos nem arquivos grandes no repositório.
 - **Rodar testes e lint antes do commit.**
 

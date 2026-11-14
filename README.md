@@ -13,7 +13,7 @@ A lightweight, static web tool that lets mission planners, educators and the pub
 
 More screenshots (1920 × 1080 and 1366 × 768, English and Portuguese) in [`web/docs/screenshots/`](web/docs/screenshots/).
 >
-> 🔗 **[PLACEHOLDER — live demo link]**
+> 🔗 **[PLACEHOLDER — live demo link]** (the repository is private; the static build in `web/dist/` can be hosted on any static service, see [`web/README.md`](web/README.md))
 >
 > 🎬 **[PLACEHOLDER — demo video link]**
 

@@ -15,12 +15,31 @@ npm run dev            # sync-data + servidor de desenvolvimento
 npm test               # testes (inclui a validação dos arquivos reais de data/app)
 npm run lint && npm run typecheck
 npm run build          # sync-data + build estático em web/dist
-BASE_PATH=/NasaSpaceApps/ npm run build   # build para GitHub Pages (caminho base)
 npm run report:scores  # tabela de notas/vereditos para datas de pouso (revisão)
 npm run report:census  # dias viáveis/marginais/inviáveis de 2027 por local
 npm run report:delay   # cenários em que um atraso muda o melhor compromisso ou o veredito
 npm run screenshots    # capturas reais (abertura e painel, 1920×1080 e 1366×768, EN e PT) em docs/screenshots/; precisa de build + vite preview na porta 4173
+npm run report:nasa    # comparação com as médias da NASA (etapa 6) em ../data/validation/COMPARISON.md
 ```
+
+## Build para hospedar em qualquer serviço estático (D47)
+
+A pasta `web/dist/` gerada pelo build é o site inteiro (HTML, JS, CSS, dados de `data/app` e a textura): basta copiá-la para o serviço de hospedagem. Não há servidor nem chamadas externas. As rotas usam `#/` (ex.: `#/mission`), então o serviço não precisa de regra de reescrita nem de página 404 especial.
+
+O caminho base vem da variável `BASE_PATH` (padrão `/`):
+
+```bash
+cd web
+npm ci
+npm run build                                # site na raiz do domínio: https://exemplo.org/
+BASE_PATH=/lunar-navigator/ npm run build    # site numa subpasta: https://exemplo.org/lunar-navigator/
+npx vite preview                             # conferir localmente o build (http://localhost:4173/)
+```
+
+- `BASE_PATH` precisa começar e terminar com `/`.
+- No PowerShell: `$env:BASE_PATH='/lunar-navigator/'; npm run build`. No Git Bash do Windows, a variável é convertida num caminho do Windows; use `MSYS2_ENV_CONV_EXCL=BASE_PATH BASE_PATH=/lunar-navigator/ npm run build`.
+- Para conferir uma subpasta localmente: `npx vite preview` com a mesma `BASE_PATH` e abrir `http://localhost:4173/lunar-navigator/`.
+- Nenhum serviço de hospedagem foi escolhido. O fluxo `.github/workflows/pages.yml` (GitHub Pages) existe só para acionamento manual, porque o repositório é privado.
 
 ## Onde fica cada coisa
 

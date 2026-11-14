@@ -97,7 +97,7 @@ Legenda de status: `a fazer` · `em andamento` · `concluído` · `plano B` · `
   - [ ] 6. Detalhe do local (panorama com play, linha do tempo, "Data and limits")
   - [ ] 7. "Small move, big change", abertura e rodapé
   - [ ] Selo "SAMPLE DATA" quando `meta.sample = true`; aviso "não é produto da NASA"; acessibilidade (contraste, teclado, nada só por cor)
-  - [x] Build estático pronto para GitHub Pages (`BASE_PATH`); publicação automática a partir da `main` (D46)
+  - [x] Build estático com caminho base configurável (`BASE_PATH`, raiz ou subpasta), pronto para qualquer serviço estático (D47); serviço de hospedagem a escolher
 
 ### 6. Validação
 - Responsável:
@@ -152,3 +152,4 @@ Legenda de status: `a fazer` · `em andamento` · `concluído` · `plano B` · `
 | 2026-11-14 | 5 | D44: tela "Roadmap" (Now / In 3 months / In 6 months), conceitos marcados "Concept, not implemented" |
 | 2026-11-14 | 6 | D45: comparação com as médias da NASA (Sol −0,5 a +4,1 p.p.; Terra −3,6 a +3,6 p.p. nos cinco locais), no painel e em `data/validation/COMPARISON.md`; nada ajustado |
 | 2026-11-14 | 5 | D46: fluxo do GitHub Pages (lint, formatação, testes, build, publicação) a partir da `main`; conferido localmente com `/NasaSpaceApps/`; falta ativar Pages com origem "GitHub Actions" e juntar na `main` |
+| 2026-11-14 | — | D47: repositório privado; GitHub Pages só manual; fluxo de verificação (`ci.yml`) a cada push; build portátil documentado. D48: regra permanente de fluxo de git. Junção de `stage-5-interface` na `main` |

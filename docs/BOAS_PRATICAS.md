@@ -76,6 +76,14 @@ Não é obrigatório ter os quatro em todo módulo — é um guia de onde cada c
 - Commits pequenos, padrão **Conventional Commits**: `feat`, `fix`, `docs`, `refactor`, `test`, `chore`.
   - Ex.: `feat(ephemeris): query Horizons for Shackleton rim`, `docs: update roadmap after stage 1`.
 - **Um branch por etapa:** `stage-1-ephemeris`, `stage-2-horizon`, `stage-3-science`, `stage-4-export`, `stage-5-web`, `stage-6-validation`, `stage-7-delivery`.
+- **Fluxo de git em toda tarefa (regra permanente, D48), sem precisar pedir:**
+  1. Começar conferindo `git status` e atualizando a branch a partir do remoto (`git fetch` + `git pull --ff-only`).
+  2. Trabalhar numa branch própria, criada a partir da `main` atualizada, com nome que descreva a tarefa (ex.: `polish-visual-review`).
+  3. Commits pequenos em Conventional Commits e push ao fim de cada passo concluído.
+  4. Antes de juntar na `main`: testes, lint e build passando (web e pipeline). Depois juntar com commit de merge (`git merge --no-ff`) e enviar a `main`.
+  5. **Nunca** usar push forçado, reescrever histórico já enviado, apagar branches remotas, nem mudar a visibilidade ou as configurações do repositório sem perguntar ao time.
+  6. Ao fim de cada tarefa, dizer em uma linha: branch, último commit e se a `main` foi atualizada.
+- **Verificação automática:** `.github/workflows/ci.yml` roda lint, formatação, testes e build a cada push (D47). Conferir na aba Actions que passou.
 - Nada de segredos nem arquivos grandes no repositório (ver `.gitignore` e `data/README.md`).
 
 ## Ao concluir uma etapa

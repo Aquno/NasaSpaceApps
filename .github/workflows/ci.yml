@@ -1,0 +1,44 @@
+# Verification on every push (any branch, including merges into main) and on pull requests to
+# main (D47). Checks only; nothing is published.
+# - web/: lint (ESLint), formatting (Prettier), tests (Vitest) and the static build.
+# - pipeline/: lint and formatting (ruff) and tests (pytest; offline, no NASA downloads).
+name: Verify
+
+on:
+  push:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  web:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run format:check
+      - run: npm test
+      - run: npm run build
+
+  pipeline:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - run: pip install -r pipeline/requirements.txt
+      - run: ruff check pipeline
+      - run: ruff format --check pipeline
+      - run: python -m pytest -q pipeline
