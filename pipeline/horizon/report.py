@@ -28,6 +28,7 @@ class SiteSummary:
 
     site_id: str
     terrain_m: float
+    slope_deg: float
     mast_m: float
     min_deg: float
     max_deg: float
@@ -45,7 +46,12 @@ class SiteSummary:
 
 
 def summarize(
-    site_id: str, terrain_m: float, mast_m: float, radius_m: float, result: HorizonResult
+    site_id: str,
+    terrain_m: float,
+    slope: float,
+    mast_m: float,
+    radius_m: float,
+    result: HorizonResult,
 ) -> SiteSummary:
     """Summary and sanity verdict of one horizon (range -10..35 deg, not constant, complete)."""
     el = result.elevation_deg
@@ -69,6 +75,7 @@ def summarize(
     return SiteSummary(
         site_id=site_id,
         terrain_m=terrain_m,
+        slope_deg=slope,
         mast_m=mast_m,
         min_deg=float(np.nanmin(el)),
         max_deg=float(np.nanmax(el)),
@@ -116,13 +123,14 @@ def render_report(
         "",
         "## Contour (degrees)",
         "",
-        "| Site | Terrain h (m) | Min | Max | Mean | Highest obstacle: azimuth "
+        "| Site | Terrain h (m) | Slope (deg) | Min | Max | Mean | Highest obstacle: azimuth "
         "| distance (km) | Sanity |",
-        "|---|---|---|---|---|---|---|---|",
+        "|---|---|---|---|---|---|---|---|---|",
     ]
     for s in summaries:
         lines.append(
-            f"| {s.site_id} | {s.terrain_m:.1f} | {s.min_deg:.3f} | {s.max_deg:.3f} | "
+            f"| {s.site_id} | {s.terrain_m:.1f} | {s.slope_deg:.1f} | {s.min_deg:.3f} | "
+            f"{s.max_deg:.3f} | "
             f"{s.mean_deg:.3f} | {s.max_azimuth_deg} | {s.max_distance_km:.2f} | "
             f"{s.sanity_message} |"
         )

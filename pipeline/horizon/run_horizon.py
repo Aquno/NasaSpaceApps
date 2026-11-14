@@ -30,6 +30,7 @@ from pipeline.horizon.dem_cog import CogDem, http_tile_fetcher, open_cog, read_w
 from pipeline.horizon.geometry import bilinear, smooth_sphere_dip_deg
 from pipeline.horizon.horizon_profile import Band, HorizonResult, compute_horizon
 from pipeline.horizon.report import SiteSummary, render_report, summarize
+from pipeline.sites.crest_point import slope_deg
 from pipeline.sites.polar_stereo import forward_south_polar
 from pipeline.sites.site_list import Site, load_sites
 
@@ -79,7 +80,8 @@ def load_terrain(dem: CogDem, fetch, site: Site, bands: list[Band]):
     site_height = float(lookup(0, np.array([x0]), np.array([y0]))[0])
     if not np.isfinite(site_height):
         raise HorizonError(f"{site.id}: no DEM height at the site")
-    return lookup, site_height, levels
+    slope = slope_deg(lambda x, y: lookup(0, x, y), x0, y0, bands[0].step_m)
+    return lookup, site_height, slope, levels
 
 
 def build_document(
@@ -89,6 +91,7 @@ def build_document(
     bands: list[Band],
     levels: list[int],
     terrain_m: float,
+    slope: float,
     mast_m: float,
 ) -> dict:
     """Output document for data/horizon/<id>.json (format: pipeline/horizon/README.md)."""
@@ -125,6 +128,8 @@ def build_document(
                 "degrees, clockwise from north (N=0, E=90, S=180, W=270), as Horizons"
             ),
             "terrain_height_m": round(terrain_m, 2),
+            "terrain_slope_deg": round(slope, 1),
+            "terrain_slope_method": "central differences over one 20 m DEM pixel at the site",
             "mast_height_m": mast_m,
             "observer_height_above_sphere_m": round(observer_m, 2),
             "smooth_sphere_dip_deg": round(
@@ -230,7 +235,7 @@ def main(argv: list[str] | None = None) -> int:
     exit_code = 0
     for site in sites:
         print(f"{site.id}: reading DEM windows and computing horizon ...")
-        lookup, terrain_m, levels = load_terrain(dem, fetch, site, bands)
+        lookup, terrain_m, slope, levels = load_terrain(dem, fetch, site, bands)
         result = compute_horizon(
             site.lat,
             site.lon,
@@ -240,7 +245,7 @@ def main(argv: list[str] | None = None) -> int:
             lookup,
             args.fine_step_deg,
         )
-        doc = build_document(site, dem, result, bands, levels, terrain_m, args.mast_m)
+        doc = build_document(site, dem, result, bands, levels, terrain_m, slope, args.mast_m)
         args.out_dir.mkdir(parents=True, exist_ok=True)
         (args.out_dir / f"{site.id}.json").write_text(json.dumps(doc, indent=1), encoding="utf-8")
 
@@ -256,7 +261,7 @@ def main(argv: list[str] | None = None) -> int:
         else:
             print(f"  no stage 1 file {ephemeris.name}; plot skipped")
 
-        summary = summarize(site.id, terrain_m, args.mast_m, dem.sphere_radius_m, result)
+        summary = summarize(site.id, terrain_m, slope, args.mast_m, dem.sphere_radius_m, result)
         summaries.append(summary)
         print(
             f"  horizon {summary.min_deg:.2f} .. {summary.max_deg:.2f} deg; "

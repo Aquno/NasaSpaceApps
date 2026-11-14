@@ -16,7 +16,7 @@ from pathlib import Path
 LAT_RANGE_DEG = (-90.0, 90.0)
 LON_RANGE_DEG = (-180.0, 180.0)  # east-positive, [-180, 180)
 REQUIRED_FIELDS = ("id", "name", "lat", "lon", "alt_km", "description", "source_type", "source")
-ALLOWED_SOURCE_TYPES = ("published_point", "derived_tile_center", "unverified")
+ALLOWED_SOURCE_TYPES = ("published_point", "derived_point", "derived_tile_center", "unverified")
 
 
 class SiteFileError(ValueError):
@@ -33,7 +33,7 @@ class Site:
         lat: latitude in degrees, MOON_ME frame (negative = south).
         lon: longitude in degrees east, MOON_ME frame, [-180, 180).
         alt_km: observer altitude in km above the 1737.4 km reference sphere.
-        source_type: published_point | derived_tile_center | unverified.
+        source_type: published_point | derived_point | derived_tile_center | unverified.
         source_url: URL of the document the coordinates come from.
     """
 

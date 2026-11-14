@@ -4,21 +4,21 @@
     {
       "id": "shackleton-rim",
       "name": "Shackleton rim",
-      "lat": -89.7668,
-      "lon": -171.87,
+      "lat": -89.780445,
+      "lon": -156.168582,
       "alt_km": 0.0,
-      "description": "Regional reference point: centre of the LOLA 5 m DEM region 'Shackleton Rim' (Site04). Not a NASA-designated landing site.",
+      "description": "Regional reference point on the Shackleton crater rim crest, derived from the LOLA 20 m DEM inside the NASA region 'Shackleton Rim' (Site04). Not a NASA-designated landing site.",
       "psr_distance_km": null,
       "nasa_avg_illumination_pct": null,
       "point_role": "regional_reference_point",
-      "source_type": "published_point",
+      "source_type": "derived_point",
       "source": {
-        "document": "NASA M2M-30044 Moon to Mars Lunar Surface Data Book, Baseline, effective 2025-03-18 (NASA/TP-20250002845)",
+        "document": "Derived by this project (docs/DECISOES.md D20) from: NASA M2M-30044 Moon to Mars Lunar Surface Data Book (2025), Table A2.1-1, region 'R04 or Site04 Shackleton Rim' centre (-89.7668, -171.87); region bounds = PGDA product 78 tile Site04; heights = PGDA product 90 LDEM_80S_20MPP_ADJ (20 m).",
         "url": "https://ntrs.nasa.gov/api/citations/20250002845/downloads/M2M-30044%20Lunar%20Surface%20Data%20Book%20Baseline_Final.pdf",
-        "location": "Appendix A2.1, Table A2.1-1 Lunar South Pole Features, page 75 of 93",
+        "location": "Rule: nearest pixel to the published centre, inside the Site04 tile, that is the highest point within 250 m and higher than the centre (pipeline/sites/crest_point.py; python -m pipeline.sites.derive_crest_point)",
         "quote": "R04 or Site04 Shackleton Rim -89.7668 -171.87"
       },
-      "cross_check": "Matches the centre of PGDA product 78 Site04_final_adj_5mpp_surf.tif (pipeline/sites/verify_site_points.py)."
+      "cross_check": "Height 1738.4 m (centre 770.9 m), 1919.6 m from the published centre, local slope 3.6 deg (centre: 31.4 deg)."
     },
     {
       "id": "connecting-ridge",
@@ -95,6 +95,26 @@
         "quote": "Haworth (Haworth is its name) -86.7639 -22.777"
       },
       "cross_check": "Matches the centre of PGDA product 78 Haworth_final_adj_5mpp_surf.tif."
+    },
+    {
+      "id": "shackleton-inner-wall",
+      "name": "Shackleton inner wall (Site04 center)",
+      "lat": -89.7668,
+      "lon": -171.87,
+      "alt_km": 0.0,
+      "description": "Published centre of the LOLA 5 m DEM region 'Shackleton Rim' (Site04). It lies on the crater's inner wall (~31 deg slope), so it is kept only to show how sensitive light and Earth visibility are to the exact position. Not a NASA-designated landing site.",
+      "psr_distance_km": null,
+      "nasa_avg_illumination_pct": null,
+      "point_role": "regional_reference_point",
+      "source_type": "published_point",
+      "source": {
+        "document": "NASA M2M-30044 Moon to Mars Lunar Surface Data Book, Baseline, effective 2025-03-18 (NASA/TP-20250002845)",
+        "url": "https://ntrs.nasa.gov/api/citations/20250002845/downloads/M2M-30044%20Lunar%20Surface%20Data%20Book%20Baseline_Final.pdf",
+        "location": "Appendix A2.1, Table A2.1-1 Lunar South Pole Features, page 75 of 93",
+        "quote": "R04 or Site04 Shackleton Rim -89.7668 -171.87"
+      },
+      "cross_check": "Matches the centre of PGDA product 78 Site04_final_adj_5mpp_surf.tif (pipeline/sites/verify_site_points.py).",
+      "purpose": "sensitivity_demo"
     }
   ]
 }

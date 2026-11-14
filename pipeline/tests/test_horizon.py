@@ -179,3 +179,42 @@ def test_decode_tile_floating_point_predictor():
     out = decode_tile(encode_float_predictor(values), level, 3, "<")
     assert np.allclose(out[~np.isnan(values)], values[~np.isnan(values)].astype(np.float32))
     assert np.isnan(out[2, 3])
+
+
+# ---- crest point and slope ---------------------------------------------------------------
+
+from pipeline.sites.crest_point import local_maxima, nearest_crest_maximum, slope_deg  # noqa: E402
+
+
+def test_local_maxima_single_peak():
+    yy, xx = np.indices((21, 21))
+    grid = -np.hypot(xx - 10, yy - 10)
+    mask = local_maxima(grid, 3)
+    assert mask[10, 10] and mask.sum() == 1
+
+
+def test_nearest_crest_maximum_picks_higher_ring_point_not_lower_floor_bump():
+    # Crater-like grid: ring crest at radius 30 px with two bumps (east and west),
+    # a floor bump near the centre that is lower than the start point.
+    size, px = 101, 20.0
+    yy, xx = np.indices((size, size))
+    r = np.hypot(xx - 50, yy - 50)
+    grid = 1000.0 - np.abs(r - 30) * 20.0
+    grid[50, 80] += 5.0  # east bump on the crest (col 80)
+    grid[50, 20] += 3.0  # west bump on the crest (col 20)
+    grid[50, 50] = 700.0  # floor bump: local max but lower than the start
+    x_left, y_top = 0.0, size * px
+    # Start on the inner wall, east side, at radius 22 px (row 50, col 72).
+    start_xy = (x_left + 72.5 * px, y_top - 50.5 * px)
+    start_h = grid[50, 72]
+    p = nearest_crest_maximum(grid, x_left, y_top, px, start_xy, start_h, (0, 2020, 0, 2020), 100.0)
+    assert (p.x_m, p.y_m) == (x_left + 80.5 * px, y_top - 50.5 * px)
+    assert p.height_m == grid[50, 80]
+    assert p.distance_to_centre_m == pytest.approx(8 * px)
+
+
+def test_slope_of_plane():
+    def plane(x, y):
+        return 0.5 * np.asarray(x)  # rises 0.5 m per metre east
+
+    assert slope_deg(plane, 0.0, 0.0, 20.0) == pytest.approx(math.degrees(math.atan(0.5)))

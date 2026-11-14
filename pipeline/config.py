@@ -86,3 +86,7 @@ HORIZON_SANITY_MIN_DEG = -10.0
 HORIZON_SANITY_MAX_DEG = 35.0
 # Days of stage 1 ephemeris overlaid on the check plots (from the start of the series).
 HORIZON_PLOT_DAYS = 30
+
+# ---- Site point review (docs/DECISOES.md D20) -------------------------------------------------
+# Radius within which a pixel must be the highest to count as a crest local maximum (team choice).
+CREST_LOCAL_MAX_RADIUS_M = 250.0

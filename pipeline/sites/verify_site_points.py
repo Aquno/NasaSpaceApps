@@ -24,6 +24,7 @@ PGDA78_BASE_URL = "https://pgda.gsfc.nasa.gov/data/LOLA_5mpp"
 # Tile used for each site; names from the PGDA product 78 README.
 SITE_TILES = {
     "shackleton-rim": "Site04",
+    "shackleton-inner-wall": "Site04",
     "connecting-ridge": "Site01",
     "de-gerlache-rim": "Site11",
     "malapert-massif": "Site23",
