@@ -1,0 +1,50 @@
+# ---- Python ----
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.ipynb_checkpoints/
+
+# ---- Node / web ----
+node_modules/
+web/dist/
+web/.vite/
+*.log
+npm-debug.log*
+
+# ---- Data (see data/README.md and docs/DECISOES.md D7) ----
+data/raw/*
+data/ephemeris/*
+data/horizon/*
+!data/raw/.gitkeep
+!data/ephemeris/.gitkeep
+!data/horizon/.gitkeep
+
+# Large binary / archive formats anywhere
+*.tif
+*.tiff
+*.img
+*.IMG
+*.lbl
+*.LBL
+*.cub
+*.zip
+*.tar
+*.gz
+*.npy
+*.npz
+
+# ---- Secrets / environment ----
+.env
+.env.*
+
+# ---- OS / editors ----
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/

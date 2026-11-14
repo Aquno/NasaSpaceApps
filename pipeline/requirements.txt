@@ -1,0 +1,13 @@
+# Python dependencies for the data pipeline (Python 3.10+).
+# Rule: add a library only when it saves real work; note why here and cite it in docs/REFERENCIAS.md.
+
+# HTTP calls to the JPL Horizons API (stage 1)
+requests
+# Numeric arrays for horizon and distance calculations (stages 2-3)
+numpy
+
+# Dev tools: lint/format and automated tests
+ruff
+pytest
+
+# PENDING (stage 2): raster reader for LOLA products (e.g. rasterio) once the file format is confirmed.
