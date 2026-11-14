@@ -98,3 +98,17 @@ PSR_PRODUCT = "NASA GSFC PGDA product 90, PSRs with area > 1 km2 (LPSR_80S_20MPP
 # Minimum PSR area counted as scientifically interesting (team choice, not a NASA criterion).
 # The PGDA file is already filtered at "area > 1 km2"; the code re-applies the bound.
 PSR_MIN_AREA_KM2 = 1.0
+
+# ---- Stage 6 (data part): NASA reference illumination (docs/DECISOES.md D22) -------------------
+VALIDATION_DIR = REPO_ROOT / "data" / "validation"
+# LOLA PDS data node, linked from PGDA product 69 (https://pgda.gsfc.nasa.gov/products/69).
+# 85S-90S at 60 m/pixel is the finest map that covers all sites (all are south of 85 S).
+NASA_ILLUM_BASE_URL = "http://imbrium.mit.edu/EXTRAS/ILLUMINATION/IMG/"
+NASA_SUN_PRODUCT = "AVGVISIB_85S_060M_201608"
+NASA_EARTH_PRODUCT = "AVGVISIB_85S_060M_201608_EARTH"
+# Content checks before trusting the files (the product page warns some links may be wrong):
+# the Sun map must read 0 inside PSRs; the Earth map must favour the near side over the far side.
+REFERENCE_CHECK_PSR_SAMPLES = 20
+REFERENCE_CHECK_MIN_ZERO_FRACTION = 0.9
+REFERENCE_CHECK_LATITUDE_DEG = -85.5
+REFERENCE_CHECK_MIN_NEAR_FAR_GAP = 0.2
