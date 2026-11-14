@@ -19,6 +19,7 @@ BASE_PATH=/NasaSpaceApps/ npm run build   # build para GitHub Pages (caminho bas
 npm run report:scores  # tabela de notas/vereditos para datas de pouso (revisão)
 npm run report:census  # dias viáveis/marginais/inviáveis de 2027 por local
 npm run report:delay   # cenários em que um atraso muda o melhor compromisso ou o veredito
+npm run screenshots    # capturas reais (abertura e painel, 1920×1080 e 1366×768, EN e PT) em docs/screenshots/; precisa de build + vite preview na porta 4173
 ```
 
 ## Onde fica cada coisa

@@ -238,6 +238,16 @@ Formato: data, decisão, motivo, consequências. Decisões novas vão no fim. N�
 - **Globo de orientação:** Lua inteira com a calota do polo sul (cerca de 85° S ao polo) destacada e "You are here", no canto do 3D; o mesmo globo maior na abertura. Textura: NASA SVS CGI Moon Kit, versão de baixa resolução (1024 × 512); se falhar, esfera cinza. Feito em cerca de 15 minutos (limite de 40).
 - **Status:** aplicada (2026-11-14). Tudo isso é apresentação; nenhum número vem da imagem.
 
+### D40 — 2026-11-14 — Abertura refeita e estilo de vidro
+
+- **Contexto:** a abertura era um bloco de texto com tabela e seletor sem estilo; quem assiste precisa entender em poucos segundos o que o projeto faz.
+- **Decisão:** primeira tela com a altura da janela: céu escuro com campo de estrelas discreto (desenhado uma vez, semente fixa, densidade baixa) e o globo da Lua girando devagar, iluminado de lado, com a calota do polo sul destacada por um brilho discreto; rótulo, nome, uma frase do que a ferramenta faz, a pergunta do atraso, botão "Open mission panel" e link "How it works". Seletor de idioma em alternância EN / PT (também no painel). Segunda seção: frase do problema (o texto antigo da abertura), três cartões de vidro e uma faixa de quatro números calculados no navegador pelo módulo de cálculo com as regras padrão (pontos avaliados, horas de dados por local, dias de 2027 sem nenhum local, datas em que +21 dias troca o melhor local — este último pela nova função `delayChangeDays`, que reproduz o total do relatório de atraso: 194 de 331). Terceira seção: "What this adds", "What this tool covers" e "Data sources", fechados por padrão; rodapé com o aviso de projeto independente.
+- **three.js sob demanda:** o globo carrega à parte; enquanto carrega, ou se o WebGL falhar, aparece uma imagem estática (a textura NASA SVS num círculo sombreado).
+- **Vidro:** fundo `rgb(13 17 23 / 0.82)` com desfoque, borda clara de 12% de opacidade, cantos de 16 px e sombra suave; sem suporte a desfoque, fundo sólido. Contraste calculado (WCAG) no pior caso, com branco puro atrás do vidro (fundo efetivo `rgb(57 60 65)`): texto 9,42:1; texto secundário 4,96:1; âmbar 5,32:1; azul 4,80:1; lilás 5,14:1. Sobre o fundo escuro da página: texto 16,1:1; secundário 8,48:1. Botão principal (texto escuro sobre claro): 16,1:1. O painel de missão usa a mesma borda fina e sombra nos cartões e seções.
+- **Movimento:** rotação do globo (uma volta em cerca de 70 s), cintilação lenta de parte das estrelas, entrada suave ao carregar e ao rolar; com movimento reduzido no sistema, tudo fica estático.
+- **Capturas:** `npm run screenshots` (Chrome sem janela pelo protocolo DevTools, sem dependência nova) gera as telas em `web/docs/screenshots/`.
+- **Status:** aplicada (2026-11-14).
+
 ### Pendências abertas após a etapa 2
 - Nenhuma pendência de dados da etapa 2.
 

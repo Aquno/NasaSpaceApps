@@ -27,7 +27,11 @@ export function App() {
   const { inputs, update } = useMissionInputs();
   const { t } = useI18n();
 
-  if (hash === '#/' || hash === '') return <Intro />;
+  if (hash === '#/' || hash === '') {
+    return (
+      <Intro ready={state.status === 'ready' ? { sites: state.sites, data: state.data } : null} />
+    );
+  }
   if (state.status === 'loading') {
     return (
       <p className="app" role="status">

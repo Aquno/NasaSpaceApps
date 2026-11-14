@@ -24,13 +24,32 @@ export const en = {
   'lang.pt-BR': 'Português (Brasil)',
 
   // opening
-  'intro.kicker': 'Lunar south pole · real NASA data',
-  'intro.lead':
-    "At the Moon's south pole, the Sun and the Earth sit right on the horizon. One ridge can leave a lander without power or contact. See, for each site and date, whether it will have sunlight and a link to Earth, and which site still works when the launch slips.",
-  'intro.question':
-    'Your launch just slipped three weeks. Which site still works for science and engineering?',
-  'intro.open': 'Open the mission dashboard',
+  'intro.kicker': 'Lunar south pole · Real NASA data',
+  'intro.question': 'Your launch just slipped three weeks. Which site still works?',
+  'intro.open': 'Open mission panel',
   'intro.whatThisAdds': 'What this adds',
+  'intro.lead':
+    "Compare landing sites at the Moon's south pole by sunlight, Earth contact and science value, on any date.",
+  'intro.how': 'How it works',
+  'intro.problem':
+    "At the Moon's south pole, the Sun and the Earth sit right on the horizon. One ridge can leave a lander without power or contact. See, for each site and date, whether it will have sunlight and a link to Earth, and which site still works when the launch slips.",
+  'intro.f1Title': 'Sun and Earth',
+  'intro.f1':
+    'See sunlight and direct contact with Earth at each site and date, with the real terrain on the horizon.',
+  'intro.f2Title': 'Side by side',
+  'intro.f2': 'Compare the sites at once, with a science score and an engineering score.',
+  'intro.f3Title': 'Replan a delay',
+  'intro.f3': 'Move the launch date and see at once which site still works.',
+  'intro.statPoints': 'reference points evaluated',
+  'intro.statHours': 'hours of Sun and Earth data per site, {year}',
+  'intro.statNone': 'days of {year} when no site works (of {total:int})',
+  'intro.statDelay':
+    'landing dates where a {d:int}-day delay changes the best site (of {total:int})',
+  'intro.statsNote':
+    'Computed in your browser from the data files, with the default mission rules ({days:int}-day mission).',
+  'intro.sources': 'Data sources',
+  'langShort.en': 'EN',
+  'langShort.pt-BR': 'PT',
 
   // what this adds
   'adds.today': 'Today',

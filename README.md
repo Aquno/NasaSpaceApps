@@ -7,7 +7,11 @@
 
 A lightweight, static web tool that lets mission planners, educators and the public compare candidate landing sites and dates near the lunar south pole — showing, for each site and time, whether the **Sun** (power) and the **Earth** (direct-to-Earth communication) are above the real terrain horizon.
 
-> 🖼️ **[PLACEHOLDER — screenshot of the mission panel]**
+![Opening screen](web/docs/screenshots/opening-top-1920x1080-en.png)
+
+![Mission panel](web/docs/screenshots/mission-1920x1080-en.png)
+
+More screenshots (1920 × 1080 and 1366 × 768, English and Portuguese) in [`web/docs/screenshots/`](web/docs/screenshots/).
 >
 > 🔗 **[PLACEHOLDER — live demo link]**
 >

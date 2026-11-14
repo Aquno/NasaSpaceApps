@@ -9,7 +9,7 @@
  */
 import { DEFAULT_RULES, type MissionRules } from '../config/scoring';
 import type { SiteData, SiteSummary } from '../data/contract';
-import { evaluateSite } from './evaluate';
+import { evaluateSite, evaluateSites } from './evaluate';
 import type { VerdictKind } from './scores';
 import type { VisibilitySeries } from './visibility';
 
@@ -56,4 +56,39 @@ export function landingCensus(
     if (!anyViable) noViableDays++;
   }
   return { daysInData, perSite, noViableDays };
+}
+
+/**
+ * Landing days on which a launch delay changes the best compromise (from one site to another,
+ * or to or from "no site"). Only days whose two missions (planned and delayed) fit in the data
+ * are compared. Same calc path as the dashboard (evaluateSites, D9).
+ * @param delayDays delay in whole days
+ * @returns compared: landing days compared; changed: days whose best compromise differs
+ */
+export function delayChangeDays(
+  sites: SiteSummary[],
+  data: Map<string, SiteData>,
+  vis: Map<string, VisibilitySeries>,
+  durationH: number,
+  delayDays: number,
+  rules: MissionRules = DEFAULT_RULES,
+): { compared: number; changed: number } {
+  const meta = data.values().next().value?.meta;
+  if (!meta) return { compared: 0, changed: 0 };
+  const best: (string | null | undefined)[] = [];
+  for (let t = meta.startMs; t <= meta.endMs; t += DAY_MS) {
+    const ev = evaluateSites(sites, data, vis, t, durationH, rules);
+    // undefined: the mission does not fit in the data.
+    best.push(ev.sites.every((s) => s.ok) ? ev.bestId : undefined);
+  }
+  let compared = 0;
+  let changed = 0;
+  for (let k = 0; k + delayDays < best.length; k++) {
+    const b0 = best[k];
+    const b1 = best[k + delayDays];
+    if (b0 === undefined || b1 === undefined) continue;
+    compared++;
+    if (b0 !== b1) changed++;
+  }
+  return { compared, changed };
 }

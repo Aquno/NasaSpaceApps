@@ -23,13 +23,32 @@ export const ptBR: Messages = {
   'lang.en': 'English',
   'lang.pt-BR': 'Português (Brasil)',
 
-  'intro.kicker': 'Polo sul da Lua · dados reais da NASA',
-  'intro.lead':
-    'No polo sul da Lua, o Sol e a Terra ficam rente ao horizonte. Uma única crista pode deixar um módulo de pouso sem energia ou sem contato. Veja, para cada local e data, se haverá luz do Sol e ligação com a Terra, e qual local ainda serve quando o lançamento atrasa.',
-  'intro.question':
-    'Seu lançamento atrasou três semanas. Qual local ainda atende a ciência e a engenharia?',
-  'intro.open': 'Abrir o painel da missão',
+  'intro.kicker': 'Polo sul da Lua · Dados reais da NASA',
+  'intro.question': 'Seu lançamento acabou de atrasar três semanas. Qual local ainda serve?',
+  'intro.open': 'Abrir painel da missão',
   'intro.whatThisAdds': 'O que a ferramenta acrescenta',
+  'intro.lead':
+    'Compare locais de pouso no polo sul da Lua por luz do Sol, contato com a Terra e valor científico, em qualquer data.',
+  'intro.how': 'Como funciona',
+  'intro.problem':
+    'No polo sul da Lua, o Sol e a Terra ficam rente ao horizonte. Uma única crista pode deixar um módulo de pouso sem energia ou sem contato. Veja, para cada local e data, se haverá luz do Sol e ligação com a Terra, e qual local ainda serve quando o lançamento atrasa.',
+  'intro.f1Title': 'Sol e Terra',
+  'intro.f1':
+    'Veja a luz do Sol e o contato direto com a Terra em cada local e data, com o relevo real no horizonte.',
+  'intro.f2Title': 'Lado a lado',
+  'intro.f2': 'Compare os locais de uma vez, com nota de ciência e nota de engenharia.',
+  'intro.f3Title': 'Replaneje o atraso',
+  'intro.f3': 'Mude a data do lançamento e veja na hora qual local ainda serve.',
+  'intro.statPoints': 'pontos de referência avaliados',
+  'intro.statHours': 'horas de dados do Sol e da Terra por local, {year}',
+  'intro.statNone': 'dias de {year} em que nenhum local serve (de {total:int})',
+  'intro.statDelay':
+    'datas de pouso em que um atraso de {d:int} dias troca o melhor local (de {total:int})',
+  'intro.statsNote':
+    'Calculado no seu navegador a partir dos arquivos de dados, com as regras padrão da missão (missão de {days:int} dias).',
+  'intro.sources': 'Fontes de dados',
+  'langShort.en': 'EN',
+  'langShort.pt-BR': 'PT',
 
   'adds.today': 'Hoje',
   'adds.withTool': 'Com esta ferramenta',

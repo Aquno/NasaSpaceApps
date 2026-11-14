@@ -145,3 +145,4 @@ Legenda de status: `a fazer` · `em andamento` · `concluído` · `plano B` · `
 | 2026-11-14 | 5 | D36: pouso na primeira hora do dia que atende às regras; relatórios refeitos (110 trocas com +21 d; cenário 04/03 → 25/03 mantido) |
 | 2026-11-14 | 5 | D38: idiomas inglês e português do Brasil, seletor salvo, motivos dos vereditos como chaves com parâmetros |
 | 2026-11-14 | 5 | D39: painel em camadas (3D grande + cinco cartões compactos, seções recolhíveis), 3D com regolito e crateras, rótulos sem sobreposição, globo de orientação (textura NASA SVS); D35 aplicada ao painel |
+| 2026-11-14 | 5 | D40: abertura refeita (globo, estrelas, números calculados dos dados, blocos recolhidos), estilo de vidro, alternância EN / PT, capturas 1920 × 1080 e 1366 × 768 em `web/docs/screenshots/` |

@@ -8,11 +8,12 @@ import type { MessageKey } from '../i18n/messages';
 const COVERS: MessageKey[] = ['covers.c1', 'covers.c2', 'covers.c3', 'covers.c4'];
 const NOT_COVERS: MessageKey[] = ['covers.n1', 'covers.n2', 'covers.n3', 'covers.n4'];
 
-export function WhatThisCovers() {
+/** @param heading false when a surrounding block already shows the title. */
+export function WhatThisCovers({ heading = true }: { heading?: boolean }) {
   const { t } = useI18n();
   return (
     <section aria-label={t('covers.title')}>
-      <h2 className="caps">{t('covers.title')}</h2>
+      {heading && <h2 className="caps">{t('covers.title')}</h2>}
       <p className="note">{t('covers.planning')}</p>
       <p className="note">
         <strong>{t('covers.bestCaseTitle')}</strong> {t('covers.bestCase')}

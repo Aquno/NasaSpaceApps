@@ -18,7 +18,8 @@
     "test": "vitest run",
     "report:scores": "tsx scripts/score-table.ts",
     "report:census": "tsx scripts/day-census.ts",
-    "report:delay": "tsx scripts/delay-scenarios.ts"
+    "report:delay": "tsx scripts/delay-scenarios.ts",
+    "screenshots": "tsx scripts/screenshots.ts"
   },
   "dependencies": {
     "@fontsource/ibm-plex-mono": "^5.3.0",

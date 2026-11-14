@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { SiteData, SiteSummary } from '../data/contract';
+import { delayChangeDays } from './census';
 import { evaluateSite } from './evaluate';
 import { earliestViableSite, nextViableWindow } from './nextViable';
 import { visibilitySeries } from './visibility';
@@ -113,5 +114,20 @@ describe('landing hour within the day (D36)', () => {
     const e = evaluateSite(s, d, visibilitySeries(d), START, 48);
     expect(e.ok && e.landingHourFound).toBe(false);
     expect(e.ok && e.verdict.kind).toBe('not-viable');
+  });
+});
+
+describe('delay change days', () => {
+  // Lit on days 0-9 only: a 3-day mission landing on days 0-7 is viable, later it is not.
+  const [s, d] = site('a', 30, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
+  const data = new Map([[s.id, d]]);
+  const vis = new Map([[s.id, visibilitySeries(d)]]);
+  it('no delay changes nothing', () => {
+    expect(delayChangeDays([s], data, vis, 72, 0).changed).toBe(0);
+  });
+  it('a delay that moves the landing out of the lit days changes the best site', () => {
+    const r = delayChangeDays([s], data, vis, 72, 10);
+    expect(r.changed).toBeGreaterThan(0);
+    expect(r.changed).toBeLessThanOrEqual(r.compared);
   });
 });
