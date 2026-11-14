@@ -13,16 +13,20 @@ Cada fonte com o que fornece, endereço, formato, resolução, limites e pendên
 
 ## Locais
 
-Pontos de **referência regionais**, não locais de pouso designados pela NASA. Latitude/longitude em graus, MOON_ME (DE421), longitude leste positiva em [-180, 180). Altitude 0 km sobre a esfera de 1737,4 km (ver limites do Horizons). Arquivo: `pipeline/sites.json`.
+Pontos de **referência regionais**, não locais de pouso designados pela NASA. Desde a D30, os cinco locais do desafio usam a **mesma regra**: dentro do recorte da NASA de cada região (PGDA produto 78), o pixel de maior iluminação solar média oficial (PGDA produto 69, 60 m), desempate pelo mais próximo do centro publicado (M2M-30044, Tab. A2.1-1). Latitude/longitude em graus, MOON_ME (DE421), longitude leste em [-180, 180). Altitude do observador: terreno do DEM de 20 m + 2 m (etapa 2). Arquivo: `pipeline/sites.json`.
 
-| id | Nome | Lat (°) | Lon (°) | Tipo de fonte | Fonte |
-|----|------|---------|---------|---------------|-------|
-| `shackleton-rim` | Shackleton rim | -89.780445 | -156.168582 | **ponto derivado** na crista, dentro da região Site04 (D20) | regra em D20 sobre [1] Tab. A2.1-1 e PGDA 78/90 |
-| `connecting-ridge` | Connecting ridge | -89.468 | -137.4 (= 222.6° E) | ponto publicado (CR1/C1) | [2] p. 26 (figura) e p. 32 (seção 7.3.3) |
-| `de-gerlache-rim` | de Gerlache rim | -88.6834 | -67.9321 | ponto publicado (centro da região Site11, "de Gerlache Rim 1") | [1] Tab. A2.1-1, p. 75 |
-| `malapert-massif` | Malapert massif | -85.9948 | -0.23578 | ponto publicado (centro da região Site23) | [1] Tab. A2.1-1, p. 75 |
-| `haworth` | Haworth | -86.7639 | -22.777 | ponto publicado (centro da região Haworth) | [1] Tab. A2.1-1, p. 75 |
-| `shackleton-inner-wall` | Shackleton inner wall (Site04 center) | -89.7668 | -171.87 | ponto publicado (centro da região Site04); **demonstração de sensibilidade** | [1] Tab. A2.1-1, p. 75 |
+| Local | Lat | Lon | Tipo | Altura (m) | Inclinação | Dist. ao centro publicado | Dist. à PSR (área) | Iluminação NASA | Terra NASA |
+|---|---|---|---|---|---|---|---|---|---|
+| Shackleton rim (Site04) | −89,686429 | −162,937143 | derivado (D30) | 1729,3 | 1,6° | 2,75 km | 2,657 km (1,96 km²) | 87,06% | 53,75% |
+| Connecting ridge (Site01) | −89,474851 | −137,443138 | derivado (D30) | 1947,5 | 3,4° | 0,35 km | 5,827 km (1,96 km²) | 88,44% | 58,08% |
+| de Gerlache rim (Site11) | −88,664627 | −68,395645 | derivado (D30) | 1815,2 | 1,6° | 0,66 km | 6,873 km (3,49 km²) | 82,69% | 61,42% |
+| Malapert massif (Site23) | −86,001142 | 2,055017 | derivado (D30) | 5156,7 | 7,4° | 4,86 km | 10,202 km (1,37 km²) | 81,89% | 58,70% |
+| Haworth | −86,368514 | −23,276449 | derivado (D30) | 2836,2 | 3,8° | 12,04 km | 9,402 km (3,63 km²) | 70,49% | 60,10% |
+| Shackleton inner wall (demonstração) | −89,7668 | −171,87 | publicado (centro do Site04) | 770,9 | 31,4° | 0 | 0,780 km (233,4 km²) | 10,96% | 11,07% |
+
+**Limite (D34):** cada ponto é o pixel de 60 m mais iluminado da sua região no mapa oficial; os pixels vizinhos chegam a ter bem menos luz (no 3 × 3 em volta, de 20% a 52% nos piores casos — `data/validation/REPORT.md`). Os resultados representam o **melhor caso de cada região, não uma área de pouso**.
+
+Centros publicados usados (M2M-30044, Tab. A2.1-1, p. 75): Site04 −89,7668 / −171,87; Site01 −89,4632 / −137,49; Site11 −88,6834 / −67,9321; Site23 −85,9948 / −0,23578; Haworth −86,7639 / −22,777. Histórico: D12 (centros e CR1) e D20 (crista do Shackleton) foram substituídos pela D30.
 
 Fontes:
 1. NASA **M2M-30044 Moon to Mars Lunar Surface Data Book**, Baseline, 2025-03-18 (NASA/TP-20250002845), Apêndice A2.1, "Table A2.1-1 Lunar South Pole Features", página 75 de 93. https://ntrs.nasa.gov/api/citations/20250002845/downloads/M2M-30044%20Lunar%20Surface%20Data%20Book%20Baseline_Final.pdf — o texto da tabela diz: "Coordinates have been generated from the DEM files on the PGDA website (South Pole LOLA DEM), so the center points of the original polygons are accurate to 5 to 10 meters." A mesma tabela está na ACD-50044 Rev A (2023), p. 57.
@@ -104,6 +108,8 @@ Observações: o README do produto 78 chama o Site11 de "de Gerlache rim"; a tab
 
 ## 4. Iluminação média (PGDA produto 69)
 
+- **Comparação feita (D45):** tabela em `data/validation/COMPARISON.md` (`npm run report:nasa` em `web/`). Nos cinco locais, Sol de −0,5 a +4,1 pontos percentuais e Terra de −3,6 a +3,6 em relação à NASA; parede interna do Shackleton: Sol 0,0, Terra −11,1.
+
 - **Fornece:** iluminação solar média e visibilidade média da Terra oficiais, usadas como referência na validação (etapa 6) e exportadas para a interface.
 - **Endereço:** https://pgda.gsfc.nasa.gov/products/69 ; arquivos no nó de dados do LOLA no PDS: http://imbrium.mit.edu/EXTRAS/ILLUMINATION/IMG/
 - **Arquivos usados:** `AVGVISIB_85S_060M_201608.IMG` (Sol) e `AVGVISIB_85S_060M_201608_EARTH.IMG` (Terra), com rótulos `.LBL`. 51.166.728 bytes cada (5058 × 5058 int16 LSB, sem cabeçalho); lidos por faixa de bytes, só as linhas dos locais e das conferências (~0,5 MB no total, cache em `data/raw/pgda69/`).
@@ -116,7 +122,7 @@ Observações: o README do produto 78 chama o Site11 de "de Gerlache rim"; a tab
   - **Período da média:** "averaged over hourly timesteps spanning 18.6 years" (página; um ciclo de nutação lunar). START/STOP_TIME do rótulo (2009-07-13 a 2013-07-18) são as datas dos dados LOLA, não o período da média.
   - **Altura acima da superfície:** não declarada no rótulo nem na página; a página diz que o efeito da altura acima da superfície pede análise adicional. Presumimos cálculo na superfície, sem afirmar.
   - Base topográfica: LDEM_85S_060M (rótulo), não o DEM de 20 m que usamos.
-- **Limites para a comparação:** média de 18,6 anos contra o nosso ano de 2027; critério "qualquer parte do disco" contra a nossa regra de centro do disco acima do horizonte (D9; etapa 5); DEM de 60 m contra 20/80/320 m; nosso observador a 2 m de altura; valor de um único pixel de 60 m — a variação 3 × 3 é grande em alguns locais (ex.: Connecting ridge 21,7–71,0% de Sol).
+- **Limites para a comparação:** média de 18,6 anos contra o nosso ano de 2027; mesmo critério "qualquer parte do disco" (D24), mas o nosso consulta o horizonte só no grau inteiro de azimute do centro do disco; DEM de 60 m contra 20/80/320 m; nosso observador a 2 m de altura; valor de um único pixel de 60 m — a variação 3 × 3 é grande em alguns locais (ex.: Connecting ridge 21,7–71,0% de Sol).
 - **Links trocados:** a página avisa que alguns links podem estar trocados; os dois usados foram conferidos pelo nome do rótulo (`PRODUCT_ID`) e pelo conteúdo (ver `pipeline/validation/README.md`). Os links COG do produto dão 404.
 
 ## 5. Apoio visual

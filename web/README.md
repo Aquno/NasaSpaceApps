@@ -1,25 +1,82 @@
 # web/ — Interface (etapa 5)
 
-Reservada para a interface. **Ainda não implementada.**
+**Status:** em andamento (ver `docs/ROTEIRO.md`). Usuário único: o planejador de missão (D26). Interface em inglês.
 
-- **Stack:** Vite + React + TypeScript (modo `strict`), site estático, sem servidor.
-- **Lint/formatação:** ESLint + Prettier. `.prettierrc` já existe; o ESLint é configurado ao criar o projeto Vite.
-- **Dados:** lê de `web/public/data/` (URL `/data/...`), que é uma **cópia de `data/app/`** feita por `npm run sync-data`, executado antes do dev e do build (D10). `web/public/data/` fica fora do git; nunca edite a cópia. Caminhos e campos: `docs/CONTRATO_DE_DADOS.md`, fonte única do formato.
-- **Visibilidade e métricas:** calculadas aqui, em **um único módulo TypeScript** de funções puras com testes. O pipeline não as calcula, e a validação da etapa 6 usa o mesmo módulo (D9).
-- **Dados de exemplo:** a interface começa em paralelo com o pipeline, usando arquivos de exemplo no **mesmo formato**, com `meta.sample = true`. Quando `sample` for `true`, a interface mostra um aviso visível. A interface não depende de saber se o dado é de exemplo ou real para funcionar.
+- **Stack:** Vite + React + TypeScript (modo `strict`), site estático, sem servidor. ESLint + Prettier. Testes com Vitest.
+- **Dados:** lê `web/public/data/` (URL `${BASE_URL}data/...`), cópia de `data/app/` feita por `npm run sync-data`, executado antes do dev e do build (D10). Nunca edite a cópia. Formato: `docs/CONTRATO_DE_DADOS.md` (versão 2), fonte única.
+- **Cálculo:** um único módulo de funções puras com testes (D9): `src/calc/`. Componentes só exibem.
 
-## Telas
+## Como rodar
 
-1. **Abertura** — o problema e os cinco locais.
-2. **Painel de missão** — comparação dos locais (Sol, Terra, distância à sombra permanente) com controle de atraso.
-3. **Detalhe do local** — panorama 360° do horizonte com as trajetórias do Sol e da Terra e linha do tempo.
+```bash
+cd web
+npm install
+npm run dev            # sync-data + servidor de desenvolvimento
+npm test               # testes (inclui a validação dos arquivos reais de data/app)
+npm run lint && npm run typecheck
+npm run build          # sync-data + build estático em web/dist
+npm run report:scores  # tabela de notas/vereditos para datas de pouso (revisão)
+npm run report:census  # dias viáveis/marginais/inviáveis de 2027 por local
+npm run report:delay   # cenários em que um atraso muda o melhor compromisso ou o veredito
+npm run screenshots    # capturas reais (abertura e painel, 1920×1080 e 1366×768, EN e PT) em docs/screenshots/; precisa de build + vite preview na porta 4173
+npm run report:nasa    # comparação com as médias da NASA (etapa 6) em ../data/validation/COMPARISON.md
+```
 
-## Regras
+## Build para hospedar em qualquer serviço estático (D47)
 
-- Componentes só exibem; cálculos (visibilidade, métricas, notas) ficam em funções puras fora deles, com testes.
-- Tipos do contrato definidos uma vez e reutilizados; todo arquivo lido é validado.
-- Estados de carregando, vazio e erro tratados.
-- Acessibilidade: contraste, teclado, nada transmitido só por cor.
-- Aviso de que não é um produto da NASA.
+A pasta `web/dist/` gerada pelo build é o site inteiro (HTML, JS, CSS, dados de `data/app` e a textura): basta copiá-la para o serviço de hospedagem. Não há servidor nem chamadas externas. As rotas usam `#/` (ex.: `#/mission`), então o serviço não precisa de regra de reescrita nem de página 404 especial.
 
-Ver `docs/BOAS_PRATICAS.md`.
+O caminho base vem da variável `BASE_PATH` (padrão `/`):
+
+```bash
+cd web
+npm ci
+npm run build                                # site na raiz do domínio: https://exemplo.org/
+BASE_PATH=/lunar-navigator/ npm run build    # site numa subpasta: https://exemplo.org/lunar-navigator/
+npx vite preview                             # conferir localmente o build (http://localhost:4173/)
+```
+
+- `BASE_PATH` precisa começar e terminar com `/`.
+- No PowerShell: `$env:BASE_PATH='/lunar-navigator/'; npm run build`. No Git Bash do Windows, a variável é convertida num caminho do Windows; use `MSYS2_ENV_CONV_EXCL=BASE_PATH BASE_PATH=/lunar-navigator/ npm run build`.
+- Para conferir uma subpasta localmente: `npx vite preview` com a mesma `BASE_PATH` e abrir `http://localhost:4173/lunar-navigator/`.
+- Nenhum serviço de hospedagem foi escolhido. O fluxo `.github/workflows/pages.yml` (GitHub Pages) existe só para acionamento manual, porque o repositório é privado.
+
+## Onde fica cada coisa
+
+| Caminho                                                              | Conteúdo                                                                                                                              |
+| -------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| `scripts/sync-data.mjs`                                              | copia `../data/app` para `public/data` (D10)                                                                                          |
+| `scripts/score-table.ts`                                             | tabela de notas por data (usa o mesmo módulo de cálculo)                                                                              |
+| `src/data/contract.ts`                                               | tipos do contrato v2 (definidos uma vez) e eixo de tempo implícito                                                                    |
+| `src/data/validate.ts`                                               | validação contra o contrato (erros com arquivo e campo)                                                                               |
+| `src/data/load.ts`, `src/data/useSites.ts`                           | leitura dos arquivos e estados carregando/erro/pronto                                                                                 |
+| `src/calc/visibility.ts`                                             | **a** regra de visibilidade (D24)                                                                                                     |
+| `src/calc/metrics.ts`                                                | métricas da missão (horas de luz, contato, intervalos, próximo ocaso)                                                                 |
+| `src/calc/scores.ts`, `src/calc/evaluate.ts`                         | notas, veredito (com regra de inclinação, D31), melhor compromisso, ordenação (D25)                                                   |
+| `src/calc/nextViable.ts`                                             | próxima data de pouso viável e janela; local viável mais cedo (D31)                                                                   |
+| `src/config/scoring.ts`                                              | pesos e limites (escolhas do time, não da NASA)                                                                                       |
+| `src/calc/annual.ts`, `src/calc/mapGeometry.ts`                      | frações diárias (faixas de 2027), posição no mapa, relevo sombreado                                                                   |
+| `src/calc/scene3d.ts`                                                | geometria do 3D: direções do Sol/Terra no referencial do polo, exagero coerente com a luz, curvatura                                  |
+| `src/calc/census.ts`                                                 | censo de dias de pouso viáveis (destaque do painel e `report:census`)                                                                 |
+| `src/components/SouthPole3D.tsx`                                     | vista 3D (three.js, carregada sob demanda); `ShadedMap.tsx` é o plano B                                                               |
+| `src/state/useMission.ts`                                            | entradas da missão e avaliações derivadas (agora e sem atraso)                                                                        |
+| `src/screens/Intro.tsx`                                              | abertura (`#/`)                                                                                                                       |
+| `src/screens/Dashboard.tsx`                                          | painel de missão (`#/mission`)                                                                                                        |
+| `src/components/`                                                    | cartões, dispersão, mapa 2D, faixas anuais, controles, "Mission rules", cabeçalho, rodapé                                             |
+| `src/i18n/`                                                          | idiomas (D38): `en.ts` (chaves), `ptBR.ts`, `translate.ts` (formatação com `Intl`), `I18nProvider.tsx` (seletor salvo; `?lang=pt-BR`) |
+| `src/styles/app.css`                                                 | tokens visuais                                                                                                                        |
+| Detalhe do local (`#/site/<id>`), vista 3D, "Small move, big change" | a fazer                                                                                                                               |
+
+## Dependências e motivo
+
+| Pacote                                                                                | Motivo                                                                                                                                             |
+| ------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| react, react-dom                                                                      | interface                                                                                                                                          |
+| vite, @vitejs/plugin-react                                                            | build estático e servidor de desenvolvimento                                                                                                       |
+| typescript, typescript-eslint, eslint, @eslint/js, eslint-plugin-react-hooks, globals | tipos estritos e lint                                                                                                                              |
+| prettier                                                                              | formatação                                                                                                                                         |
+| vitest                                                                                | testes das funções puras e da validação dos dados reais                                                                                            |
+| @types/node                                                                           | tipos dos scripts e testes que leem arquivos                                                                                                       |
+| tsx                                                                                   | rodar os scripts TypeScript de relatório (`report:*`, comparação da etapa 6) com o mesmo código do app                                             |
+| three (+ @types/three)                                                                | vista 3D do polo sul em WebGL (malha, luz direcional com sombras, controles de órbita); sem react-three-fiber para manter uma dependência só (D28) |
+| @fontsource/ibm-plex-sans, @fontsource/ibm-plex-mono                                  | tipografia técnica aprovada, empacotada (funciona sem internet no dia)                                                                             |

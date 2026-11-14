@@ -13,7 +13,7 @@ import math
 import re
 from datetime import datetime, timedelta, timezone
 
-CONTRACT_VERSION = 2
+CONTRACT_VERSION = 3
 HORIZON_LENGTH = 360
 SERIES_COLUMNS = ("sun_az", "sun_el", "sun_diam", "earth_az", "earth_el", "earth_diam")
 SOURCE_TYPES = ("published_point", "derived_point")
@@ -189,3 +189,35 @@ def _check_time_axis(meta: dict, file: str) -> list[str]:
     if start + timedelta(minutes=step * (count - 1)) != end:
         return [f"{file}: meta.start + (count - 1) * step_minutes != meta.end"]
     return []
+
+
+TERRAIN_FIELDS = {
+    "contract_version": (int, False),
+    "width": (int, False),
+    "height": (int, False),
+    "pixel_m": ((int, float), False),
+    "x_min_m": ((int, float), False),
+    "x_max_m": ((int, float), False),
+    "y_min_m": ((int, float), False),
+    "y_max_m": ((int, float), False),
+    "dtype": (str, False),
+    "sphere_radius_m": ((int, float), False),
+}
+INT16_BYTES = 2
+
+
+def validate_terrain(descriptor, n_bytes: int, file: str = "terrain.json") -> list[str]:
+    """Errors in terrain.json and the size of terrain.bin (contract v3)."""
+    if not isinstance(descriptor, dict):
+        return [f"{file}: must be an object"]
+    errors = _check_fields(descriptor, TERRAIN_FIELDS, file)
+    if errors:
+        return errors
+    if descriptor["contract_version"] != CONTRACT_VERSION:
+        errors.append(f"{file}: contract_version must be {CONTRACT_VERSION}")
+    if descriptor["dtype"] != "int16le":
+        errors.append(f"{file}: dtype must be 'int16le'")
+    expected = descriptor["width"] * descriptor["height"] * INT16_BYTES
+    if n_bytes != expected:
+        errors.append(f"terrain.bin: {n_bytes} bytes, expected {expected} from {file}")
+    return errors

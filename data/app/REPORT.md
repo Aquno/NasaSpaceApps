@@ -7,24 +7,24 @@ Format: docs/CONTRATO_DE_DADOS.md (version 2). No visibility or metric computed 
 
 | id | lat | lon | source | purpose | terrain (m) | slope (deg) | PSR dist (km) | PSR area (km2) | NASA sun (%) | NASA Earth (%) |
 |---|---|---|---|---|---|---|---|---|---|---|
-| shackleton-rim | -89.780445 | -156.168582 | derived_point | - | 1738.4 | 3.6 | 2.470 | 233.422 | 85.19 | 55.03 |
-| connecting-ridge | -89.468 | -137.4 | published_point | - | 1942.5 | 0.7 | 5.962 | 1.958 | 29.51 | 43.98 |
-| de-gerlache-rim | -88.6834 | -67.9321 | published_point | - | 1793.6 | 1.3 | 6.789 | 3.487 | 49.00 | 61.26 |
-| malapert-massif | -85.9948 | -0.23578 | published_point | - | 4784.2 | 4.3 | 10.654 | 1.372 | 28.16 | 52.41 |
-| haworth | -86.7639 | -22.777 | published_point | - | 1628.1 | 4.5 | 0.987 | 3.631 | 8.49 | 43.94 |
+| shackleton-rim | -89.686429 | -162.937143 | derived_point | - | 1729.3 | 1.6 | 2.657 | 1.958 | 87.06 | 53.75 |
+| connecting-ridge | -89.474851 | -137.443138 | derived_point | - | 1947.5 | 3.4 | 5.827 | 1.958 | 88.44 | 58.08 |
+| de-gerlache-rim | -88.664627 | -68.395645 | derived_point | - | 1815.2 | 1.6 | 6.873 | 3.487 | 82.69 | 61.42 |
+| malapert-massif | -86.001142 | 2.055017 | derived_point | - | 5156.7 | 7.4 | 10.202 | 1.372 | 81.89 | 58.70 |
+| haworth | -86.368514 | -23.276449 | derived_point | - | 2836.2 | 3.8 | 9.402 | 3.631 | 70.49 | 60.10 |
 | shackleton-inner-wall | -89.7668 | -171.87 | published_point | sensitivity_demo | 770.9 | 31.4 | 0.780 | 233.422 | 10.96 | 11.07 |
 
 ## File sizes
 
 | File | Bytes | KB |
 |---|---|---|
-| `data/app/sites/shackleton-rim.json` | 357975 | 350 |
-| `data/app/sites/connecting-ridge.json` | 357664 | 349 |
-| `data/app/sites/de-gerlache-rim.json` | 349241 | 341 |
-| `data/app/sites/malapert-massif.json` | 348170 | 340 |
-| `data/app/sites/haworth.json` | 347806 | 340 |
+| `data/app/sites/shackleton-rim.json` | 358136 | 350 |
+| `data/app/sites/connecting-ridge.json` | 358311 | 350 |
+| `data/app/sites/de-gerlache-rim.json` | 349600 | 341 |
+| `data/app/sites/malapert-massif.json` | 350578 | 342 |
+| `data/app/sites/haworth.json` | 348352 | 340 |
 | `data/app/sites/shackleton-inner-wall.json` | 357478 | 349 |
-| `data/app/sites.json` | 3698 | 4 |
+| `data/app/sites.json` | 3926 | 4 |
 
 ## Validation
 

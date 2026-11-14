@@ -4,7 +4,7 @@
 
 Legenda de status: `a fazer` · `em andamento` · `concluído` · `plano B` · `cortado`. Nas listas, `[~]` = item dispensado.
 
-Última atualização: 2026-11-14 — etapas 3, 4 e 6 (parte de dados) concluídas (D21–D23). Próxima: etapa 5 (interface).
+Última atualização: 2026-11-14 — etapa 5 em andamento (passos 1–4 prontos; próximo: vista 3D).
 
 ## Pontos de controle
 
@@ -84,33 +84,32 @@ Legenda de status: `a fazer` · `em andamento` · `concluído` · `plano B` · `
 
 ### 5. Interface
 - Responsável:
-- Status: a fazer
-- O que é: abertura; painel de missão com comparação e controle de atraso; detalhe do local com panorama do horizonte e linha do tempo.
-- Pasta: `web/`
-- Começa **em paralelo**, com dados de exemplo no mesmo formato (`meta.sample = true`).
-- Critério de pronto:
-  - [ ] `npm run sync-data` copia `data/app/` para `web/public/data/` e roda antes do dev e do build (D10)
-  - [ ] Módulo único de visibilidade/métricas em TypeScript, funções puras, com testes (D9)
-  - [ ] Abertura
-  - [ ] Painel de missão com comparação dos cinco locais
-  - [ ] Controle de atraso (deslocar a janela de datas)
-  - [ ] Detalhe do local: panorama 360° do horizonte com Sol e Terra
-  - [ ] Linha do tempo de visibilidade
-  - [ ] Aviso visível quando os dados são de exemplo
-  - [ ] Aviso "não é produto da NASA"
-  - [ ] Build estático funciona
+- Status: **em andamento**, branch `stage-5-interface`
+- O que é: abertura; painel de missão com comparação e controle de atraso; vista 3D do polo sul; detalhe do local com panorama do horizonte e linha do tempo; bloco "Small move, big change"; rodapé. Usuário único: planejador de missão (D26).
+- Pasta: `web/` (como rodar: `web/README.md`)
+- Usa os **dados reais** desde o início (sem dados de exemplo).
+- Passos e critério de pronto:
+  - [x] 1. Base do projeto (Vite + React + TS estrito, ESLint, Prettier, Vitest), `npm run sync-data` (D10), tipos do contrato v2 e validação (erros com arquivo e campo; estados carregando/erro/vazio)
+  - [x] 2. Módulo único de cálculo com testes (D9, D24, D25): visibilidade com disco, métricas da missão, notas, veredito (regras "Mission rules" ajustáveis), melhor compromisso; relatórios `report:scores`, `report:census`, `report:delay`
+  - [x] 3. Proposta visual aprovada (paleta, tipografia, layout, "Today / With this tool", enquadramento do 3D com ±150 km, sombras coerentes com o exagero e curvatura)
+  - [x] 4. Painel de missão com dados reais: controles (data, duração, atraso, "Slip launch 21 days"), mapa 2D sombreado provisório (terrain v3, D29) com ficha do local, dispersão ciência × engenharia com deslocamento pelo atraso, cinco cartões com reordenação animada (cabem sem rolagem em 1920 × 1080), "Mission rules", faixas de 2027, aviso de missão fora dos dados, "What this adds"
+  - [x] 5. Vista 3D do polo sul (D28): malha do LOLA com curvatura, luz do Sol no instante do pouso, sombras coerentes com o exagero (testado), seta da Terra, locais clicáveis, aviso "visual only"; mapa 2D como plano B automático
+  - [ ] 6. Detalhe do local (panorama com play, linha do tempo, "Data and limits")
+  - [ ] 7. "Small move, big change", abertura e rodapé
+  - [ ] Selo "SAMPLE DATA" quando `meta.sample = true`; aviso "não é produto da NASA"; acessibilidade (contraste, teclado, nada só por cor)
+  - [x] Build estático com caminho base configurável (`BASE_PATH`, raiz ou subpasta), pronto para qualquer serviço estático (D47); serviço de hospedagem a escolher
 
 ### 6. Validação
 - Responsável:
-- Status: **parte de dados concluída** (2026-11-14), branch `stage-6-reference`; comparação a fazer (depende do módulo de visibilidade da etapa 5, D9)
+- Status: **concluída** (2026-11-14): parte de dados no branch `stage-6-reference`; comparação (D45) no painel e em `npm run report:nasa` → `data/validation/COMPARISON.md`
 - O que é: comparar a iluminação calculada com a média oficial da NASA (PGDA produto 69) para os mesmos pontos.
 - A iluminação calculada vem **do mesmo módulo de visibilidade da interface** (D9), rodado como script/teste TypeScript sobre `data/app/`.
 - Como rodar a parte de dados: `python -m pipeline.validation.run_reference` (ver `pipeline/validation/README.md`)
 - Critério de pronto:
   - [x] Valores oficiais de iluminação solar e de visibilidade da Terra por local, com resolução, período e definição registrados (`DADOS.md`, D22)
-  - [ ] Tabela local × (iluminação calculada, iluminação NASA, diferença)
-  - [ ] Diferenças explicadas (período de 18,6 anos contra 2027, critério de disco, resolução, altura do observador)
-  - [ ] Resultado registrado em `DADOS.md` e no README
+  - [x] Tabela local × (iluminação calculada, iluminação NASA, diferença) — Sol e Terra (D45)
+  - [x] Diferenças explicadas (período de 18,6 anos contra 2027, resolução, altura do observador, pixel único, grau inteiro de azimute)
+  - [x] Resultado registrado em `DADOS.md` e no README
 
 ### 7. Entrega
 - Responsável:
@@ -135,3 +134,22 @@ Legenda de status: `a fazer` · `em andamento` · `concluído` · `plano B` · `
 | 2026-11-14 | 3 | Distância à PSR (≥ 1 km²) dos seis locais a partir do shapefile do PGDA 90; nenhum local dentro de PSR; D21 |
 | 2026-11-14 | 6 | Parte de dados: iluminação e visibilidade da Terra oficiais (PGDA 69, 60 m) lidas por faixa nos seis locais, conteúdo conferido; D22 |
 | 2026-11-14 | 4 | `data/app` gerado e validado (contrato v2, D23): seis arquivos de local de 340–350 KB e `sites.json` de 3,6 KB |
+| 2026-11-14 | 5 | Passos 1–2: base do `web/`, sync-data, tipos/validação do contrato v2, módulo de cálculo com testes (D24, D25); decisões do time D26–D28 (usuário único, primeira impressão, vista 3D) |
+| 2026-11-14 | 5 | Regras de viabilidade novas (D25 revisada), relatórios de censo e de atraso; terreno exportado (contrato v3, D29); painel de missão funcionando com os dados reais |
+| 2026-11-14 | 5 | D30: mesma regra de ponto para as cinco regiões (pixel mais iluminado do produto 69 dentro do recorte do produto 78); pipeline refeito (efemérides, horizonte, PSR, referência, exportação) |
+| 2026-11-14 | 5 | D31: regra de inclinação (10°), próxima janela viável e "Earliest viable site after the slip", aviso de link direto, "What this tool covers", texto da abertura |
+| 2026-11-14 | 5 | Relatórios refeitos com os pontos da D30 (notas em três datas, censo de 2027, cenários de atraso + "outro local reabre antes do Shackleton rim"); pesos e limites padrão inalterados |
+| 2026-11-14 | 5 | D32 (veredito só de engenharia; filtro de ciência opcional), D33 (cenário padrão 2027-03-04 → +21 d), D34 (limite "melhor caso por região" e censo em destaque no painel) |
+| 2026-11-14 | 5 | Vista 3D (three.js) no painel, estável na primeira tentativa (cerca de 10 min do limite de 90); mapa 2D mantido como plano B |
+| 2026-11-14 | 5 | D35: direção visual revisada (limpa, calma, espaçosa; um foco por tela) registrada; aplicação pendente |
+| 2026-11-14 | 5 | D36: pouso na primeira hora do dia que atende às regras; relatórios refeitos (110 trocas com +21 d; cenário 04/03 → 25/03 mantido) |
+| 2026-11-14 | 5 | D38: idiomas inglês e português do Brasil, seletor salvo, motivos dos vereditos como chaves com parâmetros |
+| 2026-11-14 | 5 | D39: painel em camadas (3D grande + cinco cartões compactos, seções recolhíveis), 3D com regolito e crateras, rótulos sem sobreposição, globo de orientação (textura NASA SVS); D35 aplicada ao painel |
+| 2026-11-14 | 5 | D40: abertura refeita (globo, estrelas, números calculados dos dados, blocos recolhidos), estilo de vidro, alternância EN / PT, capturas 1920 × 1080 e 1366 × 768 em `web/docs/screenshots/` |
+| 2026-11-14 | 5 | Itens 1–6 aprovados; D41: abertura mostra 110 trocas de local com +21 d; céu parado e fraco no painel com cartões de vidro |
+| 2026-11-14 | 5 | D42: detalhe do local (panorama 360° com Sol e Terra em tamanho angular real e play, linha do tempo, notas, "Data and limits") |
+| 2026-11-14 | 5 | D43: "Small move, big change" no painel (borda × parede interna do Shackleton, 2,8 km, contornos e números lado a lado) |
+| 2026-11-14 | 5 | D44: tela "Roadmap" (Now / In 3 months / In 6 months), conceitos marcados "Concept, not implemented" |
+| 2026-11-14 | 6 | D45: comparação com as médias da NASA (Sol −0,5 a +4,1 p.p.; Terra −3,6 a +3,6 p.p. nos cinco locais), no painel e em `data/validation/COMPARISON.md`; nada ajustado |
+| 2026-11-14 | 5 | D46: fluxo do GitHub Pages (lint, formatação, testes, build, publicação) a partir da `main`; conferido localmente com `/NasaSpaceApps/`; falta ativar Pages com origem "GitHub Actions" e juntar na `main` |
+| 2026-11-14 | — | D47: repositório privado; GitHub Pages só manual; fluxo de verificação (`ci.yml`) a cada push; build portátil documentado. D48: regra permanente de fluxo de git. Junção de `stage-5-interface` na `main` |
