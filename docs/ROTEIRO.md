@@ -4,7 +4,7 @@
 
 Legenda de status: `a fazer` · `em andamento` · `concluído` · `plano B` · `cortado`. Nas listas, `[~]` = item dispensado.
 
-Última atualização: 2026-11-14 — etapa 5 em andamento (passos 1–2 prontos; proposta visual aguardando aprovação).
+Última atualização: 2026-11-14 — etapa 5 em andamento (passos 1–4 prontos; próximo: vista 3D).
 
 ## Pontos de controle
 
@@ -90,9 +90,9 @@ Legenda de status: `a fazer` · `em andamento` · `concluído` · `plano B` · `
 - Usa os **dados reais** desde o início (sem dados de exemplo).
 - Passos e critério de pronto:
   - [x] 1. Base do projeto (Vite + React + TS estrito, ESLint, Prettier, Vitest), `npm run sync-data` (D10), tipos do contrato v2 e validação (erros com arquivo e campo; estados carregando/erro/vazio)
-  - [x] 2. Módulo único de cálculo com testes (D9, D24, D25): visibilidade com disco, métricas da missão, notas, veredito, melhor compromisso; tabela de três datas apresentada
-  - [ ] 3. Proposta visual (paleta, tipografia, layout, "Today / With this tool", enquadramento do 3D) — **aguardando aprovação**
-  - [ ] 4. Painel de missão (controles, cinco cartões com reordenação animada, dispersão ciência × engenharia, faixas anuais)
+  - [x] 2. Módulo único de cálculo com testes (D9, D24, D25): visibilidade com disco, métricas da missão, notas, veredito (regras "Mission rules" ajustáveis), melhor compromisso; relatórios `report:scores`, `report:census`, `report:delay`
+  - [x] 3. Proposta visual aprovada (paleta, tipografia, layout, "Today / With this tool", enquadramento do 3D com ±150 km, sombras coerentes com o exagero e curvatura)
+  - [x] 4. Painel de missão com dados reais: controles (data, duração, atraso, "Slip launch 21 days"), mapa 2D sombreado provisório (terrain v3, D29) com ficha do local, dispersão ciência × engenharia com deslocamento pelo atraso, cinco cartões com reordenação animada (cabem sem rolagem em 1920 × 1080), "Mission rules", faixas de 2027, aviso de missão fora dos dados, "What this adds"
   - [ ] 5. Vista 3D do polo sul (D28; mapa de alturas exportado pelo pipeline; plano B: mapa 2D sombreado)
   - [ ] 6. Detalhe do local (panorama com play, linha do tempo, "Data and limits")
   - [ ] 7. "Small move, big change", abertura e rodapé
@@ -135,3 +135,4 @@ Legenda de status: `a fazer` · `em andamento` · `concluído` · `plano B` · `
 | 2026-11-14 | 6 | Parte de dados: iluminação e visibilidade da Terra oficiais (PGDA 69, 60 m) lidas por faixa nos seis locais, conteúdo conferido; D22 |
 | 2026-11-14 | 4 | `data/app` gerado e validado (contrato v2, D23): seis arquivos de local de 340–350 KB e `sites.json` de 3,6 KB |
 | 2026-11-14 | 5 | Passos 1–2: base do `web/`, sync-data, tipos/validação do contrato v2, módulo de cálculo com testes (D24, D25); decisões do time D26–D28 (usuário único, primeira impressão, vista 3D) |
+| 2026-11-14 | 5 | Regras de viabilidade novas (D25 revisada), relatórios de censo e de atraso; terreno exportado (contrato v3, D29); painel de missão funcionando com os dados reais |
