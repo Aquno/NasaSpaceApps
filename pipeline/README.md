@@ -9,6 +9,7 @@ Pipeline Python **offline** que transforma dados da NASA nos arquivos que a inte
 | `horizon/` | 2 — Horizonte (**concluída**) | LDEM 20 m do PGDA 90 (por partes) | `data/horizon/` |
 | `science/` | 3 — Valor científico (**concluída**) | shapefile de PSRs ≥ 1 km² do PGDA 90 | `data/science/` |
 | `export/` | 4 — Exportação | saídas das etapas 1–3 | `data/app/` |
+| `validation/` | 6 — Validação (parte de dados **concluída**) | mapas de iluminação do PGDA 69 | `data/validation/` |
 | `tests/` | — | — | testes automáticos (pytest) |
 
 Constantes nomeadas, com origem citada, ficam em `pipeline/config.py`. Convenções: `docs/BOAS_PRATICAS.md`.
@@ -33,6 +34,7 @@ python -m pipeline.ephemeris.run_ephemeris     # etapa 1
 python -m pipeline.sites.verify_site_points    # conferência das coordenadas
 python -m pipeline.horizon.run_horizon         # etapa 2
 python -m pipeline.science.run_science         # etapa 3
+python -m pipeline.validation.run_reference    # etapa 6, parte de dados (referência NASA)
 ```
 
 Etapa 4: a definir.

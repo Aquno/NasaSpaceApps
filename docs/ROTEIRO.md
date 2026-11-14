@@ -4,7 +4,7 @@
 
 Legenda de status: `a fazer` · `em andamento` · `concluído` · `plano B` · `cortado`. Nas listas, `[~]` = item dispensado.
 
-Última atualização: 2026-11-14 — etapa 3 concluída (D21).
+Última atualização: 2026-11-14 — etapa 6, parte de dados, concluída (D22).
 
 ## Pontos de controle
 
@@ -100,12 +100,14 @@ Legenda de status: `a fazer` · `em andamento` · `concluído` · `plano B` · `
 
 ### 6. Validação
 - Responsável:
-- Status: a fazer
+- Status: **parte de dados concluída** (2026-11-14), branch `stage-6-reference`; comparação a fazer (depende do módulo de visibilidade da etapa 5, D9)
 - O que é: comparar a iluminação calculada com a média oficial da NASA (PGDA produto 69) para os mesmos pontos.
 - A iluminação calculada vem **do mesmo módulo de visibilidade da interface** (D9), rodado como script/teste TypeScript sobre `data/app/`.
+- Como rodar a parte de dados: `python -m pipeline.validation.run_reference` (ver `pipeline/validation/README.md`)
 - Critério de pronto:
+  - [x] Valores oficiais de iluminação solar e de visibilidade da Terra por local, com resolução, período e definição registrados (`DADOS.md`, D22)
   - [ ] Tabela local × (iluminação calculada, iluminação NASA, diferença)
-  - [ ] Diferenças explicadas (intervalo de datas, resolução, horizonte liso etc.)
+  - [ ] Diferenças explicadas (período de 18,6 anos contra 2027, critério de disco, resolução, altura do observador)
   - [ ] Resultado registrado em `DADOS.md` e no README
 
 ### 7. Entrega
@@ -129,3 +131,4 @@ Legenda de status: `a fazer` · `em andamento` · `concluído` · `plano B` · `
 | 2026-11-14 | 2 | Horizonte dos cinco locais a partir do LDEM 20 m do PGDA 90 lido por partes; sanidade OK; Malapert com 13,9% das direções cortadas pela borda do DEM; ponto do Shackleton rim em encosta (pendência); decisões D16–D19 |
 | 2026-11-14 | 2 | Etapa aprovada; comparação com Quickmap/Moon Trek dispensada; D20: Shackleton rim em ponto derivado na crista, centro publicado mantido como `shackleton-inner-wall`; etapas 1 e 2 rodadas para os seis locais |
 | 2026-11-14 | 3 | Distância à PSR (≥ 1 km²) dos seis locais a partir do shapefile do PGDA 90; nenhum local dentro de PSR; D21 |
+| 2026-11-14 | 6 | Parte de dados: iluminação e visibilidade da Terra oficiais (PGDA 69, 60 m) lidas por faixa nos seis locais, conteúdo conferido; D22 |

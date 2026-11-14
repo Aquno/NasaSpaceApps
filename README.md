@@ -82,6 +82,7 @@ pip install -r pipeline/requirements.txt
 python -m pipeline.ephemeris.run_ephemeris     # stage 1: Sun/Earth ephemerides from JPL Horizons
 python -m pipeline.horizon.run_horizon         # stage 2: 360-degree terrain horizon from LOLA (PGDA 90)
 python -m pipeline.science.run_science         # stage 3: distance to nearest permanently shadowed region
+python -m pipeline.validation.run_reference    # stage 6 data: NASA average illumination / Earth visibility
 python -m pipeline.sites.verify_site_points    # cross-check site coordinates against PGDA tiles
 ruff check . && pytest                          # lint and tests
 # later stages: TBD

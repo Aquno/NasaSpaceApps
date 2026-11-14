@@ -99,6 +99,11 @@ Formato: data, decisão, motivo, consequências. Decisões novas vão no fim. N�
 - **Escolhas do time, não critérios da NASA:** usar a proximidade de sombra permanente como indicador de interesse científico; o limite de 1 km².
 - **Distância:** arco de grande círculo na esfera de 1737,4 km até o ponto mais próximo da borda (buscado no plano estereográfico).
 
+### D22 — 2026-11-14 — Referência oficial de iluminação (etapa 6, parte de dados)
+- **Decisão:** usar os mapas `AVGVISIB_85S_060M_201608` (Sol) e `..._EARTH` (Terra) do PGDA produto 69, 60 m/pixel, lidos por faixa de bytes do nó PDS do LOLA; valor do pixel que contém o local, em %, com mínimo/máximo 3 × 3 como contexto.
+- **Conferência obrigatória do conteúdo** antes de usar (a página avisa sobre links trocados): Sol = 0 dentro de PSRs; Terra maior no lado próximo que no oculto. Se falhar, valores nulos.
+- **Limites registrados:** média de 18,6 anos; "qualquer parte do disco"; altura não declarada; DEM de 60 m (ver `DADOS.md`).
+
 ### Pendências abertas após a etapa 2
 - Nenhuma pendência de dados da etapa 2.
 

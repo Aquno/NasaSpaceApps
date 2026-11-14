@@ -23,6 +23,7 @@ data/raw/*
 data/ephemeris/*
 data/horizon/*
 data/science/*
+data/validation/*
 !data/raw/.gitkeep
 !data/ephemeris/.gitkeep
 !data/ephemeris/REPORT.md
@@ -30,6 +31,7 @@ data/science/*
 !data/horizon/REPORT.md
 !data/horizon/plots/
 !data/science/REPORT.md
+!data/validation/REPORT.md
 
 # Large binary / archive formats anywhere
 *.tif

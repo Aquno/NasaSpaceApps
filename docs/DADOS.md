@@ -104,11 +104,20 @@ Observações: o README do produto 78 chama o Site11 de "de Gerlache rim"; a tab
 
 ## 4. Iluminação média (PGDA produto 69)
 
-- **Fornece:** iluminação média oficial para pontos do polo sul, usada para **validar** nosso cálculo (etapa 6).
-- **Endereço:** https://pgda.gsfc.nasa.gov/products/69
-- **Formato:** `PENDENTE:` confirmar.
-- **Resolução / período de média:** `PENDENTE:` confirmar. O período da média oficial provavelmente difere do nosso intervalo (ano de 2027, D8); isso deve ser considerado ao comparar.
-- **Uso:** preenche `nasa_avg_illumination_pct` em `sites.json` e serve de referência na validação.
+- **Fornece:** iluminação solar média e visibilidade média da Terra oficiais, usadas como referência na validação (etapa 6) e exportadas para a interface.
+- **Endereço:** https://pgda.gsfc.nasa.gov/products/69 ; arquivos no nó de dados do LOLA no PDS: http://imbrium.mit.edu/EXTRAS/ILLUMINATION/IMG/
+- **Arquivos usados:** `AVGVISIB_85S_060M_201608.IMG` (Sol) e `AVGVISIB_85S_060M_201608_EARTH.IMG` (Terra), com rótulos `.LBL`. 51.166.728 bytes cada (5058 × 5058 int16 LSB, sem cabeçalho); lidos por faixa de bytes, só as linhas dos locais e das conferências (~0,5 MB no total, cache em `data/raw/pgda69/`).
+- **Resolução:** 60 m/pixel, 85°S–90°S (cantos até ~82,9°S) — a maior resolução que cobre todos os locais.
+- **Projeção:** estereográfica polar, esfera de 1737,4 km, "MEAN EARTH/POLAR AXIS OF DE421" (rótulo). Pixel → x/y pela fórmula do `DSMAP_POLAR.CAT` (http://imbrium.mit.edu/CATALOG/DSMAP_POLAR.CAT): X = (I − N/2 − 0,5)·escala, Y = (J − N/2 − 0,5)·escala·NS (NS = −1 no sul), LON = ATAN2(X, Y). A fórmula inversa do mesmo catálogo tem o sinal de X oposto para o sul e contradiz o texto ("Longitude 90 East extends to the right"); não foi usada. A orientação foi conferida com os PSRs.
+- **Escala:** valor = DN × 0,00004 + 0,0 (rótulo: "AVERAGE_VISIBILITY = (DN * SCALING_FACTOR) + OFFSET").
+- **Definição da NASA:**
+  - Sol: "the percentage of timesteps where each pixel was sunlit (by any fraction of the solar disc)" (rótulo).
+  - Terra: idem "by any fraction of the Earth disc" (rótulo); "the Earth is considered visible if any part of its disc is not obscured, so it may be very slightly optimistic for radio link studies" (página).
+  - **Período da média:** "averaged over hourly timesteps spanning 18.6 years" (página; um ciclo de nutação lunar). START/STOP_TIME do rótulo (2009-07-13 a 2013-07-18) são as datas dos dados LOLA, não o período da média.
+  - **Altura acima da superfície:** não declarada no rótulo nem na página; a página diz que o efeito da altura acima da superfície pede análise adicional. Presumimos cálculo na superfície, sem afirmar.
+  - Base topográfica: LDEM_85S_060M (rótulo), não o DEM de 20 m que usamos.
+- **Limites para a comparação:** média de 18,6 anos contra o nosso ano de 2027; critério "qualquer parte do disco" contra a nossa regra de centro do disco acima do horizonte (D9; etapa 5); DEM de 60 m contra 20/80/320 m; nosso observador a 2 m de altura; valor de um único pixel de 60 m — a variação 3 × 3 é grande em alguns locais (ex.: Connecting ridge 21,7–71,0% de Sol).
+- **Links trocados:** a página avisa que alguns links podem estar trocados; os dois usados foram conferidos pelo nome do rótulo (`PRODUCT_ID`) e pelo conteúdo (ver `pipeline/validation/README.md`). Os links COG do produto dão 404.
 
 ## 5. Apoio visual
 
@@ -126,4 +135,5 @@ Observações: o README do produto 78 chama o Site11 de "de Gerlache rim"; a tab
 | 2026-11-14 | JPL Horizons API | tabelas de observador Sol e Terra, 5 locais, 2027 | ~640 KB cada | `data/raw/horizons/` | etapa 1 |
 | 2026-11-14 | PGDA produto 90 | `LDEM_80S_20MPP_ADJ.TIF`: cabeçalho (1 MB) e blocos dos níveis 20, 80 e 320 m | ~41 MB no total | `data/raw/pgda90/` | etapa 2, leitura por faixa de bytes |
 | 2026-11-14 | PGDA produto 90 | `LPSR_80S_20MPP_ADJ_1km2` `.SHP`, `.DBF`, `.PRJ`, `.SHX` | 20,7 MB + 0,4 MB | `data/raw/pgda90/psr/` | etapa 3 |
+| 2026-11-14 | PGDA produto 69 (PDS) | rótulos `.LBL` e linhas dos `AVGVISIB_85S_060M_201608(_EARTH).IMG` | ~0,5 MB | `data/raw/pgda69/` | etapa 6 (dados) |
 | 2026-11-14 | PGDA produto 78 | duas linhas do `_surf.tif` de cada recorte no local | 13–24 KB cada | `data/raw/pgda78/` | conferência das alturas |

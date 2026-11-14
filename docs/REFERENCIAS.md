@@ -12,7 +12,9 @@ Lista de fontes para a página de submissão. **Toda fonte externa usada no proj
 | 3 | NASA Goddard PGDA — produto 90 (relevo polar e sombra permanente do LOLA); arquivo `LDEM_80S_20MPP_ADJ.TIF` | https://pgda.gsfc.nasa.gov/products/90 · https://pgda.gsfc.nasa.gov/data/LOLA_20mpp/LDEM_80S_20MPP_ADJ.TIF | Horizonte (etapa 2) | 2026-11-14 |
 | 3a | NASA Goddard PGDA — produto 90, PSRs com área > 1 km² (`LPSR_80S_20MPP_ADJ_1km2` .SHP/.DBF/.PRJ) | https://pgda.gsfc.nasa.gov/data/LOLA_20mpp/LPSR_80S_20MPP_ADJ_1km2.SHP | Distância à sombra permanente (etapa 3) | 2026-11-14 |
 | 4 | NASA Goddard PGDA — produto 78 (recortes de 5 m do LOLA) e README | https://pgda.gsfc.nasa.gov/products/78 · https://pgda.gsfc.nasa.gov/data/LOLA_5mpp/README | Conferência das coordenadas; referencial; relevo de alta resolução (opcional) | 2026-11-14 |
-| 5 | NASA Goddard PGDA — produto 69 (iluminação média) | https://pgda.gsfc.nasa.gov/products/69 | Validação da iluminação calculada | |
+| 5 | NASA Goddard PGDA — produto 69 (iluminação média) | https://pgda.gsfc.nasa.gov/products/69 | Validação da iluminação calculada | 2026-11-14 |
+| 5a | LOLA PDS data node — `AVGVISIB_85S_060M_201608` e `AVGVISIB_85S_060M_201608_EARTH` (.IMG/.LBL) | http://imbrium.mit.edu/EXTRAS/ILLUMINATION/IMG/ | Iluminação solar e visibilidade da Terra médias oficiais | 2026-11-14 |
+| 5b | LOLA PDS — `DSMAP_POLAR.CAT` (projeção polar) | http://imbrium.mit.edu/CATALOG/DSMAP_POLAR.CAT | Conversão pixel ↔ coordenadas | 2026-11-14 |
 
 ## Ferramentas de apoio
 
