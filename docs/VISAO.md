@@ -32,11 +32,26 @@ Esses objetivos se opõem: perto da sombra permanente tende a haver menos luz. A
 
 Pergunta do pitch: *"Your launch just slipped three weeks. Which site still works for science and engineering?"*
 
-## Usuários
+## Usuário (D26)
 
-- **Planejador de missão (principal, para o pitch):** quer comparar locais e reagir a atrasos.
-- **Educador:** quer mostrar por que o relevo importa no polo sul.
-- **Público:** quer entender visualmente onde e quando há Sol e Terra no céu lunar.
+- **Planejador de missão** — usuário único da interface: quer comparar locais, reagir a atrasos e ver ciência e engenharia na mesma tela.
+- Uma versão educacional é só uma **possível evolução futura** (citada em uma linha no README/rodapé); não há modo nem texto para educadores ou público nesta versão.
+
+## Primeira impressão (D27)
+
+Quem abre a plataforma deve entender, nesta ordem:
+1. É sobre o **polo sul da Lua**, com **dados reais da NASA**.
+2. O que a plataforma **acrescenta** às ferramentas existentes — comparação curta "Today / With this tool":
+
+| Today | With this tool |
+|---|---|
+| One scenario at a time | Several sites side by side |
+| Raw data | A verdict with its reason |
+| Three interfaces | One screen |
+| Engineering only | Science and engineering |
+| Redo everything when the date changes | A delay control |
+
+JPL Horizons, LROC Quickmap e NASA Moon Trek são citados como as **fontes e ferramentas de análise detalhada**; o texto é factual e não os diminui.
 
 ## Forma do MVP
 
@@ -47,9 +62,11 @@ Pergunta do pitch: *"Your launch just slipped three weeks. Which site still work
 
 ## Telas planejadas (etapa 5)
 
-1. **Abertura:** o problema em uma frase e o mapa dos cinco locais.
+1. **Abertura:** polo sul da Lua com dados reais da NASA; a pergunta do pitch; "Today / With this tool".
 2. **Painel de missão:** comparação dos locais (luz, contato com a Terra, distância à sombra permanente) com **controle de atraso** (deslocar a janela de pouso em dias/semanas).
-3. **Detalhe do local:** panorama do horizonte (360°) com as trajetórias do Sol e da Terra e linha do tempo de visibilidade.
+3. **Vista 3D do polo sul** (D28): relevo do LOLA iluminado pelo Sol do instante escolhido, locais clicáveis.
+4. **Detalhe do local:** panorama do horizonte (360°) com as trajetórias do Sol e da Terra e linha do tempo de visibilidade.
+5. **"Small move, big change":** crista e parede interna do Shackleton lado a lado.
 
 ## Fora do MVP
 

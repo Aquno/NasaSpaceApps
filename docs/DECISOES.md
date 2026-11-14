@@ -112,6 +112,34 @@ Formato: data, decisão, motivo, consequências. Decisões novas vão no fim. N�
 - **Motivo:** levar à interface tudo o que a decisão precisa (tipo de fonte, ponto de demonstração, referência oficial, distâncias do horizonte) com arquivos pequenos (~350 KB por local, sem chaves repetidas).
 - **Consequência:** dados de exemplo da etapa 5 e os tipos TypeScript seguem a versão 2.
 
+### D24 — 2026-11-14 — Regra de visibilidade com o disco do astro
+- **Decisão:** no módulo único de visibilidade da interface (`web/src/calc/visibility.ts`, D9), o azimute do astro é arredondado ao grau (coerente com D19) e o contorno não é limitado a zero. Usa-se o diâmetro angular dos dados:
+  - **alguma parte visível** se `el + diam/2 > horizon[round(az)]` — mesma convenção dos mapas oficiais da NASA ("any fraction of the disc"); é a base das **métricas principais**;
+  - **disco inteiro visível** se `el − diam/2 > horizon[round(az)]` — mostrado como número secundário.
+- **Simplificação declarada:** usa-se só o horizonte no azimute do centro do disco (a Terra tem ~1,9° de largura).
+
+### D25 — 2026-11-14 — Notas, veredito e melhor compromisso (escolhas do time)
+- **Nota de engenharia (0–100):** 35% fração da missão com Sol + 25% luz contínua a partir do pouso (fração da missão) + 25% fração com a Terra visível + 15% (1 − maior intervalo sem contato / duração).
+- **Nota de ciência (0–100):** 100 com a sombra permanente (≥ 1 km²) a até 1 km; cai linearmente até 0 a 15 km.
+- **Veredito:** *not viable* se houver menos de 24 h de Sol contínuo a partir do pouso, ou nota de engenharia < 35; *viable* se engenharia ≥ 60 e ciência ≥ 40; senão *marginal*. Sempre com um motivo em uma frase.
+- **Melhor compromisso:** entre os locais que não são *not viable*, o de maior `min(engenharia, ciência)` (o lado mais fraco decide); empate pela maior soma.
+- **Missões fora do intervalo de dados** (2027) não são calculadas; a interface avisa.
+- Pesos, limites, a altura de 2 m do observador e a sombra permanente como indicador científico são **escolhas do time, não requisitos da NASA**; ficam em `web/src/config/scoring.ts` e a tela mostra como cada nota é formada.
+
+### D26 — 2026-11-14 — Usuário único: o planejador de missão
+- **Decisão:** a interface tem um único usuário-alvo, o planejador de missão. Nenhum modo ou texto voltado a educadores ou ao público. A versão educacional aparece só como possível evolução futura, em uma linha (README/rodapé).
+- **Altera:** `VISAO.md` (seção Usuários).
+
+### D27 — 2026-11-14 — Hierarquia da primeira impressão
+- **Decisão:** quem abre a plataforma entende, nesta ordem: (a) é sobre o polo sul da Lua, com dados reais da NASA; (b) o que a plataforma acrescenta às ferramentas existentes.
+- **Como:** comparação curta "Today / With this tool" na abertura e acessível no topo do painel: um cenário por vez → vários lado a lado; dados brutos → veredito com motivo; três interfaces → uma tela; só engenharia → ciência e engenharia; refazer tudo quando a data muda → controle de atraso. Texto factual; Quickmap, Moon Trek e JPL Horizons são citados como as fontes e ferramentas de análise detalhada, sem diminuí-los.
+
+### D28 — 2026-11-14 — Visualização 3D do polo sul
+- **Decisão:** novo passo da etapa 5, depois do painel de missão e antes do detalhe do local: modelo 3D do terreno a partir do relevo do LOLA já em cache (mapa de alturas pequeno exportado pelo pipeline; formato a aprovar e a registrar no contrato), seis locais clicáveis, luz na direção real do Sol no instante escolhido (sombras mudam com data e atraso), direção da Terra indicada, exagero vertical configurável e declarado, aviso de que o modelo é visualização e os números vêm do cálculo com o contorno do horizonte.
+- **Tecnologia:** three.js (motivo a registrar no `web/README.md`).
+- **Plano B:** se em 90 minutos de trabalho não estiver estável, mapa 2D sombreado do mesmo relevo.
+- **Status:** enquadramento e posição na tela aguardando aprovação.
+
 ### Pendências abertas após a etapa 2
 - Nenhuma pendência de dados da etapa 2.
 

@@ -4,7 +4,7 @@
 
 Legenda de status: `a fazer` · `em andamento` · `concluído` · `plano B` · `cortado`. Nas listas, `[~]` = item dispensado.
 
-Última atualização: 2026-11-14 — etapas 3, 4 e 6 (parte de dados) concluídas (D21–D23). Próxima: etapa 5 (interface).
+Última atualização: 2026-11-14 — etapa 5 em andamento (passos 1–2 prontos; proposta visual aguardando aprovação).
 
 ## Pontos de controle
 
@@ -84,21 +84,20 @@ Legenda de status: `a fazer` · `em andamento` · `concluído` · `plano B` · `
 
 ### 5. Interface
 - Responsável:
-- Status: a fazer
-- O que é: abertura; painel de missão com comparação e controle de atraso; detalhe do local com panorama do horizonte e linha do tempo.
-- Pasta: `web/`
-- Começa **em paralelo**, com dados de exemplo no mesmo formato (`meta.sample = true`).
-- Critério de pronto:
-  - [ ] `npm run sync-data` copia `data/app/` para `web/public/data/` e roda antes do dev e do build (D10)
-  - [ ] Módulo único de visibilidade/métricas em TypeScript, funções puras, com testes (D9)
-  - [ ] Abertura
-  - [ ] Painel de missão com comparação dos cinco locais
-  - [ ] Controle de atraso (deslocar a janela de datas)
-  - [ ] Detalhe do local: panorama 360° do horizonte com Sol e Terra
-  - [ ] Linha do tempo de visibilidade
-  - [ ] Aviso visível quando os dados são de exemplo
-  - [ ] Aviso "não é produto da NASA"
-  - [ ] Build estático funciona
+- Status: **em andamento**, branch `stage-5-interface`
+- O que é: abertura; painel de missão com comparação e controle de atraso; vista 3D do polo sul; detalhe do local com panorama do horizonte e linha do tempo; bloco "Small move, big change"; rodapé. Usuário único: planejador de missão (D26).
+- Pasta: `web/` (como rodar: `web/README.md`)
+- Usa os **dados reais** desde o início (sem dados de exemplo).
+- Passos e critério de pronto:
+  - [x] 1. Base do projeto (Vite + React + TS estrito, ESLint, Prettier, Vitest), `npm run sync-data` (D10), tipos do contrato v2 e validação (erros com arquivo e campo; estados carregando/erro/vazio)
+  - [x] 2. Módulo único de cálculo com testes (D9, D24, D25): visibilidade com disco, métricas da missão, notas, veredito, melhor compromisso; tabela de três datas apresentada
+  - [ ] 3. Proposta visual (paleta, tipografia, layout, "Today / With this tool", enquadramento do 3D) — **aguardando aprovação**
+  - [ ] 4. Painel de missão (controles, cinco cartões com reordenação animada, dispersão ciência × engenharia, faixas anuais)
+  - [ ] 5. Vista 3D do polo sul (D28; mapa de alturas exportado pelo pipeline; plano B: mapa 2D sombreado)
+  - [ ] 6. Detalhe do local (panorama com play, linha do tempo, "Data and limits")
+  - [ ] 7. "Small move, big change", abertura e rodapé
+  - [ ] Selo "SAMPLE DATA" quando `meta.sample = true`; aviso "não é produto da NASA"; acessibilidade (contraste, teclado, nada só por cor)
+  - [ ] Build estático pronto para GitHub Pages (`BASE_PATH`)
 
 ### 6. Validação
 - Responsável:
@@ -135,3 +134,4 @@ Legenda de status: `a fazer` · `em andamento` · `concluído` · `plano B` · `
 | 2026-11-14 | 3 | Distância à PSR (≥ 1 km²) dos seis locais a partir do shapefile do PGDA 90; nenhum local dentro de PSR; D21 |
 | 2026-11-14 | 6 | Parte de dados: iluminação e visibilidade da Terra oficiais (PGDA 69, 60 m) lidas por faixa nos seis locais, conteúdo conferido; D22 |
 | 2026-11-14 | 4 | `data/app` gerado e validado (contrato v2, D23): seis arquivos de local de 340–350 KB e `sites.json` de 3,6 KB |
+| 2026-11-14 | 5 | Passos 1–2: base do `web/`, sync-data, tipos/validação do contrato v2, módulo de cálculo com testes (D24, D25); decisões do time D26–D28 (usuário único, primeira impressão, vista 3D) |
