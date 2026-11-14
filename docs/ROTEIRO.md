@@ -101,15 +101,15 @@ Legenda de status: `a fazer` · `em andamento` · `concluído` · `plano B` · `
 
 ### 6. Validação
 - Responsável:
-- Status: **parte de dados concluída** (2026-11-14), branch `stage-6-reference`; comparação a fazer (depende do módulo de visibilidade da etapa 5, D9)
+- Status: **concluída** (2026-11-14): parte de dados no branch `stage-6-reference`; comparação (D45) no painel e em `npm run report:nasa` → `data/validation/COMPARISON.md`
 - O que é: comparar a iluminação calculada com a média oficial da NASA (PGDA produto 69) para os mesmos pontos.
 - A iluminação calculada vem **do mesmo módulo de visibilidade da interface** (D9), rodado como script/teste TypeScript sobre `data/app/`.
 - Como rodar a parte de dados: `python -m pipeline.validation.run_reference` (ver `pipeline/validation/README.md`)
 - Critério de pronto:
   - [x] Valores oficiais de iluminação solar e de visibilidade da Terra por local, com resolução, período e definição registrados (`DADOS.md`, D22)
-  - [ ] Tabela local × (iluminação calculada, iluminação NASA, diferença)
-  - [ ] Diferenças explicadas (período de 18,6 anos contra 2027, critério de disco, resolução, altura do observador)
-  - [ ] Resultado registrado em `DADOS.md` e no README
+  - [x] Tabela local × (iluminação calculada, iluminação NASA, diferença) — Sol e Terra (D45)
+  - [x] Diferenças explicadas (período de 18,6 anos contra 2027, resolução, altura do observador, pixel único, grau inteiro de azimute)
+  - [x] Resultado registrado em `DADOS.md` e no README
 
 ### 7. Entrega
 - Responsável:
@@ -150,3 +150,4 @@ Legenda de status: `a fazer` · `em andamento` · `concluído` · `plano B` · `
 | 2026-11-14 | 5 | D42: detalhe do local (panorama 360° com Sol e Terra em tamanho angular real e play, linha do tempo, notas, "Data and limits") |
 | 2026-11-14 | 5 | D43: "Small move, big change" no painel (borda × parede interna do Shackleton, 2,8 km, contornos e números lado a lado) |
 | 2026-11-14 | 5 | D44: tela "Roadmap" (Now / In 3 months / In 6 months), conceitos marcados "Concept, not implemented" |
+| 2026-11-14 | 6 | D45: comparação com as médias da NASA (Sol −0,5 a +4,1 p.p.; Terra −3,6 a +3,6 p.p. nos cinco locais), no painel e em `data/validation/COMPARISON.md`; nada ajustado |

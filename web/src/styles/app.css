@@ -1345,3 +1345,15 @@ svg text {
     grid-template-columns: 1fr;
   }
 }
+
+/* ---- stage 6 check (D45) ---- */
+.nasa-check {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s3);
+}
+.nasa-check .why {
+  margin: 0;
+  padding-left: var(--s4);
+  color: var(--muted);
+}

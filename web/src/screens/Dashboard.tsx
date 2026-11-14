@@ -12,6 +12,7 @@ import { Footer } from '../components/Footer';
 import { Header } from '../components/Header';
 import { MissionControls } from '../components/MissionControls';
 import { MissionRulesPanel } from '../components/MissionRulesPanel';
+import { NasaCheck } from '../components/NasaCheck';
 import { ScatterPlot } from '../components/ScatterPlot';
 import { ShadedMap } from '../components/ShadedMap';
 import { SiteCard } from '../components/SiteCard';
@@ -228,6 +229,10 @@ export function Dashboard({ sites, data, terrain, inputs, onInputs, onOpenSite }
             rules={inputs.rules}
             sphereRadiusM={terrain.sphereRadiusM}
           />
+        </details>
+        <details className="section glass" id="nasa-check">
+          <summary>{t('check.title')}</summary>
+          <NasaCheck sites={sites} vis={pre.vis} year={year} />
         </details>
         <details className="section glass">
           <summary>{t('rules.title')}</summary>

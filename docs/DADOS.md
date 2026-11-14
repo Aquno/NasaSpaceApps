@@ -108,6 +108,8 @@ Observações: o README do produto 78 chama o Site11 de "de Gerlache rim"; a tab
 
 ## 4. Iluminação média (PGDA produto 69)
 
+- **Comparação feita (D45):** tabela em `data/validation/COMPARISON.md` (`npm run report:nasa` em `web/`). Nos cinco locais, Sol de −0,5 a +4,1 pontos percentuais e Terra de −3,6 a +3,6 em relação à NASA; parede interna do Shackleton: Sol 0,0, Terra −11,1.
+
 - **Fornece:** iluminação solar média e visibilidade média da Terra oficiais, usadas como referência na validação (etapa 6) e exportadas para a interface.
 - **Endereço:** https://pgda.gsfc.nasa.gov/products/69 ; arquivos no nó de dados do LOLA no PDS: http://imbrium.mit.edu/EXTRAS/ILLUMINATION/IMG/
 - **Arquivos usados:** `AVGVISIB_85S_060M_201608.IMG` (Sol) e `AVGVISIB_85S_060M_201608_EARTH.IMG` (Terra), com rótulos `.LBL`. 51.166.728 bytes cada (5058 × 5058 int16 LSB, sem cabeçalho); lidos por faixa de bytes, só as linhas dos locais e das conferências (~0,5 MB no total, cache em `data/raw/pgda69/`).
@@ -120,7 +122,7 @@ Observações: o README do produto 78 chama o Site11 de "de Gerlache rim"; a tab
   - **Período da média:** "averaged over hourly timesteps spanning 18.6 years" (página; um ciclo de nutação lunar). START/STOP_TIME do rótulo (2009-07-13 a 2013-07-18) são as datas dos dados LOLA, não o período da média.
   - **Altura acima da superfície:** não declarada no rótulo nem na página; a página diz que o efeito da altura acima da superfície pede análise adicional. Presumimos cálculo na superfície, sem afirmar.
   - Base topográfica: LDEM_85S_060M (rótulo), não o DEM de 20 m que usamos.
-- **Limites para a comparação:** média de 18,6 anos contra o nosso ano de 2027; critério "qualquer parte do disco" contra a nossa regra de centro do disco acima do horizonte (D9; etapa 5); DEM de 60 m contra 20/80/320 m; nosso observador a 2 m de altura; valor de um único pixel de 60 m — a variação 3 × 3 é grande em alguns locais (ex.: Connecting ridge 21,7–71,0% de Sol).
+- **Limites para a comparação:** média de 18,6 anos contra o nosso ano de 2027; mesmo critério "qualquer parte do disco" (D24), mas o nosso consulta o horizonte só no grau inteiro de azimute do centro do disco; DEM de 60 m contra 20/80/320 m; nosso observador a 2 m de altura; valor de um único pixel de 60 m — a variação 3 × 3 é grande em alguns locais (ex.: Connecting ridge 21,7–71,0% de Sol).
 - **Links trocados:** a página avisa que alguns links podem estar trocados; os dois usados foram conferidos pelo nome do rótulo (`PRODUCT_ID`) e pelo conteúdo (ver `pipeline/validation/README.md`). Os links COG do produto dão 404.
 
 ## 5. Apoio visual

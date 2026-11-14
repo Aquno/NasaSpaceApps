@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import type { Terrain } from '../data/contract';
 import { dailyFractions } from './annual';
 import { hillshade, surfaceDistanceKm, toMapXY, toPixel } from './mapGeometry';
+import { yearVisibility } from './validation';
 
 describe('daily fractions', () => {
   it('fraction of lit hours per day', () => {
@@ -68,5 +69,15 @@ describe('surface distance', () => {
   it('across the pole: 0.5 deg on each side is one degree', () => {
     const R = 1_737_400;
     expect(surfaceDistanceKm(-89.5, 0, -89.5, 180, R)).toBeCloseTo((R * Math.PI) / 180 / 1000, 6);
+  });
+});
+
+describe('year visibility (stage 6)', () => {
+  it('percent of hours with the body visible', () => {
+    const r = yearVisibility({
+      sunAny: Uint8Array.from([1, 1, 1, 0]),
+      earthAny: Uint8Array.from([0, 1, 0, 0]),
+    });
+    expect(r).toEqual({ hours: 4, sunPct: 75, earthPct: 25 });
   });
 });

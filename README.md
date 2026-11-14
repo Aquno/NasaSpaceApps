@@ -57,6 +57,20 @@ Architecture details: [`docs/ARQUITETURA.md`](docs/ARQUITETURA.md). Data format:
 
 Full list: [`docs/REFERENCIAS.md`](docs/REFERENCIAS.md).
 
+## Check against NASA averages (stage 6)
+
+Share of 2027 hours with any part of the disc above the terrain horizon, computed by the app's own visibility code, beside NASA's 18.6-year averages (PGDA product 69, 60 m pixel). Nothing was tuned to bring them closer.
+
+| Site | Sun: ours / NASA (%) | Earth: ours / NASA (%) |
+|---|---|---|
+| Shackleton rim | 86.6 / 87.1 | 50.1 / 53.8 |
+| Connecting ridge | 89.5 / 88.4 | 55.0 / 58.1 |
+| de Gerlache rim | 84.5 / 82.7 | 59.7 / 61.4 |
+| Malapert massif | 84.8 / 81.9 | 59.3 / 58.7 |
+| Haworth | 74.6 / 70.5 | 63.7 / 60.1 |
+
+Equality is not expected: one year against 18.6 years, 20/80/320 m terrain with a 2 m mast against a 60 m map, and a single 60 m pixel that can change by tens of points within about 90 m. Full table with NASA's 3×3 range: [`data/validation/COMPARISON.md`](data/validation/COMPARISON.md) (`npm run report:nasa` in `web/`).
+
 ## Candidate sites (fixed list)
 
 Shackleton rim · Connecting ridge · de Gerlache rim · Malapert massif · Haworth · plus *Shackleton inner wall* (sensitivity demo)

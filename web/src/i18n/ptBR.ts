@@ -324,4 +324,27 @@ export const ptBR: Messages = {
   'roadmap.m6_1': 'IA para refinar o relevo com novos dados de sondas',
   'roadmap.m6_2': 'O mesmo método aplicado a Marte e a outros corpos',
   'roadmap.m6_3': 'Versão educacional',
+
+  // stage 6 check (D45)
+  'check.title': 'Conferência com as médias da NASA',
+  'check.lead':
+    'Parcela das horas de {year} com alguma parte do Sol ou da Terra acima do horizonte do relevo, calculada pelo mesmo código do resto da ferramenta, ao lado das médias que a NASA publica para os mesmos pontos (iluminação polar do LOLA, PGDA produto 69).',
+  'check.site': 'Local',
+  'check.sunOurs': 'Sol, {year} (esta ferramenta)',
+  'check.sunNasa': 'Sol, média da NASA',
+  'check.earthOurs': 'Terra, {year} (esta ferramenta)',
+  'check.earthNasa': 'Terra, média da NASA',
+  'check.difference': 'Diferença',
+  'check.pct': '{v:dec1}%',
+  'check.diff': '{sign}{d:dec1} p.p.',
+  'check.whyTitle': 'Por que não se espera igualdade',
+  'check.why1':
+    'A NASA faz a média de 18,6 anos de passos horários (um ciclo de nutação lunar); a ferramenta olha um ano.',
+  'check.why2':
+    'A NASA usa um mapa de relevo de 60 m; a ferramenta usa mapas de 20, 80 e 320 m conforme a distância, com o observador num mastro de 2 m.',
+  'check.why3':
+    'Cada valor da NASA é um pixel de 60 m; em cerca de 90 m ele pode mudar dezenas de pontos (ver data/validation/COMPARISON.md).',
+  'check.why4':
+    'A ferramenta consulta o horizonte no grau inteiro de azimute mais próximo do centro do disco.',
+  'check.notTuned': 'Nada foi ajustado para aproximar os números.',
 };

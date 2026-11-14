@@ -335,4 +335,27 @@ export const en = {
   'roadmap.m6_1': 'AI to refine the terrain with new data from spacecraft',
   'roadmap.m6_2': 'The same method applied to Mars and other bodies',
   'roadmap.m6_3': 'An education version',
+
+  // stage 6 check (D45)
+  'check.title': 'Check against NASA averages',
+  'check.lead':
+    'Share of the hours of {year} with some part of the Sun or the Earth above the terrain horizon, computed by the same code as the rest of the tool, beside the averages NASA publishes for the same points (LOLA polar illumination, PGDA product 69).',
+  'check.site': 'Site',
+  'check.sunOurs': 'Sun, {year} (this tool)',
+  'check.sunNasa': 'Sun, NASA average',
+  'check.earthOurs': 'Earth, {year} (this tool)',
+  'check.earthNasa': 'Earth, NASA average',
+  'check.difference': 'Difference',
+  'check.pct': '{v:dec1}%',
+  'check.diff': '{sign}{d:dec1} pts',
+  'check.whyTitle': 'Why the numbers are not expected to match',
+  'check.why1':
+    'NASA averages 18.6 years of hourly steps (a lunar nutation cycle); this tool looks at one year.',
+  'check.why2':
+    'NASA uses a 60 m terrain map; this tool uses 20, 80 and 320 m maps by distance, with the observer on a 2 m mast.',
+  'check.why3':
+    'Each NASA value is one 60 m pixel; within about 90 m it can change by tens of points (see data/validation/COMPARISON.md).',
+  'check.why4':
+    'The tool looks up the horizon at the whole degree of azimuth nearest the disc centre.',
+  'check.notTuned': 'Nothing was adjusted to bring the numbers closer.',
 } as const;

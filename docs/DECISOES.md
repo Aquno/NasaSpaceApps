@@ -275,6 +275,14 @@ Formato: data, decisão, motivo, consequências. Decisões novas vão no fim. N�
 - **Coerência com os princípios:** a IA aparece só como conceito e nunca faz ou escolhe cálculos; o resumo escrito usaria os números do código fixo.
 - **Status:** aplicada (2026-11-14).
 
+### D45 — 2026-11-14 — Comparação da etapa 6 com as médias da NASA
+
+- **Decisão:** para cada local, a porcentagem das horas de 2027 com alguma parte do Sol e da Terra acima do horizonte do relevo, calculada por `yearVisibility` (`calc/validation.ts`) sobre a mesma série de visibilidade do painel (D9), ao lado dos valores do PGDA produto 69 (pixel de 60 m que contém o ponto). Aparece no painel (seção recolhível "Check against NASA averages") e no relatório `npm run report:nasa` → `data/validation/COMPARISON.md`, que inclui a faixa 3 × 3 da NASA.
+- **Resultado (pontos percentuais, nosso − NASA):** Sol: Shackleton rim −0,5; Connecting ridge +1,0; de Gerlache rim +1,8; Malapert massif +2,9; Haworth +4,1; parede interna do Shackleton 0,0. Terra: −3,6; −3,1; −1,7; +0,6; +3,6; −11,1.
+- **Por que não se espera igualdade:** média de 18,6 anos contra um ano; MDE de 60 m contra 20/80/320 m e observador a 2 m; valor de um pixel de 60 m, que muda dezenas de pontos em cerca de 90 m (faixas 3 × 3 no relatório); horizonte consultado no grau inteiro mais próximo do centro do disco. A parede interna (inclinação de 31°) é o caso mais sensível: nosso ponto fica 2 m acima de um MDE de 20 m numa encosta, o da NASA é a média de um pixel de 60 m.
+- **Nada foi ajustado** para aproximar os números.
+- **Status:** aplicada (2026-11-14).
+
 ### Pendências abertas após a etapa 2
 - Nenhuma pendência de dados da etapa 2.
 
