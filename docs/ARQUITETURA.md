@@ -20,7 +20,6 @@ flowchart LR
         E2["Etapa 2<br/>horizon/"]
         E3["Etapa 3<br/>science/"]
         E4["Etapa 4<br/>export/"]
-        E6["Etapa 6<br/>validação"]
     end
 
     subgraph Dados["data/"]
@@ -31,7 +30,10 @@ flowchart LR
     end
 
     subgraph Web["web/ (site estático)"]
+        SY["npm run sync-data<br/>copia data/app → web/public/data"]
+        VIS["módulo de visibilidade<br/>(TS, funções puras, testes)"]
         UI["Vite + React + TS<br/>abertura · painel de missão · detalhe do local"]
+        E6["Etapa 6<br/>validação"]
     end
 
     H --> E1 --> DE
@@ -40,12 +42,14 @@ flowchart LR
     DE --> E4
     DH --> E4
     E3 --> E4
-    E4 --> DA --> UI
+    E4 --> DA --> SY --> VIS --> UI
+    VIS --> E6
     I --> E6
-    DA --> E6
 ```
 
-A etapa 5 (interface) começa em paralelo usando **dados de exemplo no mesmo formato** de `data/app/` (marcados `meta.sample = true`).
+- O pipeline exporta **apenas** horizonte e séries do Sol e da Terra (mais metadados e `psr_distance_km`). **Visibilidade e métricas são calculadas na interface**, num único módulo TypeScript; a validação da etapa 6 usa o mesmo módulo (D9).
+- A interface lê `web/public/data/`, cópia de `data/app/` feita por `npm run sync-data` antes do dev e do build (D10).
+- A etapa 5 (interface) começa em paralelo usando **dados de exemplo no mesmo formato** de `data/app/` (marcados `meta.sample = true`).
 
 ## Como os dados se unem
 
@@ -75,7 +79,7 @@ flowchart TB
 2. **Relevo do LOLA** (NASA Goddard PGDA) vira, para cada direção (1 grau de azimute), a **elevação angular do terreno** vista do local. É o contorno do horizonte.
 3. **Regra de visibilidade:** o astro está visível se a elevação dele é **maior** que a do terreno na mesma direção:
    `visível(t) = el_astro(t) > horizon[round(az_astro(t)) mod 360]`
-   (o método exato de interpolação entre graus será definido na etapa 4/5 e registrado em `DECISOES.md`).
+   Essa regra vive num único módulo TypeScript da interface (D9); o método exato de interpolação entre graus será definido na etapa 5 e registrado em `DECISOES.md`.
 4. **Mapa de sombra permanente** (PGDA) dá a distância de cada local até a sombra permanente mais próxima — o **valor científico**.
 
 Com isso, cada local recebe, para qualquer janela de datas:
@@ -94,7 +98,9 @@ Com isso, cada local recebe, para qualquer janela de datas:
 
 | Parte | Quando roda | Onde |
 |-------|-------------|------|
-| Pipeline (etapas 1–4, 6) | Uma vez, na máquina do time | `pipeline/` |
-| Interface (etapa 5) | No navegador do visitante | `web/`, lendo `data/app/` |
+| Pipeline (etapas 1–4) | Uma vez, na máquina do time | `pipeline/` |
+| Sincronização de dados | Antes do dev e do build (`npm run sync-data`) | `data/app/` → `web/public/data/` |
+| Interface (etapa 5) | No navegador do visitante | `web/`, lendo `web/public/data/` |
+| Validação (etapa 6) | Uma vez, na máquina do time | script/teste TypeScript em `web/`, usando o módulo de visibilidade |
 
-Os cálculos pesados (efemérides, horizonte, distâncias) ficam no pipeline. No navegador só há a regra de visibilidade e agregações simples sobre os dados pré-calculados.
+Os cálculos pesados (efemérides, horizonte, distâncias) ficam no pipeline. No navegador ficam a regra de visibilidade e as métricas sobre os dados pré-calculados, num único módulo de funções puras.

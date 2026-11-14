@@ -1,6 +1,8 @@
 # Contrato de dados
 
-Formato dos arquivos que a interface (`web/`) lê. Gerados pela etapa 4 (`pipeline/export/`) em `data/app/`. Dados de exemplo para a etapa 5 seguem **exatamente** o mesmo formato, com `meta.sample = true`.
+**Este documento é a fonte única do formato** (D10). Formato dos arquivos que a interface (`web/`) lê. Gerados pela etapa 4 (`pipeline/export/`) em `data/app/` e copiados para `web/public/data/` por `npm run sync-data` antes do dev e do build. Dados de exemplo para a etapa 5 seguem **exatamente** o mesmo formato, com `meta.sample = true`.
+
+O pipeline exporta **apenas** o contorno do horizonte e as séries do Sol e da Terra; visibilidade e métricas são calculadas na interface (D9).
 
 Qualquer mudança neste contrato precisa ser registrada em `DECISOES.md` e refletida no pipeline e na interface ao mesmo tempo.
 
@@ -12,11 +14,14 @@ Qualquer mudança neste contrato precisa ser registrada em `DECISOES.md` e refle
 | Azimute | `[0, 360)`. Origem e sentido: **iguais aos do JPL Horizons** — `PENDENTE:` confirmar e escrever aqui |
 | Elevação | `[-90, 90]`, graus acima do horizonte ideal (negativo = abaixo) |
 | Distâncias | km |
-| Tempo | UTC, ISO 8601 com `Z` (ex.: `2027-01-01T00:00:00Z` — data apenas ilustrativa) |
+| Tempo | UTC, ISO 8601 com `Z` (ex.: `2027-01-01T00:00:00Z`) |
+| Intervalo | `2027-01-01T00:00:00Z` a `2027-12-31T23:00:00Z`, passo de 60 min, 8.760 registros (D8) |
 | Coordenadas | latitude/longitude em graus, referencial `PENDENTE:` (MOON_ME esperado) |
 | Valor ausente | `null` (nunca `0` ou `-1` para "sem dado") |
 
 ## Arquivos
+
+Mesma estrutura em `data/app/` (origem, gerada pelo pipeline) e em `web/public/data/` (cópia lida pela interface, URL `/data/...`).
 
 ```
 data/app/
@@ -92,7 +97,7 @@ Um arquivo por local.
 | `sample` | boolean | `true` se for dado de exemplo; a interface **deve** mostrar aviso |
 | `generated_at` | string | quando o arquivo foi gerado, UTC ISO 8601 |
 
-Os campos `horizon`, `series`, `meta.sources`, `meta.start`, `meta.end` e `meta.sample` são os mínimos combinados. Os demais campos de `meta` são propostos nesta etapa e podem ser ajustados até a etapa 4 (registrar em `DECISOES.md`).
+Todos os campos de `meta` acima foram aprovados na revisão da etapa 0 (D7). Mudanças passam por `DECISOES.md`.
 
 Exemplo de **estrutura** (valores fictícios):
 
@@ -107,7 +112,7 @@ Exemplo de **estrutura** (valores fictícios):
     "dem_resolution_m": null,
     "horizon_method": "flat",
     "start": "2027-01-01T00:00:00Z",
-    "end": "2027-01-01T00:00:00Z",
+    "end": "2027-12-31T23:00:00Z",
     "step_minutes": 60,
     "sample": true,
     "generated_at": "2026-11-14T00:00:00Z"
@@ -115,15 +120,17 @@ Exemplo de **estrutura** (valores fictícios):
 }
 ```
 
-## Regra de visibilidade (para a interface)
+## Regra de visibilidade (implementada só na interface)
+
+Implementada em **um único módulo TypeScript** de funções puras com testes (D9); não é exportada pelo pipeline. A validação da etapa 6 usa o mesmo módulo. Forma conceitual:
 
 ```
 sun_visible(t)   = sun_el(t)   > horizon[floor(sun_az(t))   mod 360]
 earth_visible(t) = earth_el(t) > horizon[floor(earth_az(t)) mod 360]
 ```
 
-`PENDENTE:` decidir entre arredondar/truncar o azimute ou interpolar entre graus vizinhos; registrar em `DECISOES.md`.
+`PENDENTE:` decidir, na etapa 5, entre truncar/arredondar o azimute ou interpolar entre graus vizinhos; registrar em `DECISOES.md` e cobrir com testes no módulo de visibilidade.
 
 ## Tamanho
 
-Um ano em passo horário são cerca de 8.760 registros por local (365 × 24). Se o arquivo ficar grande demais para o site, considerar arredondar valores a 2 casas decimais ou gzip — decisão a registrar.
+2027 em passo horário são 8.760 registros por local (365 × 24). Se o arquivo ficar grande demais para o site, considerar arredondar valores a 2 casas decimais ou gzip — decisão a registrar.

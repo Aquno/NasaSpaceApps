@@ -8,6 +8,7 @@
 | `app/` | Arquivos que a interface lê (`sites.json`, `sites/<id>.json`) | etapa 4 | **Sim** (pequenos; o site publica) |
 
 - Formato de `app/`: `docs/CONTRATO_DE_DADOS.md`.
+- `app/` é copiado para `web/public/data/` por `npm run sync-data` (D10). A origem é sempre `app/`.
 - Origem de cada download: registrar em `docs/DADOS.md` (histórico de downloads).
 - O pipeline deve poder recriar `ephemeris/`, `horizon/` e `app/` do zero (reprodutibilidade).
 - Dados de exemplo, se ficarem em `app/`, levam `meta.sample = true`.

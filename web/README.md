@@ -4,7 +4,8 @@ Reservada para a interface. **Ainda não implementada.**
 
 - **Stack:** Vite + React + TypeScript (modo `strict`), site estático, sem servidor.
 - **Lint/formatação:** ESLint + Prettier. `.prettierrc` já existe; o ESLint é configurado ao criar o projeto Vite.
-- **Dados:** lê os arquivos de `data/app/` descritos em `docs/CONTRATO_DE_DADOS.md` (`sites.json` e `sites/<id>.json`). `PENDENTE:` definir como os arquivos chegam ao build (cópia para `web/public/data/` ou alias do Vite) e registrar em `docs/DECISOES.md`.
+- **Dados:** lê de `web/public/data/` (URL `/data/...`), que é uma **cópia de `data/app/`** feita por `npm run sync-data`, executado antes do dev e do build (D10). `web/public/data/` fica fora do git; nunca edite a cópia. Caminhos e campos: `docs/CONTRATO_DE_DADOS.md`, fonte única do formato.
+- **Visibilidade e métricas:** calculadas aqui, em **um único módulo TypeScript** de funções puras com testes. O pipeline não as calcula, e a validação da etapa 6 usa o mesmo módulo (D9).
 - **Dados de exemplo:** a interface começa em paralelo com o pipeline, usando arquivos de exemplo no **mesmo formato**, com `meta.sample = true`. Quando `sample` for `true`, a interface mostra um aviso visível. A interface não depende de saber se o dado é de exemplo ou real para funcionar.
 
 ## Telas

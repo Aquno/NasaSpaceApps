@@ -23,7 +23,7 @@ Lista de fontes para a página de submissão. **Toda fonte externa usada no proj
 
 | # | Fonte | Endereço | Uso | Acesso |
 |---|-------|----------|-----|--------|
-| 8 | NASA Space Apps Challenge 2026 — "Lunar Landing Site Navigator" | `PENDENTE:` URL da página do desafio | Enunciado | |
+| 8 | NASA Space Apps Challenge 2026 — "Lunar Landing Site Navigator" | https://www.spaceappschallenge.org/2026/challenges/lunar-landing-site-navigator/ | Enunciado | |
 
 ## Coordenadas dos locais
 

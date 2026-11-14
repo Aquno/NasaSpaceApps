@@ -62,8 +62,8 @@ Não é obrigatório ter os quatro em todo módulo — é um guia de onde cada c
 - **Tipos em tudo:** type hints no Python; TypeScript em modo `strict`. Os tipos do contrato de dados são **definidos uma vez** (um módulo no pipeline, um na interface) e reutilizados.
 - **Validação nas bordas:** todo arquivo lido é validado contra o contrato de dados. A mensagem de erro diz **qual arquivo e qual campo** falhou.
 - **Tratamento de erro explícito:** nada de falha silenciosa nem de valor padrão inventado quando um dado falta (use `null` e trate). Na interface, os estados **carregando, vazio e erro** são tratados.
-- **Testes onde o erro custa caro:** funções de visibilidade, métricas, notas e conversão de coordenadas têm testes automáticos com casos simples de resultado conhecido (ex.: astro a 5° acima de um horizonte de 3° → visível). Não é preciso testar componentes visuais.
-- **Sem duplicação de regra de negócio:** a regra de visibilidade existe em **um único lugar**. `PENDENTE:` decidir na etapa 4/5 se esse lugar é o pipeline (exporta flags prontas) ou a interface (calcula a partir de `series` + `horizon`); registrar em `DECISOES.md`.
+- **Testes onde o erro custa caro:** funções de visibilidade, métricas e notas (TypeScript) e conversão de coordenadas (Python) têm testes automáticos com casos simples de resultado conhecido (ex.: astro a 5° acima de um horizonte de 3° → visível). Não é preciso testar componentes visuais.
+- **Sem duplicação de regra de negócio:** a regra de visibilidade existe em **um único lugar**: um módulo TypeScript de funções puras com testes, na interface (D9). O pipeline não calcula visibilidade nem métricas; a validação da etapa 6 importa esse mesmo módulo.
 - **Reprodutibilidade:** o pipeline pode ser rodado de novo do zero e gera os mesmos arquivos. Respostas brutas das APIs ficam em cache em `data/raw/`.
 - **Formatação e lint automáticos:**
   - Python: **ruff** (`ruff check` e `ruff format`), configurado em `pyproject.toml`.

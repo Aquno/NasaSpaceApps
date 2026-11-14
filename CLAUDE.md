@@ -26,6 +26,8 @@ Contexto para qualquer sessão do Claude (ou pessoa do time) que entre no projet
 - **Pergunta do pitch:** *"Your launch just slipped three weeks. Which site still works for science and engineering?"*
 - **Forma:** MVP de demonstração, dados reais, volume pequeno, visual forte. **Site estático, sem servidor.**
 - **Locais (lista fechada):** Shackleton rim, Connecting ridge, de Gerlache rim, Malapert massif, Haworth.
+- **Intervalo:** 2027-01-01 a 2027-12-31 UTC, passo de 1 hora (D8).
+- **Página do desafio:** https://www.spaceappschallenge.org/2026/challenges/lunar-landing-site-navigator/
 
 Detalhes em `docs/VISAO.md`.
 
@@ -48,6 +50,11 @@ Tudo vira o céu visto do local de pouso: **azimute** (direção) e **elevação
 - **Regra de visibilidade:** astro visível se `elevação do astro > elevação do terreno` no mesmo azimute.
 - Mapa de sombra permanente (PGDA) → distância até a sombra permanente mais próxima (valor científico).
 
+Onde cada coisa é calculada:
+- **Pipeline** exporta só horizonte, séries do Sol e da Terra e metadados para `data/app/`. **Não calcula visibilidade nem métricas** (D9).
+- **Interface** calcula visibilidade e métricas em **um único módulo TypeScript** de funções puras com testes. A validação da etapa 6 usa o mesmo módulo (D9).
+- `npm run sync-data` copia `data/app/` → `web/public/data/` antes do dev e do build. `docs/CONTRATO_DE_DADOS.md` é a fonte única do formato (D10).
+
 Diagrama completo em `docs/ARQUITETURA.md`.
 
 ## Etapas
@@ -60,7 +67,7 @@ Diagrama completo em `docs/ARQUITETURA.md`.
 | 3 | Valor científico (sombra permanente) | `pipeline/science/` |
 | 4 | Exportação para a interface | `pipeline/export/` |
 | 5 | Interface | `web/` |
-| 6 | Validação contra iluminação média da NASA | `pipeline/` + `docs/` |
+| 6 | Validação contra iluminação média da NASA | `web/` (mesmo módulo de visibilidade) + `docs/` |
 | 7 | Entrega (vídeo, página de submissão, referências) | `docs/`, `README.md` |
 
 Status e critérios de pronto: `docs/ROTEIRO.md`.
@@ -75,6 +82,7 @@ data/ephemeris/  saída da etapa 1 (fora do git, regenerável)
 data/horizon/    saída da etapa 2 (fora do git, regenerável)
 data/app/        arquivos que a interface lê (versionados, pequenos)
 web/         interface Vite + React + TypeScript
+web/public/data/ cópia de data/app (npm run sync-data, fora do git)
 ```
 
 ## Convenções de código e boas práticas
@@ -101,7 +109,7 @@ Versão completa, com exemplos e o equilíbrio entre rigor e prazo: **`docs/BOAS
 - Validação nas bordas: todo arquivo lido é validado contra o contrato; erros dizem arquivo e campo.
 - Erro explícito: nada de falha silenciosa nem valor padrão inventado. Interface trata carregando, vazio e erro.
 - Testes onde o erro custa caro: visibilidade, métricas, notas, conversão de coordenadas (casos simples de resultado conhecido).
-- A **regra de visibilidade existe em um único lugar**.
+- A **regra de visibilidade existe em um único lugar**: o módulo TypeScript da interface (D9).
 - Reprodutibilidade: pipeline roda do zero e gera os mesmos arquivos; respostas brutas das APIs ficam em cache (`data/raw/`).
 - Lint/formatação: **ruff** no Python (`pyproject.toml`); **ESLint + Prettier** na interface.
 - Acessibilidade: contraste, teclado, informação nunca só por cor.

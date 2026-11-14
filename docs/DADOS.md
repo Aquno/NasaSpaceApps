@@ -6,7 +6,7 @@ Cada fonte com o que fornece, endereço, formato, resolução, limites e pendên
 
 - `PENDENTE:` **Referencial.** Confirmar que as coordenadas enviadas ao Horizons usam o mesmo referencial dos dados de relevo (MOON_ME). Se houver diferença, documentar a conversão ou a magnitude do erro.
 - `PENDENTE:` **Coordenadas dos locais.** Definir latitude/longitude dos cinco locais (Shackleton rim, Connecting ridge, de Gerlache rim, Malapert massif, Haworth), com fonte citada para cada uma, e registrar na tabela abaixo.
-- `PENDENTE:` **Intervalo de datas.** Definir o ano exato (início e fim, UTC) usado nas efemérides.
+- ✅ **Intervalo de datas** (resolvido, D8): 2027-01-01T00:00:00Z a 2027-12-31T23:00:00Z, passo de 1 hora, 8.760 registros por local.
 - `PENDENTE:` **Convenção de azimute.** Confirmar origem e sentido do azimute no Horizons e usar a mesma no horizonte do LOLA.
 
 ## Locais
@@ -27,7 +27,7 @@ Cada fonte com o que fornece, endereço, formato, resolução, limites e pendên
 - **Endereço:** https://ssd.jpl.nasa.gov/horizons/
 - **API:** https://ssd-api.jpl.nasa.gov/doc/horizons.html
 - **Formato:** resposta da API em texto/JSON; nós salvamos um arquivo por local em `data/ephemeris/` (formato a definir na etapa 1).
-- **Resolução:** passo de 1 hora (escolha nossa).
+- **Resolução:** passo de 1 hora, de 2027-01-01 a 2027-12-31 UTC (D8).
 - **Limites:**
   - A elevação é contra um **horizonte ideal, sem relevo**. O relevo entra pela etapa 2.
   - `PENDENTE:` limites de uso da API (tamanho de resposta, taxa de requisições).
@@ -60,7 +60,7 @@ Cada fonte com o que fornece, endereço, formato, resolução, limites e pendên
 - **Fornece:** iluminação média oficial para pontos do polo sul, usada para **validar** nosso cálculo (etapa 6).
 - **Endereço:** https://pgda.gsfc.nasa.gov/products/69
 - **Formato:** `PENDENTE:` confirmar.
-- **Resolução / período de média:** `PENDENTE:` confirmar. O período da média oficial provavelmente difere do nosso intervalo de um ano; isso deve ser considerado ao comparar.
+- **Resolução / período de média:** `PENDENTE:` confirmar. O período da média oficial provavelmente difere do nosso intervalo (ano de 2027, D8); isso deve ser considerado ao comparar.
 - **Uso:** preenche `nasa_avg_illumination_pct` em `sites.json` e serve de referência na validação.
 
 ## 5. Apoio visual

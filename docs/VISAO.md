@@ -43,7 +43,7 @@ Pergunta do pitch: *"Your launch just slipped three weeks. Which site still work
 - Demonstração com dados reais, volume pequeno, visual forte.
 - Site estático, sem servidor. Os dados são pré-calculados por um pipeline Python.
 - Cinco locais fixos: Shackleton rim, Connecting ridge, de Gerlache rim, Malapert massif, Haworth.
-- Um ano de efemérides, passo de uma hora (intervalo exato: ver `docs/DADOS.md`).
+- Efemérides de 2027-01-01 a 2027-12-31 UTC, passo de uma hora (D8).
 
 ## Telas planejadas (etapa 5)
 

@@ -1,6 +1,6 @@
 # Lunar Landing Site Navigator
 
-> NASA Space Apps Challenge 2026 — challenge: **Lunar Landing Site Navigator**
+> NASA Space Apps Challenge 2026 — challenge: **[Lunar Landing Site Navigator](https://www.spaceappschallenge.org/2026/challenges/lunar-landing-site-navigator/)**
 > Status: early development (hackathon, November 14–15, 2026). See [`docs/ROTEIRO.md`](docs/ROTEIRO.md) for current progress (team docs are in Portuguese).
 
 **"Your launch just slipped three weeks. Which site still works for science and engineering?"**
@@ -37,7 +37,7 @@ Everything is converted to a single point of view: **the sky as seen from the la
 3. **Visibility rule** — a body is visible when its elevation is greater than the terrain elevation in the same direction.
 4. **Science value** — the PGDA permanent-shadow map gives each site's distance to the nearest permanently shadowed region.
 
-A small Python pipeline precomputes these files; a static site (Vite + React + TypeScript) reads them. No server.
+A small Python pipeline precomputes the terrain horizon and the Sun/Earth series; a static site (Vite + React + TypeScript) reads them. The visibility rule and all metrics live in a single tested TypeScript module in the web app — the same code is used to validate our results against NASA's published illumination. No server.
 
 Architecture details: [`docs/ARQUITETURA.md`](docs/ARQUITETURA.md). Data format: [`docs/CONTRATO_DE_DADOS.md`](docs/CONTRATO_DE_DADOS.md).
 
@@ -73,13 +73,14 @@ pip install -r pipeline/requirements.txt
 # Web interface
 cd web
 # npm install && npm run dev   — TBD (stage 5)
+# `npm run sync-data` copies data/app/ into web/public/data/ and runs before dev and build
 ```
 
 ## Limits (declared)
 
 - **Terrain resolution:** the horizon is computed from a downsampled LOLA product; small nearby obstacles may be missed. Exact resolution: **[PLACEHOLDER]**.
 - **Closed list of sites:** only the five sites above.
-- **Date range:** one year at one-hour steps. Exact interval: **[PLACEHOLDER]**.
+- **Date range:** January 1 to December 31, 2027 (UTC), one-hour steps. Launch-slip comparisons only work within this year.
 - **Sample data:** while the pipeline is incomplete, the interface may use sample files in the final format. These are always flagged as **sample** in the UI.
 - **No AI in the calculations:** all numbers come from NASA data or from fixed, verifiable code.
 

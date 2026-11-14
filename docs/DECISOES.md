@@ -32,3 +32,26 @@ Formato: data, decisão, motivo, consequências. Decisões novas vão no fim. N�
 ### D7 — 2026-11-14 — O que vai para o git em `data/`
 - **Decisão:** `data/raw/`, `data/ephemeris/` e `data/horizon/` ficam fora do git (grandes ou regeneráveis pelo pipeline); `data/app/` é versionado (pequeno, é o que o site publica).
 - **Motivo:** repositório leve sem perder os arquivos que a demonstração precisa.
+- **Revisão:** aprovada na revisão da etapa 0 (2026-11-14), junto com os campos extras de `meta` (`horizon_method`, `dem_resolution_m`, `step_minutes`, `generated_at`).
+
+### D8 — 2026-11-14 — Intervalo de datas
+- **Decisão:** efemérides de **2027-01-01 a 2027-12-31, passo de 1 hora**, em UTC. Primeiro registro `2027-01-01T00:00:00Z`, último `2027-12-31T23:00:00Z`: 8.760 registros por local (2027 não é bissexto).
+- **Motivo:** um ano completo cobre todas as estações do polo sul e as variações de libração, e fica no futuro próximo de missões planejadas.
+- **Consequências:** `meta.start`, `meta.end` e `meta.step_minutes = 60` fixos; o controle de atraso da interface só desloca janelas dentro desse ano.
+
+### D9 — 2026-11-14 — Regra de visibilidade na interface
+- **Decisão:** a regra de visibilidade fica na **interface**, em **um único módulo TypeScript de funções puras com testes**. O pipeline exporta apenas o contorno do horizonte e as séries do Sol e da Terra; **não calcula visibilidade nem métricas**. O número de validação da etapa 6 usa **essa mesma função**.
+- **Motivo:** a regra existe em um só lugar (sem duplicação de regra de negócio); a interface pode recalcular métricas para qualquer janela de datas e atraso sem regerar dados.
+- **Consequências:** a etapa 6 roda como script/teste TypeScript que importa o módulo de visibilidade e lê `data/app/`; o método de arredondamento/interpolação de azimute é decidido e testado nesse módulo.
+
+### D10 — 2026-11-14 — Dados no site
+- **Decisão:** a interface lê de **`web/public/data/`**, que é uma **cópia de `data/app/`** feita por um script (`npm run sync-data`), executado **antes do dev e do build**. Caminhos e campos seguem `docs/CONTRATO_DE_DADOS.md`, que é a **fonte única do formato**.
+- **Motivo:** o pipeline continua dono de `data/app/`; o Vite serve `public/` sem configuração extra.
+- **Consequências:** `web/public/data/` fica fora do git (é cópia); quem edita dados edita `data/app/` (via pipeline), nunca a cópia.
+
+### D11 — 2026-11-14 — Página do desafio
+- **Decisão:** a referência oficial do enunciado é https://www.spaceappschallenge.org/2026/challenges/lunar-landing-site-navigator/
+- **Consequências:** citada em `REFERENCIAS.md` e no `README.md`.
+
+### Pendências abertas após a revisão da etapa 0
+Continuam abertas e serão resolvidas nas etapas 1 e 2: coordenadas dos locais, referencial (MOON_ME), convenção de azimute, formato dos produtos do PGDA.
