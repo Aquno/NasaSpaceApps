@@ -94,6 +94,16 @@ export function MissionRulesPanel({ rules, onChange }: Props) {
           </span>
         </label>
         <label className="control">
+          <span className="caps">Relay alert below direct link (%)</span>
+          <input
+            type="number"
+            min={0}
+            max={100}
+            value={Math.round(rules.lowLinkBelowEarthFraction * PERCENT)}
+            onChange={(e) => set({ lowLinkBelowEarthFraction: num(e.target.value, 0) / PERCENT })}
+          />
+        </label>
+        <label className="control">
           <span className="caps">Max terrain slope (°)</span>
           <input
             type="number"

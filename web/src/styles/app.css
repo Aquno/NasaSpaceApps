@@ -512,3 +512,6 @@ svg text {
 .map-row.wide {
   grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
 }
+.card .link.alert {
+  color: var(--sun);
+}

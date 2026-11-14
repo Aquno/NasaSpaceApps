@@ -47,6 +47,8 @@ export interface MissionRules {
    */
   minScienceEnabled: boolean;
   minScienceScore: number;
+  /** Below this share of mission hours with a direct Earth link, show "relay satellite required" (D37). */
+  lowLinkBelowEarthFraction: number;
 }
 
 export const DEFAULT_RULES: MissionRules = {
@@ -58,6 +60,7 @@ export const DEFAULT_RULES: MissionRules = {
   maxSlopeDeg: 10,
   minScienceEnabled: false,
   minScienceScore: 40,
+  lowLinkBelowEarthFraction: 0.5,
 };
 
 /** Mission duration choices offered in the interface (hours). Default: 14 days. */

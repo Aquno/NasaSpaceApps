@@ -219,6 +219,10 @@ Formato: data, decisão, motivo, consequências. Decisões novas vão no fim. N�
 - **Efeito** (missão de 14 dias, 352 dias; `npm run report:census`): viáveis / marginais / inviáveis — Shackleton rim 189 / 15 / 148; Connecting ridge 222 / 0 / 130; de Gerlache rim 207 / 3 / 142; Malapert massif 229 / 9 / 114; Haworth 125 / 2 / 225; nenhum local viável em 71 dias. Melhor compromisso por dia: Shackleton rim 166, Connecting ridge 65, de Gerlache 28, Malapert 15, Haworth 8, nenhum 70. Com +21 dias, **110** datas trocam o melhor compromisso de um local para outro.
 - **Cenário padrão (D33) mantido:** 04/03 Shackleton rim viável e melhor compromisso → 25/03 Shackleton not viable ("Dark at landing" em todas as horas) e de Gerlache rim melhor compromisso (viável, eng 80 / sci 58). O caso mais "claro" do relatório passou a ser 03/03 → 24/03 (mesma troca), mas a diferença é de um dia; o padrão não precisou mudar.
 
+### D37 — 2026-11-14 — Uma linha de comunicação por local
+- **Decisão:** o cartão mostra uma única linha: "Direct link X% of mission · longest gap Y (relay needed during gaps)"; sem intervalos, só "Direct link X% of mission". O alerta "relay satellite required" aparece **só** quando a cobertura direta fica abaixo de um limite em "Mission rules" (`lowLinkBelowEarthFraction`, padrão **50%** da missão, escolha do time). Não altera o veredito. Substitui o texto "No direct link: relay satellite required" baseado só no instante do pouso, que parecia contradizer "Earth in view 86%".
+- Código: `web/src/calc/communication.ts` (testado).
+
 ### Pendências abertas após a etapa 2
 - Nenhuma pendência de dados da etapa 2.
 

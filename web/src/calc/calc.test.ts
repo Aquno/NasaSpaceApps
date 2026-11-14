@@ -10,6 +10,7 @@ import {
   runFrom,
 } from './metrics';
 import { DEFAULT_RULES } from '../config/scoring';
+import { linkStatus } from './communication';
 import { bestCompromise, engineeringScore, scienceScore, verdict } from './scores';
 import {
   azimuthBin,
@@ -236,5 +237,17 @@ describe('scores', () => {
     expect(
       bestCompromise([{ id: 'c', engineering: 1, science: 1, verdict: 'not-viable' }]),
     ).toBeNull();
+  });
+});
+
+describe('direct link status (D37)', () => {
+  it('continuous, gaps, low', () => {
+    expect(linkStatus({ earthFraction: 1, longestNoContactHours: 0 }).kind).toBe('continuous');
+    expect(linkStatus({ earthFraction: 0.86, longestNoContactHours: 9 })).toEqual({
+      kind: 'gaps',
+      fraction: 0.86,
+      longestGapHours: 9,
+    });
+    expect(linkStatus({ earthFraction: 0.3, longestNoContactHours: 120 }).kind).toBe('low');
   });
 });

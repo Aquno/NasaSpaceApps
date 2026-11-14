@@ -88,17 +88,16 @@ export function SiteCard({
             : 'No viable landing left in the data year.'}
         </p>
       )}
-      <p className={m.earthVisibleAtLanding ? 'link earth' : 'link'}>
-        {m.earthVisibleAtLanding
-          ? '▲ Direct link to Earth at landing'
-          : '△ No direct link: relay satellite required'}
+      <p className={evaluation.link.kind === 'low' ? 'link alert' : 'link earth'}>
+        {evaluation.link.kind === 'low'
+          ? `△ Direct link only ${fmtPct(evaluation.link.fraction)} of mission: relay satellite required`
+          : evaluation.link.kind === 'gaps'
+            ? `▲ Direct link ${fmtPct(evaluation.link.fraction)} of mission · longest gap ${fmtHours(evaluation.link.longestGapHours)} (relay needed during gaps)`
+            : `▲ Direct link ${fmtPct(evaluation.link.fraction)} of mission`}
       </p>
       <div className="metrics">
         <span className="sun" title="Mission hours with some part of the Sun visible">
           ● {fmtPct(m.sunFraction)} sun
-        </span>
-        <span className="earth" title="Mission hours with some part of the Earth visible">
-          ▲ {fmtPct(m.earthFraction)} Earth
         </span>
         <span className="science" title="Distance to the nearest permanently shadowed region">
           ◆ {fmtKm(site.psrDistanceKm)}

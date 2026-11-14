@@ -9,6 +9,7 @@
  */
 import { DEFAULT_RULES, type MissionRules } from '../config/scoring';
 import { indexAtOrAfter, type SiteData, type SiteSummary } from '../data/contract';
+import { linkStatus, type LinkStatus } from './communication';
 import { missionMetrics, missionWindow, type MissionMetrics, type WindowResult } from './metrics';
 import {
   bestCompromise,
@@ -34,6 +35,8 @@ export type SiteEvaluation =
       landingMs: number;
       /** False when no hour of the day meets them (the 00:00 UTC evaluation is then shown). */
       landingHourFound: boolean;
+      /** Direct-to-Earth link summary (D37). */
+      link: LinkStatus;
     }
   | { ok: false; siteId: string; window: Extract<WindowResult, { ok: false }> };
 
@@ -104,6 +107,7 @@ export function evaluateAt(
     ),
     landingMs,
     landingHourFound: true,
+    link: linkStatus(metrics, rules),
   };
 }
 
