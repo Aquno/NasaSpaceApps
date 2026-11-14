@@ -79,6 +79,8 @@ export interface Verdict {
 
 const pct = (x: number) => `${Math.round(x * 100)}%`;
 const hours = (h: number) => (h >= 48 ? `${Math.round(h / 24)} days` : `${Math.round(h)} h`);
+/** One decimal, rounded down, so a score just below a threshold never prints as equal. */
+const floor1 = (x: number) => (Math.floor(x * 10) / 10).toFixed(1);
 
 /** Which rule decided the verdict (for the interface to highlight it). */
 export type RuleKey =
@@ -164,14 +166,14 @@ function baseVerdict(
     return {
       kind: 'marginal',
       rule: 'engineering',
-      reason: `Engineering score ${eng.total.toFixed(1)} below ${rules.viableMinEngineering}: Earth in view ${pct(m.earthFraction)}, longest contact gap ${hours(m.longestNoContactHours)}.`,
+      reason: `Engineering score ${floor1(eng.total)} below ${rules.viableMinEngineering}: Earth in view ${pct(m.earthFraction)}, longest contact gap ${hours(m.longestNoContactHours)}.`,
     };
   }
   if (science < rules.viableMinScience) {
     return {
       kind: 'marginal',
       rule: 'science',
-      reason: `Good power and contact, but permanent shadow is ${distance} away (science ${science.toFixed(1)} < ${rules.viableMinScience}).`,
+      reason: `Good power and contact, but permanent shadow is ${distance} away (science ${floor1(science)} < ${rules.viableMinScience}).`,
     };
   }
   return {

@@ -18,6 +18,7 @@ import {
   type Evaluation,
   type SiteEvaluation,
 } from '../src/calc/evaluate';
+import { earliestViableSite, nextViableWindow } from '../src/calc/nextViable';
 import { DAY_MS, isoDay, loadAppData } from './lib/app-data';
 
 const delayDays = Number(process.argv[2] ?? 21);
@@ -109,4 +110,61 @@ chosen.forEach((c, i) => {
     `${i + 1}. **Planned ${isoDay(t0)} -> delayed ${isoDay(t0 + delayDays * DAY_MS)}**: ${c.kind} (clarity ${c.clarity.toFixed(0)})`,
   );
   for (const line of c.lines) console.log(`   - ${line}`);
+});
+
+// ---- After the delay, does another site reopen (become viable) before Shackleton rim? ----
+const REFERENCE_SITE = 'shackleton-rim';
+const refSite = ranked.find((s) => s.id === REFERENCE_SITE);
+interface Reopen {
+  day: number;
+  siteId: string;
+  siteStart: number;
+  siteWindow: number;
+  refStart: number | null;
+  refWindow: number;
+  gainDays: number;
+}
+const reopens: Reopen[] = [];
+const refData = data.get(REFERENCE_SITE);
+const refVis = vis.get(REFERENCE_SITE);
+if (refSite && refData && refVis) {
+  for (let k = 0; k < 365; k++) {
+    const t1 = first + (k + delayDays) * DAY_MS;
+    const earliest = earliestViableSite(ranked, data, vis, t1, duration);
+    if (!earliest || earliest.siteId === REFERENCE_SITE) continue;
+    const ref = nextViableWindow(refSite, refData, refVis, t1, duration);
+    if (ref && ref.startMs <= earliest.window.startMs) continue;
+    reopens.push({
+      day: k,
+      siteId: earliest.siteId,
+      siteStart: earliest.window.startMs,
+      siteWindow: earliest.window.windowDays,
+      refStart: ref?.startMs ?? null,
+      refWindow: ref?.windowDays ?? 0,
+      gainDays: ref ? (ref.startMs - earliest.window.startMs) / DAY_MS : 365,
+    });
+  }
+}
+const reopenChosen: Reopen[] = [];
+for (const r of [...reopens].sort((a, b) => b.gainDays - a.gainDays)) {
+  if (reopenChosen.every((x) => Math.abs(x.day - r.day) >= MIN_GAP_DAYS)) reopenChosen.push(r);
+  if (reopenChosen.length >= wanted) break;
+}
+const reopenSites = new Map<string, number>();
+for (const r of reopens) reopenSites.set(r.siteId, (reopenSites.get(r.siteId) ?? 0) + 1);
+console.log(
+  `\n### After +${delayDays} days, another site reopens before ${REFERENCE_SITE} ` +
+    `(${reopens.length} planned landing days; by site: ` +
+    `${[...reopenSites.entries()].map(([id, n]) => `${id} ${n}`).join(', ') || 'none'})\n`,
+);
+reopenChosen.forEach((r, i) => {
+  const t0 = first + r.day * DAY_MS;
+  const ref =
+    r.refStart === null
+      ? `${REFERENCE_SITE}: no viable landing left in the data`
+      : `${REFERENCE_SITE}: next viable ${isoDay(r.refStart)} (window ${r.refWindow} d)`;
+  console.log(
+    `${i + 1}. **Planned ${isoDay(t0)} -> delayed ${isoDay(t0 + delayDays * DAY_MS)}**: ` +
+      `${r.siteId} viable from ${isoDay(r.siteStart)} (window ${r.siteWindow} d); ${ref}`,
+  );
 });

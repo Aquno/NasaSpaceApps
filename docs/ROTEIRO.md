@@ -138,3 +138,4 @@ Legenda de status: `a fazer` · `em andamento` · `concluído` · `plano B` · `
 | 2026-11-14 | 5 | Regras de viabilidade novas (D25 revisada), relatórios de censo e de atraso; terreno exportado (contrato v3, D29); painel de missão funcionando com os dados reais |
 | 2026-11-14 | 5 | D30: mesma regra de ponto para as cinco regiões (pixel mais iluminado do produto 69 dentro do recorte do produto 78); pipeline refeito (efemérides, horizonte, PSR, referência, exportação) |
 | 2026-11-14 | 5 | D31: regra de inclinação (10°), próxima janela viável e "Earliest viable site after the slip", aviso de link direto, "What this tool covers", texto da abertura |
+| 2026-11-14 | 5 | Relatórios refeitos com os pontos da D30 (notas em três datas, censo de 2027, cenários de atraso + "outro local reabre antes do Shackleton rim"); pesos e limites padrão inalterados |
