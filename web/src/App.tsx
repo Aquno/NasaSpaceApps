@@ -9,6 +9,7 @@ import { useSites } from './data/useSites';
 import { useI18n } from './i18n/I18nProvider';
 import { Dashboard } from './screens/Dashboard';
 import { Intro } from './screens/Intro';
+import { SiteDetail } from './screens/SiteDetail';
 import { useMissionInputs } from './state/useMission';
 
 function useHash(): string {
@@ -57,15 +58,18 @@ export function App() {
   const siteMatch = /^#\/site\/(.+)$/.exec(hash);
   if (siteMatch) {
     const site = state.sites.find((s) => s.id === siteMatch[1]);
-    return (
-      <main className="app">
-        <a className="linkbtn" href="#/mission">
-          ◂ {t('app.backToDashboard')}
-        </a>
-        <h1>{site ? site.name : t('app.unknownSite')}</h1>
-        <p className="note">{t('app.detailComing')}</p>
-      </main>
-    );
+    const data = site ? state.data.get(site.id) : undefined;
+    if (!site || !data) {
+      return (
+        <main className="app">
+          <a className="linkbtn" href="#/mission">
+            ◂ {t('app.backToDashboard')}
+          </a>
+          <p>{t('detail.notFound')}</p>
+        </main>
+      );
+    }
+    return <SiteDetail site={site} data={data} inputs={inputs} />;
   }
   return (
     <Dashboard

@@ -256,6 +256,13 @@ Formato: data, decisão, motivo, consequências. Decisões novas vão no fim. N�
 - **Contraste (WCAG), pior caso:** texto direto sobre uma estrela (fundo efetivo `rgb(35 39 45)`): texto 12,76:1; secundário 6,73:1; apagado 4,73:1; âmbar 7,21:1; azul 6,50:1; lilás 6,96:1. Dentro dos cartões, pior caso (vidro selecionado sobre estrela, `rgb(29 36 46)`): apagado 4,92:1, demais acima de 6,7:1.
 - **Status:** aplicada (2026-11-14).
 
+### D42 — 2026-11-14 — Detalhe do local
+
+- **Decisão:** página própria (`#/site/<id>`), com o panorama do horizonte de 360° como elemento principal: silhueta real do relevo (horizonte LOLA, cada grau desenhado como um degrau, coerente com a D19), linha de 0°, trajetórias do Sol e da Terra durante a missão, e os dois discos no **tamanho angular real** do instante selecionado (diâmetro da série do Horizons), esticados pela escala vertical; anéis marcam a posição, porque no panorama inteiro o Sol tem cerca de 2 px. A escala vertical é o maior inteiro que faz a faixa de elevações caber na altura do desenho e aparece na tela ("Vertical ×N"). Controle de tempo com play (uma hora da missão a cada 60 ms) e leitura do estado de cada astro (visível, parcialmente visível, atrás do relevo) com a elevação e o relevo naquela direção.
+- **Abaixo:** linha do tempo da missão (faixas hora a hora de luz e de contato direto, regra "qualquer parte do disco", cursor no instante) com a contagem até o próximo ocaso e a próxima perda de contato (ou até o próximo nascer, quando o astro está atrás do relevo); veredito, notas e como são formadas; "Data and limits" recolhido (ponto, posição, relevo, sombra permanente, médias da NASA, resolução do relevo por faixa de distância, altura do mastro, fontes, limite do melhor caso por região, sinal de cerca de 1,3 s em cada sentido, só a linha direta com a Terra é avaliada).
+- **Cálculo:** a missão começa na hora de pouso da D36 para o dia escolhido no painel (com o atraso). Visibilidade pelo módulo único (D9); funções puras novas em `calc/panorama.ts` com testes.
+- **Status:** aplicada (2026-11-14).
+
 ### Pendências abertas após a etapa 2
 - Nenhuma pendência de dados da etapa 2.
 

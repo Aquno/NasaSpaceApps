@@ -10,6 +10,7 @@ import type { SiteSummary } from '../data/contract';
 import { useI18n } from '../i18n/I18nProvider';
 import type { MessageKey } from '../i18n/messages';
 import { VERDICT_ICON } from '../ui/format';
+import { ScoreParts } from './ScoreParts';
 
 interface Props {
   site: SiteSummary;
@@ -123,20 +124,7 @@ export function SiteCard({
           </div>
           <details onClick={(e) => e.stopPropagation()}>
             <summary>{t('card.howBuilt')}</summary>
-            <table>
-              <tbody>
-                {[...engineering.parts, ...(science?.parts ?? [])].map((p) => (
-                  <tr key={p.key}>
-                    <td>{t(`part.${p.key}`)}</td>
-                    <td className="num">
-                      {t('card.partValue', { v: p.value, w: p.weight * 100 })}
-                    </td>
-                    <td className="num">{t('card.partPoints', { p: p.points })}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            <div>{t('card.fullDisc', { s: m.sunHoursFull, e: m.earthHoursFull })}</div>
+            <ScoreParts engineering={engineering} science={science} metrics={m} />
           </details>
           <button
             type="button"

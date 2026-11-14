@@ -1039,3 +1039,221 @@ svg text {
     grid-template-columns: 1fr;
   }
 }
+
+/* ---- site detail (D42) ---- */
+.detail > :not(.starfield),
+.roadmap > :not(.starfield) {
+  position: relative;
+  z-index: 1;
+}
+.detail {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s5);
+}
+.detail-head {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: var(--s4) var(--s5);
+}
+.detail-title {
+  margin: 0;
+  font-size: 2.2rem;
+  font-weight: 600;
+}
+.detail-scores {
+  font-family: var(--font-mono);
+  font-size: 1.6rem;
+}
+.detail-scores .caps {
+  margin-right: var(--s4);
+}
+.detail-main,
+.detail-block {
+  padding: var(--s5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s3);
+}
+.detail-main h2,
+.detail-block h2,
+.detail-block h3 {
+  margin: 0;
+}
+.detail-reason {
+  font-size: 1.1rem;
+}
+.limits {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s3);
+  margin-top: var(--s4);
+}
+.limits ul {
+  margin: 0;
+  padding-left: var(--s4);
+}
+.section-details > summary {
+  cursor: pointer;
+  font-size: 1.05rem;
+  font-weight: 500;
+}
+.facts {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--s1) var(--s4);
+  margin: 0;
+}
+.facts dd {
+  margin: 0;
+}
+.score-parts {
+  border-collapse: collapse;
+  max-width: 640px;
+}
+.score-parts td {
+  padding: 2px var(--s4) 2px 0;
+}
+.score-parts td.num {
+  text-align: right;
+}
+
+/* panorama */
+.panorama {
+  margin: 0;
+}
+.panorama svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.pano-terrain {
+  fill: #3a3631;
+  stroke: #b8ad9c;
+  stroke-width: 1.5;
+}
+.pano-terrain.alt {
+  fill: rgb(185 163 255 / 0.12);
+  stroke: var(--science);
+  stroke-dasharray: 6 4;
+}
+.pano-grid {
+  stroke: rgb(233 237 242 / 0.08);
+}
+.pano-zero {
+  stroke: rgb(233 237 242 / 0.35);
+  stroke-dasharray: 4 6;
+}
+.pano-tick,
+.pano-axis {
+  fill: var(--muted);
+  font-size: 13px;
+}
+.pano-path {
+  fill: none;
+  stroke-width: 2;
+  opacity: 0.55;
+}
+.pano-path.sun {
+  stroke: var(--sun);
+}
+.pano-path.earth {
+  stroke: var(--earth);
+  stroke-dasharray: 2 4;
+}
+.pano-body.sun ellipse {
+  fill: var(--sun);
+}
+.pano-body.earth ellipse {
+  fill: var(--earth);
+}
+.pano-ring {
+  fill: none;
+  stroke-width: 1.5;
+}
+.pano-body.sun .pano-ring {
+  stroke: var(--sun);
+}
+.pano-body.earth .pano-ring {
+  stroke: var(--earth);
+}
+.pano-label {
+  font-size: 14px;
+  fill: var(--text);
+}
+.pano-caption {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s2) var(--s4);
+  align-items: baseline;
+  margin-top: var(--s2);
+}
+.pano-scale {
+  font-weight: 600;
+  border: 1px solid var(--glass-line);
+  border-radius: 999px;
+  padding: 0 var(--s3);
+}
+.time-control {
+  display: flex;
+  align-items: center;
+  gap: var(--s4);
+  flex-wrap: wrap;
+}
+.time-slider {
+  flex: 1;
+  min-width: 200px;
+}
+.time-slider input {
+  width: 100%;
+  accent-color: var(--sun);
+}
+.body-readout {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s2) var(--s6);
+  font-size: 0.92rem;
+}
+
+/* mission timeline */
+.timeline {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s2);
+}
+.timeline-row {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  align-items: center;
+  gap: var(--s3);
+}
+.timeline-row svg {
+  width: 100%;
+  height: 22px;
+  display: block;
+}
+.timeline-row:last-of-type svg {
+  height: 8px;
+}
+.tl-off {
+  fill: rgb(233 237 242 / 0.06);
+}
+.tl-on.sun {
+  fill: var(--sun);
+}
+.tl-on.earth {
+  fill: var(--earth);
+}
+.tl-cursor {
+  fill: var(--text);
+}
+.tl-tick {
+  fill: var(--muted);
+}
+.timeline-counts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s2) var(--s6);
+  margin-top: var(--s2);
+}

@@ -147,3 +147,4 @@ Legenda de status: `a fazer` · `em andamento` · `concluído` · `plano B` · `
 | 2026-11-14 | 5 | D39: painel em camadas (3D grande + cinco cartões compactos, seções recolhíveis), 3D com regolito e crateras, rótulos sem sobreposição, globo de orientação (textura NASA SVS); D35 aplicada ao painel |
 | 2026-11-14 | 5 | D40: abertura refeita (globo, estrelas, números calculados dos dados, blocos recolhidos), estilo de vidro, alternância EN / PT, capturas 1920 × 1080 e 1366 × 768 em `web/docs/screenshots/` |
 | 2026-11-14 | 5 | Itens 1–6 aprovados; D41: abertura mostra 110 trocas de local com +21 d; céu parado e fraco no painel com cartões de vidro |
+| 2026-11-14 | 5 | D42: detalhe do local (panorama 360° com Sol e Terra em tamanho angular real e play, linha do tempo, notas, "Data and limits") |
