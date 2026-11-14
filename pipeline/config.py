@@ -90,3 +90,11 @@ HORIZON_PLOT_DAYS = 30
 # ---- Site point review (docs/DECISOES.md D20) -------------------------------------------------
 # Radius within which a pixel must be the highest to count as a crest local maximum (team choice).
 CREST_LOCAL_MAX_RADIUS_M = 250.0
+
+# ---- Stage 3: science value (docs/DECISOES.md D21) ---------------------------------------------
+SCIENCE_DIR = REPO_ROOT / "data" / "science"
+PSR_BASE_URL = "https://pgda.gsfc.nasa.gov/data/LOLA_20mpp/LPSR_80S_20MPP_ADJ_1km2"
+PSR_PRODUCT = "NASA GSFC PGDA product 90, PSRs with area > 1 km2 (LPSR_80S_20MPP_ADJ_1km2)"
+# Minimum PSR area counted as scientifically interesting (team choice, not a NASA criterion).
+# The PGDA file is already filtered at "area > 1 km2"; the code re-applies the bound.
+PSR_MIN_AREA_KM2 = 1.0
