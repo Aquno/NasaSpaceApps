@@ -17,21 +17,25 @@ Pontos de **referência regionais**, não locais de pouso designados pela NASA. 
 
 | id | Nome | Lat (°) | Lon (°) | Tipo de fonte | Fonte |
 |----|------|---------|---------|---------------|-------|
-| `shackleton-rim` | Shackleton rim | -89.7668 | -171.87 | ponto publicado (centro da região Site04) | [1] Tab. A2.1-1, p. 75 |
+| `shackleton-rim` | Shackleton rim | -89.780445 | -156.168582 | **ponto derivado** na crista, dentro da região Site04 (D20) | regra em D20 sobre [1] Tab. A2.1-1 e PGDA 78/90 |
 | `connecting-ridge` | Connecting ridge | -89.468 | -137.4 (= 222.6° E) | ponto publicado (CR1/C1) | [2] p. 26 (figura) e p. 32 (seção 7.3.3) |
 | `de-gerlache-rim` | de Gerlache rim | -88.6834 | -67.9321 | ponto publicado (centro da região Site11, "de Gerlache Rim 1") | [1] Tab. A2.1-1, p. 75 |
 | `malapert-massif` | Malapert massif | -85.9948 | -0.23578 | ponto publicado (centro da região Site23) | [1] Tab. A2.1-1, p. 75 |
 | `haworth` | Haworth | -86.7639 | -22.777 | ponto publicado (centro da região Haworth) | [1] Tab. A2.1-1, p. 75 |
+| `shackleton-inner-wall` | Shackleton inner wall (Site04 center) | -89.7668 | -171.87 | ponto publicado (centro da região Site04); **demonstração de sensibilidade** | [1] Tab. A2.1-1, p. 75 |
 
 Fontes:
 1. NASA **M2M-30044 Moon to Mars Lunar Surface Data Book**, Baseline, 2025-03-18 (NASA/TP-20250002845), Apêndice A2.1, "Table A2.1-1 Lunar South Pole Features", página 75 de 93. https://ntrs.nasa.gov/api/citations/20250002845/downloads/M2M-30044%20Lunar%20Surface%20Data%20Book%20Baseline_Final.pdf — o texto da tabela diz: "Coordinates have been generated from the DEM files on the PGDA website (South Pole LOLA DEM), so the center points of the original polygons are accurate to 5 to 10 meters." A mesma tabela está na ACD-50044 Rev A (2023), p. 57.
 2. NASA **ACD-50044 Lunar Surface Data Book**, Initial Release, 2022-10-06. https://ntrs.nasa.gov/api/citations/20220015275/downloads/ACD-50044%20Lunar%20Surface%20Data%20Book_100622.pdf — "Traverse between two points C1 (89.468° S, 222.6° E) and C2 (89.500° S, 222.1° E) on the Shackleton - de Gerlache connecting ridge" e "a landing at the CR1 (89.468° S, 222.6° E) location". Repetido na M2M-30044, figura 7.3.2.7-1, p. 54.
 
+Inclinação local no DEM de 20 m (D20): Shackleton rim 3,6°, Connecting ridge 0,7°, de Gerlache rim 1,3°, Malapert massif 4,3°, Haworth 4,5°, Shackleton inner wall 31,4°.
+
 Conferência independente (`python -m pipeline.sites.verify_site_points`): o centro de cada GeoTIFF do PGDA produto 78 (`<tile>_final_adj_5mpp_surf.tif`; só o cabeçalho é lido, por requisição HTTP com `Range`), convertido de estereográfica polar sul (esfera de 1.737.400 m, origem -90°, meridiano central 0°, escala 1, declarados nas GeoKeys do arquivo) para latitude/longitude:
 
 | Local | Recorte | Distância ao ponto publicado |
 |---|---|---|
-| Shackleton rim | Site04 | 0,3 m |
+| Shackleton inner wall (centro publicado) | Site04 | 0,3 m |
+| Shackleton rim (derivado, D20) | Site04 | 1919,6 m do centro (esperado: ponto na crista) |
 | Connecting ridge | Site01 | 148,9 m (CR1 não é o centro do recorte; o centro publicado do Site01 é -89.4632, -137.49) |
 | de Gerlache rim | Site11 | 0,6 m |
 | Malapert massif | Site23 | 0,5 m |

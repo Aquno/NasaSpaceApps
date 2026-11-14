@@ -85,8 +85,15 @@ Formato: data, decisão, motivo, consequências. Decisões novas vão no fim. N�
 - **Decisão:** cálculo a cada 0,1° de azimute; `horizon[i]` guarda o **máximo** dos azimutes em [i − 0,5, i + 0,5). Contorno não limitado a zero.
 - **Consequência para a etapa 5:** a regra de visibilidade deve usar o azimute **arredondado** ao grau mais próximo (`round(az) mod 360`) para casar com essa convenção. Decisão final do método fica para a etapa 5 (pendência em `CONTRATO_DE_DADOS.md`).
 
+### D20 — 2026-11-14 — Shackleton rim: ponto derivado na crista (altera a D12)
+- **Problema:** o centro publicado da região Site04 (−89,7668; −171,87) fica na parede interna da cratera (inclinação 31,4°); horizonte de até 31,9°.
+- **Decisão:** o local `shackleton-rim` passa a usar um **ponto derivado** na crista, tipo de fonte `derived_point`, citando a região Site04 e o Data Book (M2M-30044, Tab. A2.1-1).
+- **Regra reproduzível** (`pipeline/sites/crest_point.py`, `python -m pipeline.sites.derive_crest_point`): no DEM de 20 m do PGDA 90, dentro dos limites do recorte Site04 do PGDA 78 (x −9000 a 7000 m, y −15000 a 1000 m), entre os pixels que (1) são o ponto mais alto num raio de 250 m e (2) são mais altos que o terreno no centro publicado, escolher o mais próximo do centro publicado. O raio de 250 m é escolha do time.
+- **Resultado:** lat −89,780445°, lon −156,168582° (x −2690, y −6090 m), altura 1738,4 m (centro: 770,9 m), a 1919,6 m do centro publicado, inclinação local 3,6°.
+- **Centro publicado mantido** como sexto local, `shackleton-inner-wall`, "Shackleton inner wall (Site04 center)", tipo `published_point`, marcado `purpose = sensitivity_demo` (mostra a sensibilidade à posição).
+- **Outros quatro pontos verificados** (inclinação por diferenças centrais em um pixel de 20 m): Connecting ridge 0,7°, de Gerlache rim 1,3°, Malapert massif 4,3°, Haworth 4,5°. Nenhum alterado.
+
 ### Pendências abertas após a etapa 2
-- `PENDENTE:` (revisão do time) o ponto de referência do **Shackleton rim** (centro da região Site04 publicado pela NASA) fica na **parede interna** da cratera, em encosta de ~31°: o horizonte calculado chega a 31,9° (média 12,5°). O valor está correto para esse ponto, mas o ponto não representa a crista. Ver opções no `ROTEIRO.md`.
 - `PENDENTE:` (etapa 3) arquivo de sombra permanente do produto 90.
 
 ### Pendências abertas após a etapa 1 (histórico)

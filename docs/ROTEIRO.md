@@ -4,7 +4,7 @@
 
 Legenda de status: `a fazer` · `em andamento` · `concluído` · `plano B` · `cortado`. Nas listas, `[~]` = item dispensado.
 
-Última atualização: 2026-11-14 — etapa 2 concluída, aguardando aprovação (decisões D16–D19).
+Última atualização: 2026-11-14 — etapa 2 aprovada; D20 (Shackleton rim na crista; seis locais).
 
 ## Pontos de controle
 
@@ -43,7 +43,7 @@ Legenda de status: `a fazer` · `em andamento` · `concluído` · `plano B` · `
 
 ### 2. Horizonte
 - Responsável:
-- Status: **concluído** (2026-11-14), branch `stage-2-horizon` — aguardando aprovação
+- Status: **concluído e aprovado** (2026-11-14), branch `stage-2-horizon` juntada à `main`
 - O que é: calcular o contorno de 360 graus de cada local a partir do relevo do LOLA.
 - Pasta: `pipeline/horizon/` → `data/horizon/` (relatório e figuras versionados)
 - Como rodar: `python -m pipeline.horizon.run_horizon` (ver `pipeline/horizon/README.md`)
@@ -54,9 +54,9 @@ Legenda de status: `a fazer` · `em andamento` · `concluído` · `plano B` · `
   - [x] Altura do observador tirada do DEM (D13) + mastro de 2 m (D18)
   - [x] Sanidade: contornos dentro de [−10°, +35°], não constantes, sem direções sem dado (`data/horizon/REPORT.md`)
   - [x] Verificação visual: figuras com o contorno e a trajetória de um mês do Sol e da Terra (`data/horizon/plots/`)
-  - [ ] Comparação qualitativa com Quickmap/Moon Trek — **não feita** (precisa de navegador; fica para o time, opcional)
+  - [~] Comparação qualitativa com Quickmap/Moon Trek — **dispensada** pelo time na aprovação da etapa 2 (2026-11-14)
 - **Plano B** (horizonte liso): não foi necessário.
-- **Atenção — Shackleton rim:** o ponto de referência (centro da região Site04, D12) fica na parede interna da cratera, em encosta de ~31°; horizonte de 0,1° a 31,9° (média 12,5°). O cálculo está correto para o ponto, mas o ponto não representa a crista. Opções em discussão: (a) manter e declarar; (b) usar o LM1 "Shackleton Rim B" da mesma tabela da NASA (−89,5244; 56,30993) — testado: encosta de ~12°, horizonte −1,4° a 14,2°; (c) derivar um ponto na crista dentro do recorte Site04 (ponto derivado por nós, não publicado).
+- **Shackleton rim (resolvido, D20):** o centro publicado do Site04 ficava na parede interna (31,4°). O local passou a usar um ponto derivado na crista (inclinação 3,6°, horizonte −2,5° a 1,0°); o centro publicado virou o sexto local, `shackleton-inner-wall`, para demonstrar a sensibilidade à posição.
 
 ### 3. Valor científico
 - Responsável:
@@ -125,3 +125,4 @@ Legenda de status: `a fazer` · `em andamento` · `concluído` · `plano B` · `
 | 2026-11-14 | 1 | Efemérides dos cinco locais (8.760 registros cada), todas as verificações OK; coordenadas do Data Book da NASA conferidas contra os GeoTIFFs do PGDA 78; decisões D12–D15 |
 | 2026-11-14 | 1 | Etapa aprovada; comparação com a interface web do Horizons dispensada; branch juntada à `main` |
 | 2026-11-14 | 2 | Horizonte dos cinco locais a partir do LDEM 20 m do PGDA 90 lido por partes; sanidade OK; Malapert com 13,9% das direções cortadas pela borda do DEM; ponto do Shackleton rim em encosta (pendência); decisões D16–D19 |
+| 2026-11-14 | 2 | Etapa aprovada; comparação com Quickmap/Moon Trek dispensada; D20: Shackleton rim em ponto derivado na crista, centro publicado mantido como `shackleton-inner-wall`; etapas 1 e 2 rodadas para os seis locais |

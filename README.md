@@ -55,19 +55,20 @@ Full list: [`docs/REFERENCIAS.md`](docs/REFERENCIAS.md).
 
 ## Candidate sites (fixed list)
 
-Shackleton rim · Connecting ridge · de Gerlache rim · Malapert massif · Haworth
+Shackleton rim · Connecting ridge · de Gerlache rim · Malapert massif · Haworth · plus *Shackleton inner wall* (sensitivity demo)
 
 These are **regional reference points**, not NASA-designated landing sites. Latitude/longitude in degrees, lunar mean-Earth frame (MOON_ME, DE421), east-positive longitude.
 
 | Site | Lat | Lon | Source |
 |---|---|---|---|
-| Shackleton rim | -89.7668 | -171.87 | NASA M2M-30044 Lunar Surface Data Book (2025), Table A2.1-1 (region centre) |
+| Shackleton rim | -89.780445 | -156.168582 | Point derived on the rim crest inside the NASA region Site04 (M2M-30044 Lunar Surface Data Book, 2025, Table A2.1-1; rule in docs/DECISOES.md D20) |
 | Connecting ridge | -89.468 | -137.4 (222.6° E) | NASA ACD-50044 Lunar Surface Data Book (2022), point CR1 |
 | de Gerlache rim | -88.6834 | -67.9321 | NASA M2M-30044 (2025), Table A2.1-1 ("de Gerlache Rim 1") |
 | Malapert massif | -85.9948 | -0.23578 | NASA M2M-30044 (2025), Table A2.1-1 |
 | Haworth | -86.7639 | -22.777 | NASA M2M-30044 (2025), Table A2.1-1 |
+| Shackleton inner wall (Site04 center) | -89.7668 | -171.87 | NASA M2M-30044 (2025), Table A2.1-1 — published region centre on the crater's inner wall, kept to show sensitivity to position |
 
-Region centres were independently cross-checked against the extents of the LOLA 5 m DEM tiles (PGDA product 78): agreement within 1.3 m.
+Published region centres were independently cross-checked against the extents of the LOLA 5 m DEM tiles (PGDA product 78): agreement within 1.3 m.
 
 ## Running locally
 
@@ -95,7 +96,7 @@ cd web
 - **Terrain resolution:** the horizon uses the LOLA 20 m south polar DEM (PGDA product 90) at 20 m up to 5 km from the site, and its 80 m and 320 m overviews up to 40 km and 200 km. Obstacles smaller than those pixels may be missed, and how the overviews were generated is not documented (distant peaks may be slightly lowered).
 - **Search radius and DEM edge:** 200 km. Where a ray leaves the DEM (a ±304 km square), terrain beyond is treated as unknown; this affects 13.9% of directions at Malapert massif.
 - **Observer:** DEM terrain height plus a 2 m mast (a team choice, not a NASA requirement). Heights are taken as metres above the 1737.4 km sphere, inferred from the datum declared in the DEM file.
-- **Shackleton rim reference point:** the NASA-published region centre lies on the crater's inner wall (~31° slope), so its horizon is very high; it does not represent the rim crest. Under team review.
+- **Shackleton rim reference point:** the NASA-published Site04 centre lies on the crater's inner wall (31° slope). The "Shackleton rim" site uses a point derived on the rim crest (3.6° slope, rule in docs/DECISOES.md D20); the published centre is kept as "Shackleton inner wall" to show how much the exact position matters.
 - **Closed list of sites:** only the five sites above.
 - **Date range:** January 1 to December 31, 2027 (UTC), one-hour steps. Launch-slip comparisons only work within this year.
 - **Observer height:** ephemerides use an observer at 0 km above the 1737.4 km reference sphere; the effect on Sun/Earth angles is negligible.
