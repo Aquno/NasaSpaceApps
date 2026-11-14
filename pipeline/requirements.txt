@@ -11,8 +11,11 @@ numpy
 # `pip install --use-feature=truststore -r pipeline/requirements.txt`.
 truststore
 
+# Check plots of the horizon with the Sun/Earth paths (stage 2, visual review only)
+matplotlib
+
 # Dev tools: lint/format and automated tests
 ruff
 pytest
 
-# PENDING (stage 2): raster reader for LOLA products (e.g. rasterio) once needed.
+# No raster library needed: the LOLA COG is read with pipeline/horizon/dem_cog.py.

@@ -65,3 +65,24 @@ SYNODIC_MONTH_DAYS = 29.53
 # Coarse "close to one month" band for the period checks (fraction of the synodic month).
 # A sanity bound only, not a measurement.
 MONTH_PERIOD_TOLERANCE_FRACTION = 0.15
+
+# ---- Stage 2: terrain horizon (docs/DECISOES.md D16-D18) ------------------------------------
+HORIZON_DIR = REPO_ROOT / "data" / "horizon"
+# LOLA south polar DEM, PGDA product 90 (https://pgda.gsfc.nasa.gov/products/90):
+# cloud-optimized GeoTIFF, 20 m/pixel, 80 S to the pole, heights in metres.
+HORIZON_DEM_URL = "https://pgda.gsfc.nasa.gov/data/LOLA_20mpp/LDEM_80S_20MPP_ADJ.TIF"
+HORIZON_DEM_PRODUCT = "NASA GSFC PGDA product 90, LOLA south polar DEM (LDEM_80S_20MPP_ADJ)"
+# Distance bands (outer edge in metres, DEM pixel size in metres = sample step); approved
+# by the team on 2026-11-14: full 20 m resolution near the site, COG overviews farther out.
+HORIZON_BANDS_M = ((5_000.0, 20.0), (40_000.0, 80.0), (200_000.0, 320.0))
+# Extra map margin around each band's window so bilinear samples never fall off the window.
+HORIZON_WINDOW_MARGIN_M = 2_000.0
+# Fine azimuth step before taking the per-degree maximum (must be < 1 degree).
+HORIZON_FINE_STEP_DEG = 0.1
+# Observer mast height above the DEM terrain: a team choice, not a NASA requirement (D18).
+HORIZON_MAST_HEIGHT_M = 2.0
+# Sanity bounds for the contour (stage 2 brief): outside them the run stops for review.
+HORIZON_SANITY_MIN_DEG = -10.0
+HORIZON_SANITY_MAX_DEG = 35.0
+# Days of stage 1 ephemeris overlaid on the check plots (from the start of the series).
+HORIZON_PLOT_DAYS = 30
