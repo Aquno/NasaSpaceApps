@@ -329,6 +329,15 @@ Formato: data, decisão, motivo, consequências. Decisões novas vão no fim. N�
 - **Dez casos de dúvida, decididos pelo time:** "(relay needed during gaps)" saiu do cartão e foi para a dica ⓘ; em português, "Contato direto" na linha de comunicação; mantidos o rótulo da abertura e o link "How it works"; os três cartões da abertura reescritos em tom neutro; "Nothing was adjusted…" foi para a dica da comparação com a NASA (segue na documentação, D45); o motivo virou "Sun behind the terrain at landing." e a regra que decidiu o veredito aparece no cartão expandido e no detalhe ("Rule: …"); o texto dos vereditos em "Mission rules" ficou numa frase; "Only the first column exists." saiu do Roadmap; escopo encurtado para "Planning tool, used on Earth before launch."
 - **Status:** aplicada (2026-11-14), branch `polish-visual-review`, juntada na `main`.
 
+### D51 — 2026-11-14 — Acabamentos do panorama do horizonte
+
+- **Escala vertical:** o intervalo cobre o relevo, as trajetórias inteiras do Sol e da Terra durante a missão e os discos, com 1° de margem. A trajetória da Terra não era recortada pelo desenho: no cenário padrão ela sobe até 6,2° na hora 218 e volta quase pelo mesmo azimute, o que parecia um corte; com a margem e os trechos distintos, a volta fica legível.
+- **Discos:** círculos com diâmetro igual ao tamanho angular real na escala vertical (a escala horizontal é comprimida; a dica diz que as larguras não estão em escala). O anel de destaque fica só em volta do Sol.
+- **Eixo vertical:** rótulos numa calha à esquerda do gráfico, nunca sobre o relevo.
+- **Trajetórias:** traço forte onde o astro está visível (regra "qualquer parte do disco", módulo único D9), traço apagado atrás do relevo, ponto pequeno nos instantes de nascer e de ocaso (`trackRuns`, `trackEvents` em `calc/panorama.ts`, com testes). Em "Position sensitivity" a trajetória do Sol fica num só estilo, porque os dois pontos o veem de forma diferente.
+- **Instante atual:** o play move o mesmo marcador (com a hora) na linha do tempo da missão, na cor do controle de tempo; clicar nas faixas também move o instante.
+- **Status:** aplicada (2026-11-14), branch `panorama-polish`.
+
 ### Pendências abertas após a etapa 2
 - Nenhuma pendência de dados da etapa 2.
 
