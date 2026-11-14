@@ -1,0 +1,180 @@
+import { describe, expect, it } from 'vitest';
+import type { SiteData } from '../data/contract';
+import {
+  countOn,
+  longestOffRun,
+  missionMetrics,
+  missionWindow,
+  recordsToNextRise,
+  recordsToNextSet,
+  runFrom,
+} from './metrics';
+import { bestCompromise, engineeringScore, scienceScore, verdict } from './scores';
+import {
+  azimuthBin,
+  horizonAt,
+  isAnyPartVisible,
+  isFullyVisible,
+  visibilitySeries,
+} from './visibility';
+
+const flat = (h: number) => new Float64Array(360).fill(h);
+const flags = (s: string) => Uint8Array.from(s.split('').map(Number));
+
+describe('visibility rule', () => {
+  it('rounds azimuth to the whole degree (D19) and wraps', () => {
+    expect([azimuthBin(0.49), azimuthBin(0.5), azimuthBin(359.6), azimuthBin(-0.2)]).toEqual([
+      0, 1, 0, 0,
+    ]);
+    const h = flat(0);
+    h[90] = 5;
+    expect(horizonAt(h, 89.6)).toBe(5);
+    expect(horizonAt(h, 89.4)).toBe(0);
+  });
+  it('any part vs full disc', () => {
+    const h = flat(1);
+    // Disc of 0.5 deg centred 0.9 deg: top 1.15 > 1 (some part), bottom 0.65 < 1 (not full).
+    expect(isAnyPartVisible(h, 10, 0.9, 0.5)).toBe(true);
+    expect(isFullyVisible(h, 10, 0.9, 0.5)).toBe(false);
+    expect(isFullyVisible(h, 10, 1.3, 0.5)).toBe(true);
+    expect(isAnyPartVisible(h, 10, 0.7, 0.5)).toBe(false);
+  });
+  it('negative horizon is not clamped', () => {
+    const h = flat(-2);
+    expect(isAnyPartVisible(h, 0, -1, 0.5)).toBe(true);
+  });
+});
+
+describe('run helpers', () => {
+  it('count, runs, gaps', () => {
+    const f = flags('1100011101');
+    expect(countOn(f, 0, 10)).toBe(6);
+    expect(runFrom(f, 0, 10)).toBe(2);
+    expect(runFrom(f, 2, 10)).toBe(0);
+    expect(longestOffRun(f, 0, 10)).toBe(3);
+  });
+  it('next set and rise', () => {
+    const f = flags('0011100111');
+    expect(recordsToNextSet(f, 0)).toBe(5); // rises at 2, sets at 5
+    expect(recordsToNextSet(f, 3)).toBe(2);
+    expect(recordsToNextSet(f, 8)).toBeNull(); // still up when data ends
+    expect(recordsToNextRise(f, 3)).toBe(4);
+  });
+});
+
+function synthetic(sunEl: number[], earthEl: number[]): SiteData {
+  const n = sunEl.length;
+  const col = (v: number) => new Float64Array(n).fill(v);
+  return {
+    horizon: flat(0),
+    horizonObstacleKm: flat(1),
+    horizonCutKm: new Float64Array(360).fill(Number.NaN),
+    series: {
+      sunAz: col(10),
+      sunEl: Float64Array.from(sunEl),
+      sunDiam: col(0.5),
+      earthAz: col(20),
+      earthEl: Float64Array.from(earthEl),
+      earthDiam: col(1.9),
+    },
+    meta: {
+      contractVersion: 2,
+      siteId: 'x',
+      sources: [],
+      demResolutionM: 20,
+      horizonBands: [],
+      horizonMethod: 'lola',
+      terrainHeightM: 0,
+      mastHeightM: 2,
+      observerHeightM: 2,
+      startMs: Date.parse('2027-01-01T00:00:00Z'),
+      endMs: Date.parse('2027-01-01T00:00:00Z') + (n - 1) * 3600_000,
+      stepMinutes: 60,
+      count: n,
+      sample: false,
+      generatedAt: '2026-11-14',
+    },
+  };
+}
+
+describe('mission metrics', () => {
+  // 10 hours: Sun up for the first 6, Earth up except hours 2-4.
+  const data = synthetic([1, 1, 1, 1, 1, 1, -1, -1, -1, -1], [1, 1, -2, -2, -2, 1, 1, 1, 1, 1]);
+  const vis = visibilitySeries(data);
+  it('window refuses missions beyond the data', () => {
+    expect(missionWindow(data.meta, data.meta.startMs, 10).ok).toBe(true);
+    const late = missionWindow(data.meta, data.meta.startMs + 3600_000, 10);
+    expect(late.ok === false && late.reason).toBe('after-data');
+  });
+  it('known values', () => {
+    const w = missionWindow(data.meta, data.meta.startMs, 10);
+    if (!w.ok) throw new Error('window');
+    const m = missionMetrics(data, vis, w.window);
+    expect(m.sunHours).toBe(6);
+    expect(m.sunHoursFromLanding).toBe(6);
+    expect(m.sunFraction).toBeCloseTo(0.6);
+    expect(m.earthFraction).toBeCloseTo(0.7);
+    expect(m.longestNoContactHours).toBe(3);
+    expect(m.hoursToNextSunset).toBe(6);
+    expect(m.sunElMaxDeg).toBe(1);
+    expect(m.sunElMeanDeg).toBeCloseTo(0.2);
+  });
+});
+
+describe('scores', () => {
+  const base = {
+    durationHours: 100,
+    sunHours: 80,
+    sunHoursFull: 70,
+    sunFraction: 0.8,
+    sunHoursFromLanding: 50,
+    sunElMeanDeg: 1,
+    sunElMaxDeg: 2,
+    earthHours: 60,
+    earthHoursFull: 50,
+    earthFraction: 0.6,
+    longestNoContactHours: 20,
+    hoursToNextSunset: 50,
+    hoursToNextEarthSet: 10,
+    sunVisibleAtLanding: true,
+    earthVisibleAtLanding: true,
+  };
+  it('engineering = weighted sum', () => {
+    const s = engineeringScore(base);
+    // 0.35*0.8 + 0.25*0.5 + 0.25*0.6 + 0.15*0.8 = 0.675
+    expect(s.total).toBeCloseTo(67.5);
+    expect(s.parts.map((p) => p.key)).toEqual([
+      'sunlight',
+      'sunlightFromLanding',
+      'earthContact',
+      'contactGaps',
+    ]);
+  });
+  it('science: 100 within 1 km, 0 at 15 km, linear between', () => {
+    expect(scienceScore(0.5)?.total).toBeCloseTo(100);
+    expect(scienceScore(8)?.total).toBeCloseTo(50);
+    expect(scienceScore(20)?.total).toBeCloseTo(0);
+    expect(scienceScore(null)).toBeNull();
+  });
+  it('verdicts', () => {
+    const eng = engineeringScore(base);
+    expect(verdict(base, eng, scienceScore(2), 2).kind).toBe('viable');
+    expect(verdict(base, eng, scienceScore(14), 14).kind).toBe('marginal');
+    const dark = { ...base, sunHoursFromLanding: 0, sunVisibleAtLanding: false };
+    const v = verdict(dark, engineeringScore(dark), scienceScore(2), 2);
+    expect(v.kind).toBe('not-viable');
+    expect(v.reason).toContain('Dark at landing');
+  });
+  it('best compromise = highest min(eng, sci), ignoring not-viable', () => {
+    expect(
+      bestCompromise([
+        { id: 'a', engineering: 90, science: 30, verdict: 'marginal' },
+        { id: 'b', engineering: 60, science: 55, verdict: 'viable' },
+        { id: 'c', engineering: 95, science: 95, verdict: 'not-viable' },
+      ]),
+    ).toBe('b');
+    expect(
+      bestCompromise([{ id: 'c', engineering: 1, science: 1, verdict: 'not-viable' }]),
+    ).toBeNull();
+  });
+});
