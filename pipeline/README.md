@@ -8,7 +8,7 @@ Pipeline Python **offline** que transforma dados da NASA nos arquivos que a inte
 | `ephemeris/` | 1 — Efemérides (**concluída**) | `sites.json`, intervalo D8 | `data/ephemeris/` |
 | `horizon/` | 2 — Horizonte (**concluída**) | LDEM 20 m do PGDA 90 (por partes) | `data/horizon/` |
 | `science/` | 3 — Valor científico (**concluída**) | shapefile de PSRs ≥ 1 km² do PGDA 90 | `data/science/` |
-| `export/` | 4 — Exportação | saídas das etapas 1–3 | `data/app/` |
+| `export/` | 4 — Exportação (**concluída**) | saídas das etapas 1–3 e 6 (dados) | `data/app/` |
 | `validation/` | 6 — Validação (parte de dados **concluída**) | mapas de iluminação do PGDA 69 | `data/validation/` |
 | `tests/` | — | — | testes automáticos (pytest) |
 
@@ -35,6 +35,5 @@ python -m pipeline.sites.verify_site_points    # conferência das coordenadas
 python -m pipeline.horizon.run_horizon         # etapa 2
 python -m pipeline.science.run_science         # etapa 3
 python -m pipeline.validation.run_reference    # etapa 6, parte de dados (referência NASA)
+python -m pipeline.export.run_export           # etapa 4 (depois das etapas 1, 2, 3 e 6)
 ```
-
-Etapa 4: a definir.

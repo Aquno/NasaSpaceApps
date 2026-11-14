@@ -5,7 +5,9 @@
 | `raw/` | Downloads brutos e cache das respostas de API (relevo LOLA, mapas PGDA, respostas do Horizons) | etapas 1–3 | **Não** (grande; baixável de novo) |
 | `ephemeris/` | Efemérides por local: azimute/elevação do Sol e da Terra, hora a hora | etapa 1 | **Não** (regenerável) |
 | `horizon/` | Horizonte por local: 360 elevações do terreno | etapa 2 | **Não** (regenerável) |
-| `app/` | Arquivos que a interface lê (`sites.json`, `sites/<id>.json`) | etapa 4 | **Sim** (pequenos; o site publica) |
+| `science/` | Distância à sombra permanente por local (`REPORT.md` versionado) | etapa 3 | Só o relatório |
+| `validation/` | Valores oficiais de iluminação/visibilidade da Terra (`REPORT.md` versionado) | etapa 6 (dados) | Só o relatório |
+| `app/` | Arquivos que a interface lê (`sites.json`, `sites/<id>.json`, `REPORT.md`) | etapa 4 | **Sim** (~2,1 MB no total; o site publica) |
 
 - Formato de `app/`: `docs/CONTRATO_DE_DADOS.md`.
 - `app/` é copiado para `web/public/data/` por `npm run sync-data` (D10). A origem é sempre `app/`.

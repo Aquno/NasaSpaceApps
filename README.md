@@ -37,7 +37,7 @@ Everything is converted to a single point of view: **the sky as seen from the la
 3. **Visibility rule** — a body is visible when its elevation is greater than the terrain elevation in the same direction.
 4. **Science value** — the PGDA permanent-shadow map gives each site's distance to the nearest permanently shadowed region.
 
-A small Python pipeline precomputes the terrain horizon and the Sun/Earth series; a static site (Vite + React + TypeScript) reads them. The visibility rule and all metrics live in a single tested TypeScript module in the web app — the same code is used to validate our results against NASA's published illumination. No server.
+A small Python pipeline precomputes the terrain horizon and the Sun/Earth series and exports them to `data/app/` (about 350 KB per site; format in [`docs/CONTRATO_DE_DADOS.md`](docs/CONTRATO_DE_DADOS.md)); a static site (Vite + React + TypeScript) reads them. The visibility rule and all metrics live in a single tested TypeScript module in the web app — the same code is used to validate our results against NASA's published illumination. No server.
 
 Architecture details: [`docs/ARQUITETURA.md`](docs/ARQUITETURA.md). Data format: [`docs/CONTRATO_DE_DADOS.md`](docs/CONTRATO_DE_DADOS.md).
 
@@ -83,6 +83,7 @@ python -m pipeline.ephemeris.run_ephemeris     # stage 1: Sun/Earth ephemerides 
 python -m pipeline.horizon.run_horizon         # stage 2: 360-degree terrain horizon from LOLA (PGDA 90)
 python -m pipeline.science.run_science         # stage 3: distance to nearest permanently shadowed region
 python -m pipeline.validation.run_reference    # stage 6 data: NASA average illumination / Earth visibility
+python -m pipeline.export.run_export           # stage 4: write data/app/ (the files the web app reads)
 python -m pipeline.sites.verify_site_points    # cross-check site coordinates against PGDA tiles
 ruff check . && pytest                          # lint and tests
 # later stages: TBD
@@ -103,6 +104,7 @@ cd web
 - **Date range:** January 1 to December 31, 2027 (UTC), one-hour steps. Launch-slip comparisons only work within this year.
 - **Observer height:** ephemerides use an observer at 0 km above the 1737.4 km reference sphere; the effect on Sun/Earth angles is negligible.
 - **Leap seconds:** for 2027 JPL Horizons holds the last known leap second constant (possible 1 s offset).
+- **NASA reference values:** average solar illumination and Earth visibility at each site come from the LOLA 60 m maps (PGDA product 69), averaged over 18.6 years and counting the Sun/Earth as visible if any part of the disc is unobstructed; they are shown for comparison and are not directly comparable to a single year.
 - **Science indicator:** distance to the nearest permanently shadowed region of at least 1 km² (PGDA product 90). Using proximity to permanent shadow as a science indicator, and the 1 km² bound, are our team's choices, not NASA criteria.
 - **Sample data:** while the pipeline is incomplete, the interface may use sample files in the final format. These are always flagged as **sample** in the UI.
 - **No AI in the calculations:** all numbers come from NASA data or from fixed, verifiable code.

@@ -4,7 +4,7 @@
 
 Legenda de status: `a fazer` · `em andamento` · `concluído` · `plano B` · `cortado`. Nas listas, `[~]` = item dispensado.
 
-Última atualização: 2026-11-14 — etapa 6, parte de dados, concluída (D22).
+Última atualização: 2026-11-14 — etapas 3, 4 e 6 (parte de dados) concluídas (D21–D23). Próxima: etapa 5 (interface).
 
 ## Pontos de controle
 
@@ -72,13 +72,15 @@ Legenda de status: `a fazer` · `em andamento` · `concluído` · `plano B` · `
 
 ### 4. Exportação
 - Responsável:
-- Status: a fazer
-- O que é: juntar etapas 1 a 3 nos arquivos que a interface lê. Exporta apenas horizonte, séries do Sol e da Terra e metadados; **não calcula visibilidade nem métricas** (D9).
-- Pasta: `pipeline/export/` → `data/app/`
+- Status: **concluído** (2026-11-14), branch `stage-4-export`
+- O que é: juntar etapas 1, 2, 3 e 6 (dados) nos arquivos que a interface lê. Exporta horizonte, séries do Sol e da Terra e dados de referência; **não calcula visibilidade nem métricas** (D9).
+- Pasta: `pipeline/export/` → `data/app/` (versionado)
+- Como rodar: `python -m pipeline.export.run_export`
 - Critério de pronto:
-  - [ ] `data/app/sites.json` e `data/app/sites/<id>.json` gerados conforme `CONTRATO_DE_DADOS.md`
-  - [ ] Validação automática do formato (campos, tipos, 360 valores de horizonte)
-  - [ ] `meta.sample = false` em todos os arquivos reais
+  - [x] `data/app/sites.json` e `data/app/sites/<id>.json` gerados conforme `CONTRATO_DE_DADOS.md` (versão 2, D23)
+  - [x] Validação automática do formato (campos, tipos, 360 valores de horizonte, 8.760 por coluna) e contra as etapas anteriores
+  - [x] `meta.sample = false` em todos os arquivos reais
+  - [x] Tamanhos informados (`data/app/REPORT.md`): ~340–350 KB por local, 3,6 KB o `sites.json`
 
 ### 5. Interface
 - Responsável:
@@ -132,3 +134,4 @@ Legenda de status: `a fazer` · `em andamento` · `concluído` · `plano B` · `
 | 2026-11-14 | 2 | Etapa aprovada; comparação com Quickmap/Moon Trek dispensada; D20: Shackleton rim em ponto derivado na crista, centro publicado mantido como `shackleton-inner-wall`; etapas 1 e 2 rodadas para os seis locais |
 | 2026-11-14 | 3 | Distância à PSR (≥ 1 km²) dos seis locais a partir do shapefile do PGDA 90; nenhum local dentro de PSR; D21 |
 | 2026-11-14 | 6 | Parte de dados: iluminação e visibilidade da Terra oficiais (PGDA 69, 60 m) lidas por faixa nos seis locais, conteúdo conferido; D22 |
+| 2026-11-14 | 4 | `data/app` gerado e validado (contrato v2, D23): seis arquivos de local de 340–350 KB e `sites.json` de 3,6 KB |

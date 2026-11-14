@@ -104,6 +104,14 @@ Formato: data, decisão, motivo, consequências. Decisões novas vão no fim. N�
 - **Conferência obrigatória do conteúdo** antes de usar (a página avisa sobre links trocados): Sol = 0 dentro de PSRs; Terra maior no lado próximo que no oculto. Se falhar, valores nulos.
 - **Limites registrados:** média de 18,6 anos; "qualquer parte do disco"; altura não declarada; DEM de 60 m (ver `DADOS.md`).
 
+### D23 — 2026-11-14 — Contrato de dados versão 2
+- **Decisão:** acréscimos mínimos ao contrato para a etapa 4:
+  - `sites.json`: `source_type`, `purpose` (`null` ou `"sensitivity_demo"`), `terrain_height_m`, `terrain_slope_deg`, `observer_height_m`, `psr_area_km2`, `psr_name`, `nasa_avg_earth_visibility_pct`.
+  - `sites/<id>.json`: `horizon_obstacle_km`, `horizon_cut_km`; `series` **em colunas** (`sun_az`, `sun_el`, `sun_diam`, `earth_az`, `earth_el`, `earth_diam`) com o tempo **implícito** (`t_i = start + i × step_minutes`, sem campo `t`); `meta` ganha `contract_version`, `site_id`, `horizon_bands`, `terrain_height_m`, `mast_height_m`, `observer_height_m`, `count`; `generated_at` passa a ser só a data.
+  - Ângulos arredondados a 3 casas decimais.
+- **Motivo:** levar à interface tudo o que a decisão precisa (tipo de fonte, ponto de demonstração, referência oficial, distâncias do horizonte) com arquivos pequenos (~350 KB por local, sem chaves repetidas).
+- **Consequência:** dados de exemplo da etapa 5 e os tipos TypeScript seguem a versão 2.
+
 ### Pendências abertas após a etapa 2
 - Nenhuma pendência de dados da etapa 2.
 
