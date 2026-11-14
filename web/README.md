@@ -32,7 +32,8 @@ npm run report:delay   # cenários em que um atraso muda o melhor compromisso ou
 | `src/data/load.ts`, `src/data/useSites.ts` | leitura dos arquivos e estados carregando/erro/pronto |
 | `src/calc/visibility.ts` | **a** regra de visibilidade (D24) |
 | `src/calc/metrics.ts` | métricas da missão (horas de luz, contato, intervalos, próximo ocaso) |
-| `src/calc/scores.ts`, `src/calc/evaluate.ts` | notas, veredito, melhor compromisso, ordenação (D25) |
+| `src/calc/scores.ts`, `src/calc/evaluate.ts` | notas, veredito (com regra de inclinação, D31), melhor compromisso, ordenação (D25) |
+| `src/calc/nextViable.ts` | próxima data de pouso viável e janela; local viável mais cedo (D31) |
 | `src/config/scoring.ts` | pesos e limites (escolhas do time, não da NASA) |
 | `src/calc/annual.ts`, `src/calc/mapGeometry.ts` | frações diárias (faixas de 2027), posição no mapa, relevo sombreado |
 | `src/state/useMission.ts` | entradas da missão e avaliações derivadas (agora e sem atraso) |

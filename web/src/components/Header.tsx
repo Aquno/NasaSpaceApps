@@ -5,6 +5,7 @@
  */
 import { useRef } from 'react';
 import { WhatThisAddsTable } from './WhatThisAdds';
+import { WhatThisCovers } from './WhatThisCovers';
 
 interface Props {
   sample: boolean;
@@ -22,10 +23,11 @@ export function Header({ sample }: Props) {
         Start
       </a>
       <button type="button" className="linkbtn" onClick={() => dialog.current?.showModal()}>
-        What this adds ▸
+        What this adds · scope ▸
       </button>
       <dialog ref={dialog} aria-label="What this tool adds">
         <WhatThisAddsTable />
+        <WhatThisCovers />
         <form method="dialog">
           <button className="linkbtn" type="submit">
             Close

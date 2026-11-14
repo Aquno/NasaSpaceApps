@@ -9,6 +9,12 @@
 import { useMemo, useState } from 'react';
 import { dailyFractions, type DailyFractions } from '../calc/annual';
 import { evaluateSites, rankedSites, type Evaluation } from '../calc/evaluate';
+import {
+  earliestViableSite,
+  nextViableWindow,
+  type EarliestViable,
+  type ViableWindow,
+} from '../calc/nextViable';
 import { visibilitySeries, type VisibilitySeries } from '../calc/visibility';
 import {
   DEFAULT_LANDING_ISO,
@@ -45,6 +51,10 @@ export interface Derived {
   landingMs: number;
   now: Evaluation;
   planned: Evaluation;
+  /** Next viable landing for sites that are not viable now (null: none before the data end). */
+  next: Map<string, ViableWindow | null>;
+  /** Earliest viable site from the (delayed) landing date. */
+  earliest: EarliestViable | null;
 }
 
 /** Visibility and daily fractions are computed once per data set. */
@@ -78,5 +88,20 @@ export function useEvaluations(
       evaluateSites(pre.ranked, data, pre.vis, inputs.plannedMs, inputs.durationH, inputs.rules),
     [pre, data, inputs.plannedMs, inputs.durationH, inputs.rules],
   );
-  return { ...pre, landingMs, now, planned };
+  const next = useMemo(() => {
+    const out = new Map<string, ViableWindow | null>();
+    for (const e of now.sites) {
+      const site = pre.ranked.find((s) => s.id === e.siteId);
+      const d = data.get(e.siteId);
+      const v = pre.vis.get(e.siteId);
+      if (!site || !d || !v || (e.ok && e.verdict.kind === 'viable')) continue;
+      out.set(e.siteId, nextViableWindow(site, d, v, landingMs, inputs.durationH, inputs.rules));
+    }
+    return out;
+  }, [now, pre, data, landingMs, inputs.durationH, inputs.rules]);
+  const earliest = useMemo(
+    () => earliestViableSite(pre.ranked, data, pre.vis, landingMs, inputs.durationH, inputs.rules),
+    [pre, data, landingMs, inputs.durationH, inputs.rules],
+  );
+  return { ...pre, landingMs, now, planned, next, earliest };
 }

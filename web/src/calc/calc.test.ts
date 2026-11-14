@@ -197,6 +197,18 @@ describe('scores', () => {
   it('marginal: far from permanent shadow', () => {
     expect(check(base, 14)).toMatchObject({ kind: 'marginal', rule: 'science' });
   });
+  it('slope above the limit lowers the verdict by one level and cites the value', () => {
+    const v = verdict(base, engineeringScore(base), scienceScore(2), 2, DEFAULT_RULES, 12.3);
+    expect(v).toMatchObject({ kind: 'marginal', rule: 'slope' });
+    expect(v.reason).toBe('Terrain slope 12.3° exceeds the 10° limit (would otherwise be viable).');
+    const marginal = { ...base, sunFraction: 0.6 };
+    expect(
+      verdict(marginal, engineeringScore(marginal), scienceScore(2), 2, DEFAULT_RULES, 31).kind,
+    ).toBe('not-viable');
+    expect(verdict(base, engineeringScore(base), scienceScore(2), 2, DEFAULT_RULES, 9.9).kind).toBe(
+      'viable',
+    );
+  });
   it('rules are adjustable', () => {
     const lenient = { ...DEFAULT_RULES, survivalDarknessHours: 48 };
     expect(check({ ...base, longestDarkHours: 30 }, 2, lenient).kind).toBe('viable');

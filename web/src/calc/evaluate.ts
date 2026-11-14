@@ -58,7 +58,14 @@ export function evaluateSite(
     metrics,
     engineering,
     science,
-    verdict: verdict(metrics, engineering, science, site.psrDistanceKm, rules),
+    verdict: verdict(
+      metrics,
+      engineering,
+      science,
+      site.psrDistanceKm,
+      rules,
+      site.terrainSlopeDeg,
+    ),
   };
 }
 

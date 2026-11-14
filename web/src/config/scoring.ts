@@ -40,6 +40,8 @@ export interface MissionRules {
   /** Viable needs both scores at or above these (communication enters via engineering). */
   viableMinEngineering: number;
   viableMinScience: number;
+  /** Terrain slope (degrees, 20 m DEM) above which the verdict is lowered by one level. */
+  maxSlopeDeg: number;
 }
 
 export const DEFAULT_RULES: MissionRules = {
@@ -49,6 +51,7 @@ export const DEFAULT_RULES: MissionRules = {
   marginalBelowSunFraction: 0.7,
   viableMinEngineering: 60,
   viableMinScience: 40,
+  maxSlopeDeg: 10,
 };
 
 /** Mission duration choices offered in the interface (hours). Default: 14 days. */

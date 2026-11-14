@@ -107,7 +107,7 @@ cd web
 - **NASA reference values:** average solar illumination and Earth visibility at each site come from the LOLA 60 m maps (PGDA product 69), averaged over 18.6 years and counting the Sun/Earth as visible if any part of the disc is unobstructed; they are shown for comparison and are not directly comparable to a single year.
 - **Science indicator:** distance to the nearest permanently shadowed region of at least 1 km² (PGDA product 90). Using proximity to permanent shadow as a science indicator, and the 1 km² bound, are our team's choices, not NASA criteria.
 - **Sample data:** while the pipeline is incomplete, the interface may use sample files in the final format. These are always flagged as **sample** in the UI.
-- **No AI in the calculations:** all numbers come from NASA data or from fixed, verifiable code.
+- **Fixed decision rules and scoring:** every number comes from NASA data or from fixed, verifiable code; the rules and weights are shown on screen.
 
 ## Disclaimer
 

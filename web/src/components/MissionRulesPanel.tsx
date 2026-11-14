@@ -83,6 +83,16 @@ export function MissionRulesPanel({ rules, onChange }: Props) {
             onChange={(e) => set({ viableMinScience: num(e.target.value, 0) })}
           />
         </label>
+        <label className="control">
+          <span className="caps">Max terrain slope (°)</span>
+          <input
+            type="number"
+            min={0}
+            max={45}
+            value={rules.maxSlopeDeg}
+            onChange={(e) => set({ maxSlopeDeg: num(e.target.value, rules.maxSlopeDeg) })}
+          />
+        </label>
         <button type="button" className="linkbtn" onClick={() => onChange(DEFAULT_RULES)}>
           Reset to defaults
         </button>
@@ -90,8 +100,9 @@ export function MissionRulesPanel({ rules, onChange }: Props) {
       <p className="note">
         Not viable: dark at landing, a darkness longer than the survival limit, or too little
         sunlight. Marginal: sunlight below the comfort share, or a score below the viable minimum.
-        Earth contact counts through the engineering score. Best compromise: the site with the
-        highest of min(engineering, science) among sites that are not &quot;not viable&quot;.
+        Earth contact counts through the engineering score. A terrain slope above the limit lowers
+        the verdict by one level. Best compromise: the site with the highest of min(engineering,
+        science) among sites that are not &quot;not viable&quot;.
       </p>
     </details>
   );

@@ -428,3 +428,26 @@ svg text {
 .facts dd {
   margin: 0;
 }
+.card .next {
+  margin: 0;
+  font-size: 0.85rem;
+  font-family: var(--font-mono);
+}
+.card .link {
+  margin: 0;
+  font-size: 0.85rem;
+}
+.earliest {
+  margin: var(--gap) 0 0;
+  padding: 8px 14px;
+  border-left: 6px solid var(--text);
+}
+.covers {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.covers ul {
+  margin: 4px 0;
+  padding-left: 18px;
+}

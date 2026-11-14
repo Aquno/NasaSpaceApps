@@ -170,6 +170,13 @@ Formato: data, decisão, motivo, consequências. Decisões novas vão no fim. N�
 
 - **Observação:** como o ponto é o pixel mais iluminado de 60 m, os vizinhos 3 × 3 chegam a ter só 20–52% (ver `data/validation/REPORT.md`): a iluminação varia muito em poucas dezenas de metros.
 
+### D31 — 2026-11-14 — Inclinação, próxima janela viável e textos de escopo (ajustes de mentores)
+- **Inclinação:** nova regra em `MissionRules` (`maxSlopeDeg`, padrão **10°**, escolha do time, não requisito da NASA; ajustável em "Mission rules"): inclinação do terreno no local (DEM de 20 m) acima do limite **rebaixa o veredito em um nível** (viable → marginal → not viable), com motivo "Terrain slope X° exceeds the Y° limit". A inclinação aparece no cartão.
+- **Próxima janela viável:** `web/src/calc/nextViable.ts` procura, dia a dia (mesmo horário do pouso), a próxima data de pouso viável com as regras atuais e o tamanho da janela de dias viáveis consecutivos; o cartão mostra "Next viable landing: …" quando o veredito não é viável, e o painel mostra "Earliest viable site after the slip".
+- **Comunicação:** onde a Terra não está visível no pouso, o cartão mostra "No direct link: relay satellite required". `PENDENTE:` (detalhe do local) nota de que o sinal leva cerca de 1,3 s em cada sentido e de que a ferramenta avalia só a linha direta, não redes de retransmissão.
+- **Escopo:** bloco "What this tool covers" (cobre: luz solar, linha direta com a Terra, inclinação, proximidade de sombra permanente; não cobre: trajetória e combustível, ambiente térmico, obstáculos no solo, redes de retransmissão; ferramenta de planejamento, usada na Terra antes do lançamento) na abertura e no diálogo "What this adds · scope".
+- **Texto da abertura** atualizado; nenhuma parte do cálculo é descrita como inteligência artificial ("decision rules", "scoring").
+
 ### Pendências abertas após a etapa 2
 - Nenhuma pendência de dados da etapa 2.
 

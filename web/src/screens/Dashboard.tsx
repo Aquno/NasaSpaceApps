@@ -98,9 +98,17 @@ export function Dashboard({ sites, data, terrain, inputs, onInputs, onOpenSite }
         </section>
       </div>
 
-      {d.now.bestId === null && !outside && (
-        <p className="warning">No site meets the mission rules for this date: see each reason.</p>
-      )}
+      <p className={`panel earliest ${d.now.bestId === null ? 'warning' : ''}`} aria-live="polite">
+        {d.now.bestId === null && !outside && (
+          <>No site meets the mission rules on {fmtDate(d.landingMs)}. </>
+        )}
+        <strong>
+          Earliest viable site {inputs.delayDays > 0 ? 'after the slip' : 'from this date'}:
+        </strong>{' '}
+        {d.earliest
+          ? `${sites.find((s) => s.id === d.earliest?.siteId)?.name ?? d.earliest.siteId}, landing ${fmtDate(d.earliest.window.startMs)} (viable for ${d.earliest.window.windowDays} consecutive landing days)`
+          : 'none before the end of the data.'}
+      </p>
       <ol className="cards" aria-label="Sites ranked for this mission">
         {d.now.order.map((id, k) => {
           const site = d.ranked.find((s) => s.id === id);
@@ -110,6 +118,7 @@ export function Dashboard({ sites, data, terrain, inputs, onInputs, onOpenSite }
               <SiteCard
                 site={site}
                 evaluation={d.now.sites.find((e) => e.siteId === id)}
+                next={d.next.has(id) ? (d.next.get(id) ?? null) : undefined}
                 rank={k + 1}
                 best={id === d.now.bestId}
                 selected={id === selectedId}

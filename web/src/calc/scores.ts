@@ -88,15 +88,23 @@ export type RuleKey =
   | 'marginalSunFraction'
   | 'engineering'
   | 'science'
+  | 'slope'
   | 'allPassed';
+
+const LOWER: Record<VerdictKind, VerdictKind> = {
+  viable: 'marginal',
+  marginal: 'not-viable',
+  'not-viable': 'not-viable',
+};
 
 /**
  * Verdict with a one-sentence reason that cites the deciding rule and the measured value
- * (rules: config/scoring.ts MissionRules, team choices, D25).
+ * (rules: config/scoring.ts MissionRules, team choices, D25, D31).
  * Hard rules (any fails -> not viable): Sun visible at landing; longest darkness below the
  * survival limit; sunlit fraction at least the minimum. Then: sunlit fraction below the
  * marginal threshold, engineering (which includes Earth contact) or science below the viable
- * minimum -> marginal; otherwise viable.
+ * minimum -> marginal; otherwise viable. Finally, a terrain slope above the limit lowers the
+ * verdict by one level (viable -> marginal -> not viable).
  */
 export function verdict(
   m: MissionMetrics,
@@ -104,6 +112,23 @@ export function verdict(
   sci: Score | null,
   psrDistanceKm: number | null,
   rules: MissionRules = DEFAULT_RULES,
+  slopeDeg = 0,
+): Verdict & { rule: RuleKey } {
+  const base = baseVerdict(m, eng, sci, psrDistanceKm, rules);
+  if (slopeDeg <= rules.maxSlopeDeg || base.kind === 'not-viable') return base;
+  return {
+    kind: LOWER[base.kind],
+    rule: 'slope',
+    reason: `Terrain slope ${slopeDeg.toFixed(1)}° exceeds the ${rules.maxSlopeDeg}° limit (would otherwise be ${base.kind}).`,
+  };
+}
+
+function baseVerdict(
+  m: MissionMetrics,
+  eng: Score,
+  sci: Score | null,
+  psrDistanceKm: number | null,
+  rules: MissionRules,
 ): Verdict & { rule: RuleKey } {
   if (rules.requireSunAtLanding && !m.sunVisibleAtLanding) {
     return {

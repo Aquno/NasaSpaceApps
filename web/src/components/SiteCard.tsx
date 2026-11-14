@@ -4,12 +4,15 @@
  * Roadmap stage: 5 — Interface (see docs/ROTEIRO.md).
  */
 import type { SiteEvaluation } from '../calc/evaluate';
+import type { ViableWindow } from '../calc/nextViable';
 import type { SiteSummary } from '../data/contract';
-import { fmtHours, fmtKm, fmtPct, fmtScore, VERDICT_LABEL } from '../ui/format';
+import { fmtDate, fmtHours, fmtKm, fmtPct, fmtScore, VERDICT_LABEL } from '../ui/format';
 
 interface Props {
   site: SiteSummary;
   evaluation: SiteEvaluation | undefined;
+  /** Next viable landing (undefined when the site is viable now; null when none is left). */
+  next: ViableWindow | null | undefined;
   rank: number;
   best: boolean;
   selected: boolean;
@@ -17,13 +20,22 @@ interface Props {
   onOpen: () => void;
 }
 
-export function SiteCard({ site, evaluation, rank, best, selected, onSelect, onOpen }: Props) {
+export function SiteCard({
+  site,
+  evaluation,
+  next,
+  rank,
+  best,
+  selected,
+  onSelect,
+  onOpen,
+}: Props) {
   if (!evaluation || !evaluation.ok) {
     return (
       <article className="card not-viable" aria-label={`${site.name}: outside data`}>
         <h3>{site.name}</h3>
         <p className="reason">
-          Mission leaves the data interval (2027 only). Choose an earlier landing date.
+          The mission runs past the end of the data interval. Choose an earlier landing date.
         </p>
       </article>
     );
@@ -56,6 +68,18 @@ export function SiteCard({ site, evaluation, rank, best, selected, onSelect, onO
         <span aria-hidden="true">{label.icon}</span> {label.text}
       </div>
       <p className="reason">{v.reason}</p>
+      {next !== undefined && (
+        <p className="next">
+          {next
+            ? `Next viable landing: ${fmtDate(next.startMs)} (window ${next.windowDays} d)`
+            : 'No viable landing left in the data year.'}
+        </p>
+      )}
+      <p className={m.earthVisibleAtLanding ? 'link earth' : 'link'}>
+        {m.earthVisibleAtLanding
+          ? '▲ Direct link to Earth at landing'
+          : '△ No direct link: relay satellite required'}
+      </p>
       <div className="metrics">
         <span className="sun" title="Mission hours with some part of the Sun visible">
           ● {fmtPct(m.sunFraction)} sun
@@ -66,6 +90,7 @@ export function SiteCard({ site, evaluation, rank, best, selected, onSelect, onO
         <span className="science" title="Distance to the nearest permanently shadowed region">
           ◆ {fmtKm(site.psrDistanceKm)}
         </span>
+        <span title="Local terrain slope (20 m DEM)">⟋ {site.terrainSlopeDeg.toFixed(1)}°</span>
       </div>
       <details onClick={(e) => e.stopPropagation()}>
         <summary>How the scores are built</summary>
