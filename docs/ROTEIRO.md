@@ -97,7 +97,7 @@ Legenda de status: `a fazer` · `em andamento` · `concluído` · `plano B` · `
   - [ ] 6. Detalhe do local (panorama com play, linha do tempo, "Data and limits")
   - [ ] 7. "Small move, big change", abertura e rodapé
   - [ ] Selo "SAMPLE DATA" quando `meta.sample = true`; aviso "não é produto da NASA"; acessibilidade (contraste, teclado, nada só por cor)
-  - [ ] Build estático pronto para GitHub Pages (`BASE_PATH`)
+  - [x] Build estático pronto para GitHub Pages (`BASE_PATH`); publicação automática a partir da `main` (D46)
 
 ### 6. Validação
 - Responsável:
@@ -151,3 +151,4 @@ Legenda de status: `a fazer` · `em andamento` · `concluído` · `plano B` · `
 | 2026-11-14 | 5 | D43: "Small move, big change" no painel (borda × parede interna do Shackleton, 2,8 km, contornos e números lado a lado) |
 | 2026-11-14 | 5 | D44: tela "Roadmap" (Now / In 3 months / In 6 months), conceitos marcados "Concept, not implemented" |
 | 2026-11-14 | 6 | D45: comparação com as médias da NASA (Sol −0,5 a +4,1 p.p.; Terra −3,6 a +3,6 p.p. nos cinco locais), no painel e em `data/validation/COMPARISON.md`; nada ajustado |
+| 2026-11-14 | 5 | D46: fluxo do GitHub Pages (lint, formatação, testes, build, publicação) a partir da `main`; conferido localmente com `/NasaSpaceApps/`; falta ativar Pages com origem "GitHub Actions" e juntar na `main` |

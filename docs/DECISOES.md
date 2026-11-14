@@ -283,6 +283,13 @@ Formato: data, decisão, motivo, consequências. Decisões novas vão no fim. N�
 - **Nada foi ajustado** para aproximar os números.
 - **Status:** aplicada (2026-11-14).
 
+### D46 — 2026-11-14 — Publicação no GitHub Pages
+
+- **Decisão:** fluxo do GitHub Actions (`.github/workflows/pages.yml`) que, a cada push na `main` (ou manualmente), instala, roda lint, formatação e testes, gera o build com `BASE_PATH=/<nome do repositório>/` (o `prebuild` copia `data/app` para o site) e publica em `https://aquno.github.io/NasaSpaceApps/`. Só depende de `data/app/` (versionado) e de `web/`.
+- **Conferido localmente:** build com `BASE_PATH=/NasaSpaceApps/` servido nesse caminho: dados, textura e telas carregam. As rotas usam `#/`, então não há página 404 a configurar.
+- **Ativação:** em Settings → Pages, "Source" = "GitHub Actions" (uma vez). O fluxo só roda depois da junção na `main`, que fica para o time decidir.
+- **Status:** preparada (2026-11-14); publicação pendente da junção na `main`.
+
 ### Pendências abertas após a etapa 2
 - Nenhuma pendência de dados da etapa 2.
 
