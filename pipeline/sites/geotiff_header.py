@@ -1,10 +1,10 @@
 """
 What: Read the georeferencing tags of a GeoTIFF from its first bytes only (no full download).
-Roadmap stage: 1 — Ephemeris, site coordinates (see docs/ROTEIRO.md)
+Roadmap stage: 1 (site coordinates) and 2 (horizon DEM) (see docs/ROTEIRO.md)
 Inputs: URL of a GeoTIFF that supports HTTP range requests; or the raw header bytes.
 Outputs: GeoTiffGeoref with raster size, pixel scale, tie point and GeoKeys.
-NASA data source: LOLA 5 m south pole site DEMs, PGDA product 78
-    (https://pgda.gsfc.nasa.gov/products/78).
+NASA data source: LOLA DEM GeoTIFFs, PGDA products 78 and 90
+    (https://pgda.gsfc.nasa.gov/products/78, https://pgda.gsfc.nasa.gov/products/90).
 
 Only the tags needed to locate the raster are decoded
 (TIFF 6.0 and OGC GeoTIFF Standard, OGC 19-008r4).
@@ -102,15 +102,22 @@ def fetch_header_bytes(url: str, cache_path: Path, n_bytes: int = DEFAULT_HEADER
     return data
 
 
-def parse_georef(data: bytes, source: str = "<bytes>") -> GeoTiffGeoref:
-    """Decode raster size and GeoTIFF georeferencing from the first bytes of a TIFF file.
+def read_ifds(data: bytes, source: str = "<bytes>") -> tuple[str, list[dict[int, tuple]]]:
+    """Decode every image file directory (IFD) whose entries lie inside ``data``.
+
+    Works for classic TIFF and BigTIFF. Tag values located beyond ``data`` are left out
+    (callers that need them raise a clear error).
 
     Args:
-        data: leading bytes of the file (must include IFD0 and its tag values).
-        source: name used in error messages (file or URL).
+        data: leading bytes of the file.
+        source: name used in error messages.
+
+    Returns:
+        (endian, ifds): struct byte-order prefix ("<" or ">") and one dict per IFD mapping
+        tag id -> tuple of values (ASCII tags as a 1-tuple holding the string).
 
     Raises:
-        GeoTiffHeaderError: on invalid TIFF or tags located beyond ``data``.
+        GeoTiffHeaderError: on an invalid TIFF or if IFD0 is not inside ``data``.
     """
     if data[:2] == b"II":
         endian = "<"
@@ -122,38 +129,59 @@ def parse_georef(data: bytes, source: str = "<bytes>") -> GeoTiffGeoref:
     (magic,) = struct.unpack_from(endian + "H", data, 2)
     if magic == CLASSIC_TIFF_MAGIC:
         (ifd_offset,) = struct.unpack_from(endian + "I", data, 4)
-        count_fmt, entry_fmt, entry_size, inline_size = "H", "HHII", 12, 4
+        count_fmt, entry_fmt, entry_size, inline_size, next_fmt = "H", "HHII", 12, 4, "I"
     elif magic == BIG_TIFF_MAGIC:
         (ifd_offset,) = struct.unpack_from(endian + "Q", data, 8)
-        count_fmt, entry_fmt, entry_size, inline_size = "Q", "HHQQ", 20, 8
+        count_fmt, entry_fmt, entry_size, inline_size, next_fmt = "Q", "HHQQ", 20, 8, "Q"
     else:
         raise GeoTiffHeaderError(f"{source}: unknown TIFF magic number {magic}")
 
     _require(data, ifd_offset + 8, source, "IFD0")
-    (n_entries,) = struct.unpack_from(endian + count_fmt, data, ifd_offset)
-    first_entry = ifd_offset + struct.calcsize(count_fmt)
-
-    tags: dict[int, tuple] = {}
-    for index in range(n_entries):
-        pos = first_entry + index * entry_size
-        _require(data, pos + entry_size, source, "IFD0 entries")
-        tag, field_type, count, raw_value = struct.unpack_from(endian + entry_fmt, data, pos)
-        if field_type not in FIELD_TYPES:
-            continue
-        code, size = FIELD_TYPES[field_type]
-        total = size * count
-        value_pos = pos + struct.calcsize(endian + "HH" + entry_fmt[2])
-        start = value_pos if total <= inline_size else raw_value
-        if tag in _WANTED_TAGS:
-            _require(data, start + total, source, f"tag {tag}")
+    ifds: list[dict[int, tuple]] = []
+    while ifd_offset and ifd_offset + 8 <= len(data):
+        (n_entries,) = struct.unpack_from(endian + count_fmt, data, ifd_offset)
+        first_entry = ifd_offset + struct.calcsize(count_fmt)
+        next_pos = first_entry + n_entries * entry_size
+        if next_pos + struct.calcsize(next_fmt) > len(data):
+            break
+        tags: dict[int, tuple] = {}
+        for index in range(n_entries):
+            pos = first_entry + index * entry_size
+            tag, field_type, count, raw_value = struct.unpack_from(endian + entry_fmt, data, pos)
+            if field_type not in FIELD_TYPES:
+                continue
+            code, size = FIELD_TYPES[field_type]
+            total = size * count
+            value_pos = pos + struct.calcsize(endian + "HH" + entry_fmt[2])
+            start = value_pos if total <= inline_size else raw_value
+            if start + total > len(data):
+                continue
             if field_type == 2:
                 tags[tag] = (data[start : start + total].decode("ascii", "replace"),)
             else:
                 tags[tag] = struct.unpack_from(f"{endian}{count}{code}", data, start)
+        ifds.append(tags)
+        (ifd_offset,) = struct.unpack_from(endian + next_fmt, data, next_pos)
+    return endian, ifds
 
+
+def parse_georef(data: bytes, source: str = "<bytes>") -> GeoTiffGeoref:
+    """Decode raster size and GeoTIFF georeferencing from the first bytes of a TIFF file.
+
+    Args:
+        data: leading bytes of the file (must include IFD0 and its tag values).
+        source: name used in error messages (file or URL).
+
+    Raises:
+        GeoTiffHeaderError: on invalid TIFF or tags located beyond ``data``.
+    """
+    _endian, ifds = read_ifds(data, source)
+    tags = ifds[0]
     for needed in (TAG_IMAGE_WIDTH, TAG_IMAGE_LENGTH, TAG_MODEL_PIXEL_SCALE, TAG_MODEL_TIEPOINT):
         if needed not in tags:
-            raise GeoTiffHeaderError(f"{source}: missing TIFF tag {needed}")
+            raise GeoTiffHeaderError(
+                f"{source}: TIFF tag {needed} missing or beyond the {len(data)} bytes read"
+            )
 
     return GeoTiffGeoref(
         width=int(tags[TAG_IMAGE_WIDTH][0]),
@@ -182,17 +210,6 @@ def raster_center_xy(georef: GeoTiffGeoref) -> tuple[float, float]:
         center_i, center_j = georef.width / 2.0, georef.height / 2.0
     # Map y decreases as the row index grows (north-up raster convention).
     return x0 + (center_i - i0) * sx, y0 - (center_j - j0) * sy
-
-
-_WANTED_TAGS = {
-    TAG_IMAGE_WIDTH,
-    TAG_IMAGE_LENGTH,
-    TAG_MODEL_PIXEL_SCALE,
-    TAG_MODEL_TIEPOINT,
-    TAG_GEO_KEY_DIRECTORY,
-    TAG_GEO_DOUBLE_PARAMS,
-    TAG_GEO_ASCII_PARAMS,
-}
 
 
 def _require(data: bytes, end: int, source: str, what: str) -> None:
