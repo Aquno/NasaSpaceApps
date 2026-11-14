@@ -53,6 +53,10 @@ Quem abre a plataforma deve entender, nesta ordem:
 
 JPL Horizons, LROC Quickmap e NASA Moon Trek são citados como as **fontes e ferramentas de análise detalhada**; o texto é factual e não os diminui.
 
+## Direção visual (D35)
+
+Limpa, calma e espaçosa: um foco por tela, muito respiro, hierarquia em três níveis (título; número ou veredito; apoio discreto), pouco texto, cor só com função, poucos indicadores grandes. No painel, o foco é a vista 3D com os cartões ao lado; o resto fica recolhido. Substitui a ideia de "sala de controle de missão".
+
 ## Forma do MVP
 
 - Demonstração com dados reais, volume pequeno, visual forte.

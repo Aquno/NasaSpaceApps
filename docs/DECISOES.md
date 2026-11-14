@@ -197,6 +197,22 @@ Formato: data, decisão, motivo, consequências. Decisões novas vão no fim. N�
 - Cada ponto é o pixel de 60 m mais iluminado da sua região no mapa oficial (D30); os pixels vizinhos chegam a ter bem menos luz. Os resultados representam o **melhor caso de cada região, não uma área de pouso**. Declarado no bloco "What this tool covers", no README, em `DADOS.md` e (a fazer) em "Data and limits" do detalhe do local.
 - **Número de destaque no painel:** dias de pouso de 2027 em que cada local é viável e dias em que nenhum local serve, para a duração e as regras atuais (`web/src/calc/census.ts`, mesmo código do relatório).
 
+### D35 — 2026-11-14 — Direção visual revisada: limpa, calma e espaçosa (substitui "sala de controle de missão")
+- **Decisão:** interface com poucas coisas por tela, muito respiro e uma mensagem de cada vez. Referência de espírito (só clareza e respiro; nada de layout, textos, cores ou componentes copiados): projeto vencedor de 2025, PureFlow (https://larasdiniz.github.io/PureFlow-2025/src/public/html/home/home.html).
+- **Princípios, em todas as telas:**
+  - Um foco por tela. No painel de missão, o foco é a vista 3D com os cartões ao lado; o resto fica recolhido ou em outra página.
+  - Espaço em branco generoso, a partir de uma escala única de espaçamento; separar por espaço, não por bordas e caixas; molduras mínimas.
+  - Hierarquia em três níveis: título; número ou veredito principal; texto de apoio discreto.
+  - Menos texto: frases curtas, rótulos de uma ou duas palavras; detalhes técnicos só ao expandir ou no detalhe do local.
+  - Cor com parcimônia: fundo escuro neutro, texto claro; as três cores funcionais (Sol, Terra, ciência) só onde carregam significado.
+  - Tipografia maior e arejada; caixa alta espaçada só em rótulos pequenos.
+  - Cartões simples, sem contornos pesados; o melhor compromisso se destaca por tamanho e posição, não por moldura.
+  - Poucos indicadores grandes com legenda curta no lugar de frases longas com vários números.
+  - Movimento suave e discreto.
+  - Abertura: título, uma frase, o globo da Lua e um botão; abaixo, três blocos curtos do que a ferramenta faz e poucos números de destaque reais, vindos dos dados.
+- **Mantém:** paleta funcional (Sol âmbar, Terra azul-céu, ciência lilás), contraste AA, vereditos com ícone e texto (nunca só cor), tipografia IBM Plex.
+- **Status:** registrada; aplicação pendente (junto com a reorganização do painel e a melhoria do 3D).
+
 ### Pendências abertas após a etapa 2
 - Nenhuma pendência de dados da etapa 2.
 

@@ -141,3 +141,4 @@ Legenda de status: `a fazer` · `em andamento` · `concluído` · `plano B` · `
 | 2026-11-14 | 5 | Relatórios refeitos com os pontos da D30 (notas em três datas, censo de 2027, cenários de atraso + "outro local reabre antes do Shackleton rim"); pesos e limites padrão inalterados |
 | 2026-11-14 | 5 | D32 (veredito só de engenharia; filtro de ciência opcional), D33 (cenário padrão 2027-03-04 → +21 d), D34 (limite "melhor caso por região" e censo em destaque no painel) |
 | 2026-11-14 | 5 | Vista 3D (three.js) no painel, estável na primeira tentativa (cerca de 10 min do limite de 90); mapa 2D mantido como plano B |
+| 2026-11-14 | 5 | D35: direção visual revisada (limpa, calma, espaçosa; um foco por tela) registrada; aplicação pendente |
