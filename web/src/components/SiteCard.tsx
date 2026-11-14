@@ -6,7 +6,15 @@
 import type { SiteEvaluation } from '../calc/evaluate';
 import type { ViableWindow } from '../calc/nextViable';
 import type { SiteSummary } from '../data/contract';
-import { fmtDate, fmtHours, fmtKm, fmtPct, fmtScore, VERDICT_LABEL } from '../ui/format';
+import {
+  fmtDate,
+  fmtDateTime,
+  fmtHours,
+  fmtKm,
+  fmtPct,
+  fmtScore,
+  VERDICT_LABEL,
+} from '../ui/format';
 
 interface Props {
   site: SiteSummary;
@@ -68,6 +76,11 @@ export function SiteCard({
         <span aria-hidden="true">{label.icon}</span> {label.text}
       </div>
       <p className="reason">{v.reason}</p>
+      <p className="next">
+        {evaluation.landingHourFound
+          ? `Landing ${fmtDateTime(evaluation.landingMs)}`
+          : 'No hour of this day meets the landing rules.'}
+      </p>
       {next !== undefined && (
         <p className="next">
           {next

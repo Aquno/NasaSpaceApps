@@ -213,6 +213,12 @@ Formato: data, decisão, motivo, consequências. Decisões novas vão no fim. N�
 - **Mantém:** paleta funcional (Sol âmbar, Terra azul-céu, ciência lilás), contraste AA, vereditos com ícone e texto (nunca só cor), tipografia IBM Plex.
 - **Status:** registrada; aplicação pendente (junto com a reorganização do painel e a melhoria do 3D).
 
+### D36 — 2026-11-14 — Hora do pouso: a data é o dia do pouso
+- **Problema:** a data virava pouso às 00:00 UTC, e locais eram reprovados ("Dark at landing") por uma hora arbitrária.
+- **Decisão:** a data escolhida é o **dia do pouso** (UTC). As 24 horas do dia são avaliadas em ordem e usa-se a **primeira hora que atende às regras de pouso** (veredito diferente de *not viable*); se nenhuma atender, o local é *not viable* naquele dia (mostra-se o motivo da avaliação às 00:00). A hora escolhida aparece no cartão e no relatório (`web/src/calc/evaluate.ts`, testado).
+- **Efeito** (missão de 14 dias, 352 dias; `npm run report:census`): viáveis / marginais / inviáveis — Shackleton rim 189 / 15 / 148; Connecting ridge 222 / 0 / 130; de Gerlache rim 207 / 3 / 142; Malapert massif 229 / 9 / 114; Haworth 125 / 2 / 225; nenhum local viável em 71 dias. Melhor compromisso por dia: Shackleton rim 166, Connecting ridge 65, de Gerlache 28, Malapert 15, Haworth 8, nenhum 70. Com +21 dias, **110** datas trocam o melhor compromisso de um local para outro.
+- **Cenário padrão (D33) mantido:** 04/03 Shackleton rim viável e melhor compromisso → 25/03 Shackleton not viable ("Dark at landing" em todas as horas) e de Gerlache rim melhor compromisso (viável, eng 80 / sci 58). O caso mais "claro" do relatório passou a ser 03/03 → 24/03 (mesma troca), mas a diferença é de um dia; o padrão não precisou mudar.
+
 ### Pendências abertas após a etapa 2
 - Nenhuma pendência de dados da etapa 2.
 

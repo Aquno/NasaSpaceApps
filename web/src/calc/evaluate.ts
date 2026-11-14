@@ -1,5 +1,5 @@
 /**
- * What: Evaluate every site for a landing time and mission duration: metrics, scores, verdict,
+ * What: Evaluate every site for a landing day (first suitable hour, D36) and mission duration: metrics, scores, verdict,
  *   best compromise and display order. Pure function composing the calc modules.
  * Roadmap stage: 5 — Interface (see docs/ROTEIRO.md).
  * Inputs: site summaries, SiteData and precomputed visibility per site, landing time (ms UTC),
@@ -8,7 +8,7 @@
  * NASA data source: Horizons ephemerides, LOLA horizon and PSRs via data/app.
  */
 import { DEFAULT_RULES, type MissionRules } from '../config/scoring';
-import type { SiteData, SiteSummary } from '../data/contract';
+import { indexAtOrAfter, type SiteData, type SiteSummary } from '../data/contract';
 import { missionMetrics, missionWindow, type MissionMetrics, type WindowResult } from './metrics';
 import {
   bestCompromise,
@@ -30,8 +30,16 @@ export type SiteEvaluation =
       engineering: Score;
       science: Score | null;
       verdict: Verdict & { rule: RuleKey };
+      /** Landing time used (ms UTC): the first hour of the day that meets the landing rules. */
+      landingMs: number;
+      /** False when no hour of the day meets them (the 00:00 UTC evaluation is then shown). */
+      landingHourFound: boolean;
     }
   | { ok: false; siteId: string; window: Extract<WindowResult, { ok: false }> };
+
+const HOUR_MS = 3_600_000;
+const DAY_MS = 86_400_000;
+export const LANDING_HOURS_PER_DAY = 24;
 
 export interface Evaluation {
   sites: SiteEvaluation[];
@@ -39,7 +47,35 @@ export interface Evaluation {
   order: string[];
 }
 
+/**
+ * Evaluate a landing DAY (D36): the date is the day of landing (UTC). Each hour of the day is
+ * tried in order and the first one whose verdict is not "not-viable" (it meets the landing
+ * rules) is used; if none does, the site is not viable that day and the 00:00 UTC evaluation
+ * (with its reason) is returned with landingHourFound = false.
+ */
 export function evaluateSite(
+  site: SiteSummary,
+  data: SiteData,
+  vis: VisibilitySeries,
+  landingDayMs: number,
+  durationHours: number,
+  rules: MissionRules = DEFAULT_RULES,
+): SiteEvaluation {
+  const dayStart = Math.floor(landingDayMs / DAY_MS) * DAY_MS;
+  for (let h = 0; h < LANDING_HOURS_PER_DAY; h++) {
+    const t = dayStart + h * HOUR_MS;
+    const i = indexAtOrAfter(data.meta, t);
+    // Cheap pre-check of the first landing rule before computing the mission metrics.
+    if (rules.requireSunAtLanding && i >= 0 && i < data.meta.count && vis.sunAny[i] === 0) continue;
+    const e = evaluateAt(site, data, vis, t, durationHours, rules);
+    if (e.ok && e.verdict.kind !== 'not-viable') return e;
+  }
+  const fallback = evaluateAt(site, data, vis, dayStart, durationHours, rules);
+  return fallback.ok ? { ...fallback, landingHourFound: false } : fallback;
+}
+
+/** Evaluate a landing at one exact time (ms UTC). */
+export function evaluateAt(
   site: SiteSummary,
   data: SiteData,
   vis: VisibilitySeries,
@@ -66,6 +102,8 @@ export function evaluateSite(
       rules,
       site.terrainSlopeDeg,
     ),
+    landingMs,
+    landingHourFound: true,
   };
 }
 

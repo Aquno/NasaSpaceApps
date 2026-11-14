@@ -21,3 +21,5 @@ export const VERDICT_LABEL: Record<VerdictKind, { icon: string; text: string }> 
 
 /** Short display names for tight places (scatter labels). */
 export const shortName = (name: string) => name.replace(/\s*\(.*\)$/, '');
+export const fmtDateTime = (ms: number) =>
+  `${new Date(ms).toISOString().slice(0, 16).replace('T', ' ')} UTC`;

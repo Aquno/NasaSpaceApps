@@ -19,7 +19,7 @@ const ranked = rankedSites(sites);
 const census = landingCensus(ranked, data, vis, duration);
 
 console.log(
-  `\n### Landing days by verdict (${duration / 24}-day mission, landing 00:00 UTC, ` +
+  `\n### Landing days by verdict (${duration / 24}-day mission, landing day, first suitable hour (UTC), ` +
     `${census.daysInData} landing days whose mission fits in the data)\n`,
 );
 console.log('| Site | Viable | Marginal | Not viable |');

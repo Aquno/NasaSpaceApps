@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { SiteData, SiteSummary } from '../data/contract';
+import { evaluateSite } from './evaluate';
 import { earliestViableSite, nextViableWindow } from './nextViable';
 import { visibilitySeries } from './visibility';
 
@@ -93,5 +94,24 @@ describe('next viable landing', () => {
       siteId: 'b',
       window: { startMs: START + 3 * DAY, windowDays: 2 },
     });
+  });
+});
+
+describe('landing hour within the day (D36)', () => {
+  it('uses the first hour of the day that meets the landing rules', () => {
+    // Sun up from hour 5 of day 0 through day 3.
+    const [s, d] = site('h', 6, []);
+    d.series.sunEl.fill(2, 5, 4 * 24);
+    const v = visibilitySeries(d);
+    const e = evaluateSite(s, d, v, START, 48);
+    expect(e.ok && e.landingMs).toBe(START + 5 * HOUR);
+    expect(e.ok && e.landingHourFound).toBe(true);
+    expect(e.ok && e.verdict.kind).toBe('viable');
+  });
+  it('not viable when no hour of the day meets them', () => {
+    const [s, d] = site('n', 6, []);
+    const e = evaluateSite(s, d, visibilitySeries(d), START, 48);
+    expect(e.ok && e.landingHourFound).toBe(false);
+    expect(e.ok && e.verdict.kind).toBe('not-viable');
   });
 });

@@ -24,9 +24,9 @@ for (const date of dates) {
   const ev = evaluateSites(ranked, data, vis, Date.parse(date), duration);
   console.log(`\n### Landing ${date.slice(0, 10)}, ${duration / 24} days\n`);
   console.log(
-    '| Rank | Site | Eng | Sci | Verdict | Sun % | Longest dark (h) | Earth % | Longest gap (h) | Reason |',
+    '| Rank | Site | Landing (UTC) | Eng | Sci | Verdict | Sun % | Longest dark (h) | Earth % | Longest gap (h) | Reason |',
   );
-  console.log('|---|---|---|---|---|---|---|---|---|---|');
+  console.log('|---|---|---|---|---|---|---|---|---|---|---|');
   ev.order.forEach((id, k) => {
     const e = ev.sites.find((x) => x.siteId === id);
     if (!e) return;
@@ -37,7 +37,7 @@ for (const date of dates) {
     const m = e.metrics;
     const star = id === ev.bestId ? ' **(best)**' : '';
     console.log(
-      `| ${k + 1} | ${id}${star} | ${e.engineering.total.toFixed(0)} | ` +
+      `| ${k + 1} | ${id}${star} | ${e.landingHourFound ? new Date(e.landingMs).toISOString().slice(11, 16) : 'none'} | ${e.engineering.total.toFixed(0)} | ` +
         `${(e.science?.total ?? 0).toFixed(0)} | ${e.verdict.kind} | ` +
         `${(m.sunFraction * 100).toFixed(0)} | ${m.longestDarkHours} | ` +
         `${(m.earthFraction * 100).toFixed(0)} | ${m.longestNoContactHours} | ${e.verdict.reason} |`,

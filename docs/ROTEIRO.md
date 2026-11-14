@@ -142,3 +142,4 @@ Legenda de status: `a fazer` · `em andamento` · `concluído` · `plano B` · `
 | 2026-11-14 | 5 | D32 (veredito só de engenharia; filtro de ciência opcional), D33 (cenário padrão 2027-03-04 → +21 d), D34 (limite "melhor caso por região" e censo em destaque no painel) |
 | 2026-11-14 | 5 | Vista 3D (three.js) no painel, estável na primeira tentativa (cerca de 10 min do limite de 90); mapa 2D mantido como plano B |
 | 2026-11-14 | 5 | D35: direção visual revisada (limpa, calma, espaçosa; um foco por tela) registrada; aplicação pendente |
+| 2026-11-14 | 5 | D36: pouso na primeira hora do dia que atende às regras; relatórios refeitos (110 trocas com +21 d; cenário 04/03 → 25/03 mantido) |
