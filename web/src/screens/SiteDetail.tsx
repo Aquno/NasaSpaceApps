@@ -226,12 +226,17 @@ export function SiteDetail({ site, data, inputs }: Props) {
                 ))}
               </ul>
             </dd>
+            <dt className="caps">{t('detail.limitBestCase')}</dt>
+            <dd>
+              {t('covers.bestCaseTitle')} {t('covers.bestCase')}
+            </dd>
+            <dt className="caps">{t('detail.limitLink')}</dt>
+            <dd>{t('detail.directOnly')}</dd>
+            <dt className="caps">{t('detail.limitSignal')}</dt>
+            <dd>{t('detail.signal')}</dd>
+            <dt className="caps">{t('detail.limitRules')}</dt>
+            <dd>{t('detail.teamRules')}</dd>
           </dl>
-          <p>
-            <strong>{t('covers.bestCaseTitle')}</strong> {t('covers.bestCase')}
-          </p>
-          <p>{t('detail.signal')}</p>
-          <p>{t('detail.directOnly')}</p>
         </div>
       </details>
       <Footer />

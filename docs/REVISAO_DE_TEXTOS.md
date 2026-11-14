@@ -10,14 +10,14 @@ Nomes próprios (locais, produtos e fontes da NASA) não são traduzidos.
 
 | Ação | Textos |
 |---|---:|
-| mantido | 202 |
-| reescrito | 54 |
+| mantido | 198 |
+| reescrito | 57 |
 | movido para dica | 6 |
 | movido para Sobre | 2 |
-| removido | 8 |
-| novo | 7 |
+| removido | 9 |
+| novo | 11 |
 | dúvida | 16 |
-| **total** | **295** |
+| **total** | **299** |
 
 ## Casos de dúvida (ficam com o texto atual até decisão)
 
@@ -208,9 +208,9 @@ Nomes próprios (locais, produtos e fontes da NASA) não são traduzidos.
 | Painel: 3D | `scene.vertical` | Vertical ×{n:int} | Vertical ×{n:int} | Vertical ×{n:int} | Vertical ×{n:int} | mantido |
 | Painel: 3D | `scene.verticalAria` | Vertical exaggeration | Exagero vertical | Vertical exaggeration | Exagero vertical | mantido |
 | Painel: 3D | `scene.reset` | Reset view | Reiniciar vista | Reset view | Reiniciar vista | mantido |
-| Painel: 3D | `scene.sun` | Sun {el:deg1} | Sol {el:deg1} | Sun {el:deg1} | Sol {el:deg1} | mantido |
+| Painel: 3D | `scene.sun` | Sun {el:deg1} | Sol {el:deg1} | Sun {el:deg1} | Sol {el:deg1} | reescrito |
 | Painel: 3D | `scene.at` | at {site} | em {site} | at {site} | em {site} | mantido |
-| Painel: 3D | `scene.earth` | Earth | Terra | Earth | Terra | mantido |
+| Painel: 3D | `scene.earth` | Earth | Terra | — | — | removido |
 | Painel: 3D | `scene.curvature` | curvature on | curvatura ligada | — | — | removido |
 | Painel: 3D | `scene.visualOnly` | visual only | só visualização | — | — | removido |
 | Painel: 3D | `scene.aria` | 3D south pole view. Arrow keys rotate and tilt, plus and minus zoom, R resets. | Vista 3D do polo sul. Setas giram e inclinam, mais e menos aproximam, R reinicia. | 3D south pole view. Arrow keys rotate and tilt, plus and minus zoom, R resets. | Vista 3D do polo sul. Setas giram e inclinam, mais e menos aproximam, R reinicia. | mantido |
@@ -268,8 +268,8 @@ Nomes próprios (locais, produtos e fontes da NASA) não são traduzidos.
 | Detalhe do local | `detail.band` | {px:int} m up to {km:int} km | {px:int} m até {km:int} km | {px:int} m up to {km:int} km | {px:int} m até {km:int} km | mantido |
 | Detalhe do local | `detail.observer` | Observer height | Altura do observador | Observer height | Altura do observador | mantido |
 | Detalhe do local | `detail.observerValue` | {m:dec1} m above the ground (mast) | {m:dec1} m acima do solo (mastro) | {m:dec1} m above the ground (mast) | {m:dec1} m acima do solo (mastro) | mantido |
-| Detalhe do local | `detail.signal` | A radio signal takes about 1.3 s each way between the Earth and the Moon. | Um sinal de rádio leva cerca de 1,3 s em cada sentido entre a Terra e a Lua. | A radio signal takes about 1.3 s each way between the Earth and the Moon. | Um sinal de rádio leva cerca de 1,3 s em cada sentido entre a Terra e a Lua. | mantido |
-| Detalhe do local | `detail.directOnly` | Only the direct line of sight to Earth is evaluated; relay satellites are not modelled. | Só a linha de visada direta com a Terra é avaliada; satélites retransmissores não são modelados. | Only the direct line of sight to Earth is evaluated; relay satellites are not modelled. | Só a linha de visada direta com a Terra é avaliada; satélites retransmissores não são modelados. | mantido |
+| Detalhe do local | `detail.signal` | A radio signal takes about 1.3 s each way between the Earth and the Moon. | Um sinal de rádio leva cerca de 1,3 s em cada sentido entre a Terra e a Lua. | About 1.3 s each way between the Earth and the Moon. | Cerca de 1,3 s em cada sentido entre a Terra e a Lua. | reescrito |
+| Detalhe do local | `detail.directOnly` | Only the direct line of sight to Earth is evaluated; relay satellites are not modelled. | Só a linha de visada direta com a Terra é avaliada; satélites retransmissores não são modelados. | Direct line of sight only; relay satellites are not modelled. | Só a linha de visada direta; satélites retransmissores não são modelados. | reescrito |
 | Detalhe do local | `detail.notFound` | This site is not in the data. | Este local não está nos dados. | This site is not in the data. | Este local não está nos dados. | mantido |
 | Detalhe: panorama | `dir.N` | N | N | N | N | mantido |
 | Detalhe: panorama | `dir.E` | E | L | E | L | mantido |
@@ -331,3 +331,7 @@ Nomes próprios (locais, produtos e fontes da NASA) não são traduzidos.
 | Sobre | `about.title` |  |  | About | Sobre | novo |
 | Sobre | `about.compare` |  |  | Compared with existing tools | Comparação com as ferramentas existentes | novo |
 | Sobre | `about.sources` |  |  | Sources | Fontes | novo |
+| Detalhe do local | `detail.limitBestCase` |  |  | Best case | Melhor caso | novo |
+| Detalhe do local | `detail.limitLink` |  |  | Earth link | Ligação com a Terra | novo |
+| Detalhe do local | `detail.limitSignal` |  |  | Signal delay | Atraso do sinal | novo |
+| Detalhe do local | `detail.limitRules` |  |  | Scores | Notas | novo |

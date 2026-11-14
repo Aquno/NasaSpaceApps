@@ -8,6 +8,9 @@
  * Placeholder syntax: {name} or {name:type} with type in
  *   int, dec1, dec1floor, pct (fraction 0-1), deg1, km1, hours (h or days), date, datetime,
  *   verdict (VerdictKind, translated with the verdict.* keys), msg (another message key).
+ * Plural: {name:plural:singular|plural} picks the singular form when the value is exactly 1 and
+ *   the plural form otherwise (0 too), in both languages (D50). Write the number separately,
+ *   e.g. "{n:int} {n:plural:day|days}".
  */
 import type { MessageKey, Messages } from './messages';
 
@@ -22,6 +25,8 @@ export interface Msg {
   params?: Params;
 }
 
+/** {name}, {name:type} or {name:plural:one|other}. */
+const PLACEHOLDER = /\{(\w+)(?::(\w+)(?::([^}]*))?)?\}/g;
 const DAY_HOURS = 24;
 const DAYS_FROM_HOURS = 48; // durations of 48 h or more are shown in days
 
@@ -51,9 +56,13 @@ export function createTranslator(messages: Messages, locale: Locale): Translator
     `${new Intl.DateTimeFormat(locale, { dateStyle: 'medium', timeStyle: 'short', hourCycle: 'h23', timeZone: 'UTC' }).format(ms)} UTC`;
 
   const t = (key: MessageKey, params: Params = {}): string =>
-    messages[key].replace(/\{(\w+)(?::(\w+))?\}/g, (_m, name: string, type?: string) => {
+    messages[key].replace(PLACEHOLDER, (_m, name: string, type?: string, forms?: string) => {
       const v = params[name];
       if (v === undefined) return `{${name}}`;
+      if (type === 'plural') {
+        const [one = '', other = one] = (forms ?? '').split('|');
+        return Math.abs(Number(v)) === 1 ? one : other;
+      }
       if (typeof v === 'string' && type !== 'verdict' && type !== 'msg') return v;
       switch (type) {
         case 'int':
@@ -95,5 +104,5 @@ export function createTranslator(messages: Messages, locale: Locale): Translator
 
 /** Placeholder names used in a template (for consistency tests between languages). */
 export function placeholders(template: string): string[] {
-  return [...template.matchAll(/\{(\w+)(?::\w+)?\}/g)].map((m) => m[1] as string).sort();
+  return [...new Set([...template.matchAll(PLACEHOLDER)].map((m) => m[1] as string))].sort();
 }

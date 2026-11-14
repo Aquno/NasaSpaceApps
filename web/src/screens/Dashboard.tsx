@@ -10,6 +10,7 @@ import { bodyDirectionsAt } from '../calc/scene3d';
 import { AnnualStrips } from '../components/AnnualStrips';
 import { Footer } from '../components/Footer';
 import { Header } from '../components/Header';
+import { InfoTip } from '../components/InfoTip';
 import { MissionControls } from '../components/MissionControls';
 import { MissionRulesPanel } from '../components/MissionRulesPanel';
 import { NasaCheck } from '../components/NasaCheck';
@@ -72,7 +73,10 @@ export function Dashboard({ sites, data, terrain, inputs, onInputs, onOpenSite }
     <div className="app dash">
       <Starfield still maxAlpha={DASH_STAR_ALPHA} />
       <div className="dash-screen">
-        <Header sample={sample} />
+        <Header
+          sample={sample}
+          dataScope={anyMeta ? { points: d.ranked.length, hours: anyMeta.count, year } : null}
+        />
         {anyMeta && (
           <MissionControls
             inputs={inputs}
@@ -98,7 +102,13 @@ export function Dashboard({ sites, data, terrain, inputs, onInputs, onOpenSite }
 
         <div className="dash-main">
           <section className="stage" aria-label={t('section.map')}>
-            <p className="stage-title caps">{t(view3d ? 'map.title3d' : 'map.title2d', { px })}</p>
+            <p className="stage-title caps">
+              {t(view3d ? 'map.title3d' : 'map.title2d')}{' '}
+              <InfoTip>
+                {t('map.resolution', { px })} {t(view3d ? 'map.how3d' : 'map.how2d')}{' '}
+                {t('map.numbersNote')} {t('map.demoNote')}
+              </InfoTip>
+            </p>
             {view3d && lightSite && lightDirs ? (
               <Suspense fallback={<p className="note">{t('scene.loading')}</p>}>
                 <SouthPole3D
@@ -125,7 +135,6 @@ export function Dashboard({ sites, data, terrain, inputs, onInputs, onOpenSite }
               />
             )}
             <p className="stage-note note">
-              <span title={t('map.demoNote')}>{t('map.numbersNote')}</span>{' '}
               <span className="stage-actions">
                 <button type="button" className="linkbtn" onClick={openSmallMove}>
                   {t('small.title')} ↓
@@ -182,7 +191,10 @@ export function Dashboard({ sites, data, terrain, inputs, onInputs, onOpenSite }
 
       <div className="more">
         <details className="section glass">
-          <summary>{t('census.title', { year, days: inputs.durationH / 24 })}</summary>
+          <summary>
+            {t('census.title', { year })}{' '}
+            <InfoTip>{t('census.tip', { days: inputs.durationH / 24 })}</InfoTip>
+          </summary>
           <ul className="indicators">
             {d.ranked.map((s) => (
               <li key={s.id}>

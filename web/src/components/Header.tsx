@@ -1,19 +1,21 @@
 /**
  * What: Dashboard header: product name, context (lunar south pole, real NASA data), SAMPLE DATA
- *   badge when any file is marked as sample, language selector and the "What this adds" dialog.
+ *   badge when any file is marked as sample, Roadmap link, language selector and the "About"
+ *   dialog (comparison, scope, sources; D50).
  * Roadmap stage: 5 — Interface (see docs/ROTEIRO.md).
  */
 import { useRef } from 'react';
 import { useI18n } from '../i18n/I18nProvider';
 import { LanguageSelect } from './LanguageSelect';
-import { WhatThisAddsTable } from './WhatThisAdds';
-import { WhatThisCovers } from './WhatThisCovers';
+import { About, type DataScope } from './About';
 
 interface Props {
   sample: boolean;
+  /** Data coverage line shown under the sources (when the data is loaded). */
+  dataScope?: DataScope | null;
 }
 
-export function Header({ sample }: Props) {
+export function Header({ sample, dataScope = null }: Props) {
   const { t } = useI18n();
   const dialog = useRef<HTMLDialogElement>(null);
   return (
@@ -28,12 +30,12 @@ export function Header({ sample }: Props) {
         {t('header.roadmap')}
       </a>
       <button type="button" className="linkbtn" onClick={() => dialog.current?.showModal()}>
-        {t('header.whatThisAdds')} ▸
+        {t('header.whatThisAdds')}
       </button>
       <LanguageSelect />
       <dialog ref={dialog} aria-label={t('header.whatThisAdds')}>
-        <WhatThisAddsTable />
-        <WhatThisCovers />
+        <h2>{t('about.title')}</h2>
+        <About dataScope={dataScope} />
         <form method="dialog">
           <button className="linkbtn" type="submit">
             {t('header.close')}

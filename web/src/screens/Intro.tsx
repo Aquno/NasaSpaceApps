@@ -20,8 +20,8 @@ import { Footer } from '../components/Footer';
 import { GlobeStill } from '../components/GlobeStill';
 import { LanguageSelect } from '../components/LanguageSelect';
 import { Starfield } from '../components/Starfield';
-import { WhatThisAddsTable } from '../components/WhatThisAdds';
-import { WhatThisCovers } from '../components/WhatThisCovers';
+import { About } from '../components/About';
+import { InfoTip } from '../components/InfoTip';
 import type { SiteData, SiteSummary } from '../data/contract';
 import { useI18n } from '../i18n/I18nProvider';
 import type { MessageKey } from '../i18n/messages';
@@ -161,7 +161,6 @@ export function Intro({ ready }: Props) {
           <p className="caps hero-kicker">{t('intro.kicker')}</p>
           <h1 className="hero-title">{t('header.title')}</h1>
           <p className="hero-lead">{t('intro.lead')}</p>
-          <p className="hero-question">{t('intro.question')}</p>
           <div className="hero-actions">
             <a className="btn-primary" href="#/mission">
               {t('intro.open')}
@@ -238,8 +237,8 @@ export function Intro({ ready }: Props) {
                 </span>
               </li>
             </ul>
-            <p className="note stats-note">
-              {t('intro.statsNote', { days: DEFAULT_MISSION_DURATION_H / 24 })}
+            <p className="stats-note">
+              <InfoTip>{t('intro.statsNote', { days: DEFAULT_MISSION_DURATION_H / 24 })}</InfoTip>
             </p>
           </>
         ) : (
@@ -251,19 +250,10 @@ export function Intro({ ready }: Props) {
 
       <section className="opening-section reveal more-info" ref={moreRef}>
         <details className="glass">
-          <summary>{t('intro.whatThisAdds')}</summary>
-          <WhatThisAddsTable />
+          <summary>{t('about.title')}</summary>
+          <About dataScope={n ? { points: n.points, hours: n.hours, year: n.year } : null} />
         </details>
-        <details className="glass">
-          <summary>{t('covers.title')}</summary>
-          <WhatThisCovers heading={false} />
-        </details>
-        <details className="glass">
-          <summary>{t('intro.sources')}</summary>
-          <p>{t('footer.sources')}</p>
-          {n && <p>{t('intro.dataScope', { n: n.points, h: n.hours, year: n.year })}</p>}
-        </details>
-        <Footer sources={false} />
+        <Footer />
       </section>
     </div>
   );

@@ -40,6 +40,9 @@ const LIGHT_DISTANCE_KM = 400;
 const SHADOW_HALF_EXTENT_KM = 165;
 const SHADOW_MAP_SIZE = 2048;
 const ARROW_LENGTH_KM = 70;
+/** Arrows start just above the pole; their labels sit a little past the tip (km). */
+const ARROW_ORIGIN: Vec3 = [0, 0, 15];
+const TIP_LABEL_OFFSET_KM = 8;
 const KEY_ROTATE_RAD = Math.PI / 36;
 // Ambient keeps shadowed relief readable; the Sun light stays on even when it grazes the pole
 // frame from slightly below (high terrain can still see it).
@@ -105,6 +108,10 @@ export function SouthPole3D(props: Props) {
   const labelRefs = useRef(new Map<string, HTMLButtonElement>());
   const dotRefs = useRef(new Map<string, HTMLSpanElement>());
   const lineRefs = useRef(new Map<string, SVGLineElement>());
+  const tipRefs = useRef<Record<'sun' | 'earth', HTMLSpanElement | null>>({
+    sun: null,
+    earth: null,
+  });
   const [exaggeration, setExaggeration] = useState(DEFAULT_EXAGGERATION);
   const exagRef = useRef(exaggeration);
 
@@ -181,6 +188,21 @@ export function SouthPole3D(props: Props) {
       line.setAttribute('x2', String(Math.min(Math.max(pt.x, box.left), box.left + size.w)));
       line.setAttribute('y2', String(Math.min(Math.max(pt.y, box.top), box.top + size.h)));
       line.style.visibility = 'visible';
+    }
+    // Short labels at the arrow tips (Sun, Earth).
+    for (const kind of ['sun', 'earth'] as const) {
+      const tip = tipRefs.current[kind];
+      const dir = shownDirs.current?.[kind];
+      if (!tip) continue;
+      if (!dir) {
+        tip.style.visibility = 'hidden';
+        continue;
+      }
+      const p = new THREE.Vector3(...ARROW_ORIGIN)
+        .addScaledVector(dir, ARROW_LENGTH_KM + TIP_LABEL_OFFSET_KM)
+        .project(st.camera);
+      tip.style.transform = `translate(${((p.x + 1) / 2) * w}px, ${((1 - p.y) / 2) * h}px)`;
+      tip.style.visibility = p.z < 1 ? 'visible' : 'hidden';
     }
   };
   const renderRef = useRef(render);
@@ -271,7 +293,7 @@ export function SouthPole3D(props: Props) {
 
     const sunArrow = new THREE.ArrowHelper(
       new THREE.Vector3(1, 0, 0),
-      new THREE.Vector3(0, 0, 15),
+      new THREE.Vector3(...ARROW_ORIGIN),
       ARROW_LENGTH_KM,
       0xf0a500,
       10,
@@ -279,7 +301,7 @@ export function SouthPole3D(props: Props) {
     );
     const earthArrow = new THREE.ArrowHelper(
       new THREE.Vector3(0, 1, 0),
-      new THREE.Vector3(0, 0, 15),
+      new THREE.Vector3(...ARROW_ORIGIN),
       ARROW_LENGTH_KM,
       0x56b4e9,
       10,
@@ -476,6 +498,19 @@ export function SouthPole3D(props: Props) {
             </span>
           );
         })}
+        {(['sun', 'earth'] as const).map((kind) => (
+          <span
+            key={kind}
+            className={`scene3d-tip ${kind}`}
+            ref={(el) => {
+              if (el) tipRefs.current[kind] = el;
+              else tipRefs.current[kind] = null;
+            }}
+            aria-hidden="true"
+          >
+            {t(kind === 'sun' ? 'detail.sun' : 'detail.earth')}
+          </span>
+        ))}
         <div className="scene3d-globe">
           <MoonGlobe size={GLOBE_PX} />
         </div>
@@ -497,10 +532,8 @@ export function SouthPole3D(props: Props) {
           {t('scene.reset')}
         </button>
         <span className="note">
-          <span className="sun">━▶ {t('scene.sun', { el: sunElDeg })}</span>{' '}
-          {t('scene.at', { site: lightSiteName })} ·{' '}
-          <span className="earth">━▶ {t('scene.earth')}</span> · {t('scene.curvature')} ·{' '}
-          {t('scene.visualOnly')}
+          <span className="sun">{t('scene.sun', { el: sunElDeg })}</span>{' '}
+          {t('scene.at', { site: lightSiteName })}
         </span>
       </div>
     </div>

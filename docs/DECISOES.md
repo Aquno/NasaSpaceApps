@@ -318,6 +318,16 @@ Formato: data, decisão, motivo, consequências. Decisões novas vão no fim. N�
 - **"Slip 21 days":** a direção do Sol e da Terra no 3D gira suavemente (0,9 s); os cartões se reordenam com animação de 0,6 s; o novo melhor compromisso entra com um realce breve. Tudo estático com movimento reduzido.
 - **Status:** aplicada (2026-11-14), branch `polish-visual-review`.
 
+### D50 — 2026-11-14 — Revisão de textos: rótulos curtos e funcionais
+
+- **Contexto:** havia frases de efeito e legendas explicativas de apresentação dentro do sistema.
+- **Regras aplicadas:** rótulos (substantivos) em vez de slogans; menos legendas, com as explicações num ícone ⓘ (dica ao passar o mouse ou focar) ou em "Data and limits"; uma ideia por texto; tom neutro e técnico nos dois idiomas; avisos obrigatórios discretos e em um só lugar por tela; na abertura, só o nome e a frase do que a ferramenta faz (a pergunta do atraso saiu).
+- **Mudanças principais:** "Best compromise" → "Best overall" / "Melhor no conjunto"; "Small move, big change" → "Position sensitivity" / "Sensibilidade à posição"; "What this adds" → "About" / "Sobre" (comparação com as ferramentas existentes, escopo e fontes, num só bloco, no cabeçalho e na abertura); "+21 days" / "+21 dias" e "Reset" / "Zerar"; "South pole" / "Polo sul" no globo; "2027 availability"; "Viable landing days, 2027"; "Score breakdown" / "Composição das notas"; título da vista "South pole, 3D" com a dica (resolução, controles, "os números não vêm desta vista", ponto de demonstração); rodapé só com os avisos (fontes foram para "Sobre"; a versão educacional fica no Roadmap).
+- **Singular e plural:** marcador `{n:plural:singular|plural}` no tradutor (1 → singular; 0 e demais → plural), com teste; aplicado a todas as contagens de dias.
+- **Ajustes visuais junto:** em "Data and limits", melhor caso por região, ligação com a Terra (só linha direta), atraso do sinal (~1,3 s) e notas (escolhas do time) viraram linhas da tabela; no 3D, rótulos "Sun"/"Earth" na ponta das setas e legenda reduzida ao Sol no local.
+- **Tabela completa e casos de dúvida:** `docs/REVISAO_DE_TEXTOS.md`. Os dez casos de dúvida ficam com o texto atual até decisão do time.
+- **Status:** aplicada (2026-11-14), branch `polish-visual-review`; dúvidas pendentes.
+
 ### Pendências abertas após a etapa 2
 - Nenhuma pendência de dados da etapa 2.
 

@@ -9,6 +9,7 @@
  */
 import { elevationRange, fitExaggeration, type AzEl } from '../calc/panorama';
 import { useI18n } from '../i18n/I18nProvider';
+import { InfoTip } from './InfoTip';
 import type { MessageKey } from '../i18n/messages';
 
 /** Drawing size (viewBox units); the SVG scales to its box. */
@@ -147,15 +148,15 @@ export function HorizonPanorama({ horizons, bodies, ariaLabel, range }: Props) {
       </svg>
       <figcaption className="pano-caption">
         <span className="pano-scale">{t('detail.vertical', { n: ex })}</span>
-        <span className="note">
-          {t('detail.astroHorizon')}
-          {bodies.some((b) => b.now) && ' · '}
-          {bodies.some((b) => b.now) &&
-            t('detail.realSize', {
+        <span className="note">{t('detail.astroHorizon')}</span>
+        {bodies.some((b) => b.now) && (
+          <InfoTip>
+            {t('detail.realSize', {
               s: bodies.find((b) => b.kind === 'sun')?.now?.diam ?? 0,
               e: bodies.find((b) => b.kind === 'earth')?.now?.diam ?? 0,
             })}
-        </span>
+          </InfoTip>
+        )}
       </figcaption>
     </figure>
   );
