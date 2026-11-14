@@ -8,8 +8,9 @@ extend-exclude = ["web", "data"]
 [tool.ruff.lint]
 # E/F: pycodestyle + pyflakes, I: import order, B: bugbear, UP: pyupgrade, D: docstrings
 select = ["E", "F", "I", "B", "UP", "D"]
-# Module headers follow our own template (docs/BOAS_PRATICAS.md), not pydocstyle's.
-ignore = ["D100", "D104"]
+# Module headers follow our own template (docs/BOAS_PRATICAS.md), not pydocstyle's
+# summary-line rules (D205, D212, D415).
+ignore = ["D100", "D104", "D205", "D212", "D415"]
 
 [tool.ruff.lint.pydocstyle]
 convention = "google"
@@ -19,3 +20,4 @@ convention = "google"
 
 [tool.pytest.ini_options]
 testpaths = ["pipeline/tests"]
+pythonpath = ["."]

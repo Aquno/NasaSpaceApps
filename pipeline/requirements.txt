@@ -1,13 +1,18 @@
 # Python dependencies for the data pipeline (Python 3.10+).
 # Rule: add a library only when it saves real work; note why here and cite it in docs/REFERENCIAS.md.
 
-# HTTP calls to the JPL Horizons API (stage 1)
+# HTTP calls to the JPL Horizons API (stage 1) and PGDA GeoTIFF header range requests
 requests
-# Numeric arrays for horizon and distance calculations (stages 2-3)
+# Numeric arrays: period checks (stage 1), horizon and distance calculations (stages 2-3)
 numpy
+# Use the operating system's certificate store for HTTPS. Needed on networks that inspect
+# TLS with a local root certificate (Python's bundled certificates reject it).
+# If pip itself fails with CERTIFICATE_VERIFY_FAILED: install truststore first, then
+# `pip install --use-feature=truststore -r pipeline/requirements.txt`.
+truststore
 
 # Dev tools: lint/format and automated tests
 ruff
 pytest
 
-# PENDING (stage 2): raster reader for LOLA products (e.g. rasterio) once the file format is confirmed.
+# PENDING (stage 2): raster reader for LOLA products (e.g. rasterio) once needed.
