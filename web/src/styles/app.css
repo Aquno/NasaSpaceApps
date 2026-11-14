@@ -1357,3 +1357,6 @@ svg text {
   padding-left: var(--s4);
   color: var(--muted);
 }
+.limits .facts {
+  grid-template-columns: 200px 1fr;
+}

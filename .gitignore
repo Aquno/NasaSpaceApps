@@ -32,6 +32,7 @@ data/validation/*
 !data/horizon/plots/
 !data/science/REPORT.md
 !data/validation/REPORT.md
+!data/validation/COMPARISON.md
 
 # Large binary / archive formats anywhere
 *.tif
