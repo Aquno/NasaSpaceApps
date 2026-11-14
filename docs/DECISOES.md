@@ -93,8 +93,14 @@ Formato: data, decisão, motivo, consequências. Decisões novas vão no fim. N�
 - **Centro publicado mantido** como sexto local, `shackleton-inner-wall`, "Shackleton inner wall (Site04 center)", tipo `published_point`, marcado `purpose = sensitivity_demo` (mostra a sensibilidade à posição).
 - **Outros quatro pontos verificados** (inclinação por diferenças centrais em um pixel de 20 m): Connecting ridge 0,7°, de Gerlache rim 1,3°, Malapert massif 4,3°, Haworth 4,5°. Nenhum alterado.
 
+### D21 — 2026-11-14 — Valor científico: distância à sombra permanente
+- **Decisão:** o valor científico de cada local é a distância (km) até a borda da PSR mais próxima com área ≥ 1 km², zero se dentro; com a área e a identificação (`gid`, `name`) dessa PSR.
+- **Fonte:** PGDA produto 90, `LPSR_80S_20MPP_ADJ_1km2` (vetorial já filtrado por área > 1 km²), preferido ao mapa raster.
+- **Escolhas do time, não critérios da NASA:** usar a proximidade de sombra permanente como indicador de interesse científico; o limite de 1 km².
+- **Distância:** arco de grande círculo na esfera de 1737,4 km até o ponto mais próximo da borda (buscado no plano estereográfico).
+
 ### Pendências abertas após a etapa 2
-- `PENDENTE:` (etapa 3) arquivo de sombra permanente do produto 90.
+- Nenhuma pendência de dados da etapa 2.
 
 ### Pendências abertas após a etapa 1 (histórico)
 Resolvidas na etapa 1: coordenadas (D12), referencial (D14), convenção de azimute (`DADOS.md`). Continua aberta para a etapa 2: formato e resolução do produto PGDA usado no horizonte (produto 90 ou 78) e a altura do observador a partir do DEM.

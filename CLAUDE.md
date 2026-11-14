@@ -64,7 +64,7 @@ Diagrama completo em `docs/ARQUITETURA.md`.
 | 0 | Base do repositório e documentação | raiz, `docs/` |
 | 1 | Efemérides (Horizons) — **concluída** | `pipeline/ephemeris/` |
 | 2 | Horizonte (LOLA) — **concluída** | `pipeline/horizon/` |
-| 3 | Valor científico (sombra permanente) | `pipeline/science/` |
+| 3 | Valor científico (sombra permanente) — **concluída** | `pipeline/science/` |
 | 4 | Exportação para a interface | `pipeline/export/` |
 | 5 | Interface | `web/` |
 | 6 | Validação contra iluminação média da NASA | `web/` (mesmo módulo de visibilidade) + `docs/` |

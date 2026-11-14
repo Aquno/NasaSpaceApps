@@ -81,6 +81,7 @@ python -m venv .venv
 pip install -r pipeline/requirements.txt
 python -m pipeline.ephemeris.run_ephemeris     # stage 1: Sun/Earth ephemerides from JPL Horizons
 python -m pipeline.horizon.run_horizon         # stage 2: 360-degree terrain horizon from LOLA (PGDA 90)
+python -m pipeline.science.run_science         # stage 3: distance to nearest permanently shadowed region
 python -m pipeline.sites.verify_site_points    # cross-check site coordinates against PGDA tiles
 ruff check . && pytest                          # lint and tests
 # later stages: TBD
@@ -101,6 +102,7 @@ cd web
 - **Date range:** January 1 to December 31, 2027 (UTC), one-hour steps. Launch-slip comparisons only work within this year.
 - **Observer height:** ephemerides use an observer at 0 km above the 1737.4 km reference sphere; the effect on Sun/Earth angles is negligible.
 - **Leap seconds:** for 2027 JPL Horizons holds the last known leap second constant (possible 1 s offset).
+- **Science indicator:** distance to the nearest permanently shadowed region of at least 1 km² (PGDA product 90). Using proximity to permanent shadow as a science indicator, and the 1 km² bound, are our team's choices, not NASA criteria.
 - **Sample data:** while the pipeline is incomplete, the interface may use sample files in the final format. These are always flagged as **sample** in the UI.
 - **No AI in the calculations:** all numbers come from NASA data or from fixed, verifiable code.
 

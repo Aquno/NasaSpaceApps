@@ -4,7 +4,7 @@
 
 Legenda de status: `a fazer` · `em andamento` · `concluído` · `plano B` · `cortado`. Nas listas, `[~]` = item dispensado.
 
-Última atualização: 2026-11-14 — etapa 2 aprovada; D20 (Shackleton rim na crista; seis locais).
+Última atualização: 2026-11-14 — etapa 3 concluída (D21).
 
 ## Pontos de controle
 
@@ -60,13 +60,15 @@ Legenda de status: `a fazer` · `em andamento` · `concluído` · `plano B` · `
 
 ### 3. Valor científico
 - Responsável:
-- Status: a fazer
-- O que é: distância de cada local até a sombra permanente mais próxima, a partir do mapa de sombra permanente do PGDA.
-- Pasta: `pipeline/science/`
+- Status: **concluído** (2026-11-14), branch `stage-3-science`
+- O que é: distância de cada local até a sombra permanente (≥ 1 km²) mais próxima, a partir do shapefile de PSRs do PGDA produto 90.
+- Pasta: `pipeline/science/` → `data/science/` (relatório versionado)
+- Como rodar: `python -m pipeline.science.run_science`
 - Critério de pronto:
-  - [ ] Produto de sombra permanente escolhido e registrado em `DADOS.md`
-  - [ ] `psr_distance_km` calculado para os cinco locais
-  - [ ] Método de distância documentado no cabeçalho do módulo
+  - [x] Produto de sombra permanente escolhido e registrado em `DADOS.md` (`LPSR_80S_20MPP_ADJ_1km2`)
+  - [x] `psr_distance_km` calculado para os seis locais, com área e identificação da PSR
+  - [x] Método de distância documentado no cabeçalho do módulo e em D21
+  - [x] Testes (dentro, fora, buraco, leitura de SHP/DBF sintéticos)
 
 ### 4. Exportação
 - Responsável:
@@ -126,3 +128,4 @@ Legenda de status: `a fazer` · `em andamento` · `concluído` · `plano B` · `
 | 2026-11-14 | 1 | Etapa aprovada; comparação com a interface web do Horizons dispensada; branch juntada à `main` |
 | 2026-11-14 | 2 | Horizonte dos cinco locais a partir do LDEM 20 m do PGDA 90 lido por partes; sanidade OK; Malapert com 13,9% das direções cortadas pela borda do DEM; ponto do Shackleton rim em encosta (pendência); decisões D16–D19 |
 | 2026-11-14 | 2 | Etapa aprovada; comparação com Quickmap/Moon Trek dispensada; D20: Shackleton rim em ponto derivado na crista, centro publicado mantido como `shackleton-inner-wall`; etapas 1 e 2 rodadas para os seis locais |
+| 2026-11-14 | 3 | Distância à PSR (≥ 1 km²) dos seis locais a partir do shapefile do PGDA 90; nenhum local dentro de PSR; D21 |

@@ -22,12 +22,14 @@ npm-debug.log*
 data/raw/*
 data/ephemeris/*
 data/horizon/*
+data/science/*
 !data/raw/.gitkeep
 !data/ephemeris/.gitkeep
 !data/ephemeris/REPORT.md
 !data/horizon/.gitkeep
 !data/horizon/REPORT.md
 !data/horizon/plots/
+!data/science/REPORT.md
 
 # Large binary / archive formats anywhere
 *.tif

@@ -9,7 +9,8 @@ Lista de fontes para a página de submissão. **Toda fonte externa usada no proj
 | 1 | JPL Horizons System | https://ssd.jpl.nasa.gov/horizons/ | Efemérides do Sol e da Terra | 2026-11-14 |
 | 2 | JPL Horizons API — documentação | https://ssd-api.jpl.nasa.gov/doc/horizons.html | Consulta automatizada (endpoint https://ssd.jpl.nasa.gov/api/horizons.api) | 2026-11-14 |
 | 2a | JPL Horizons — manual | https://ssd.jpl.nasa.gov/horizons/manual.html | Observador na superfície, referencial, convenções | 2026-11-14 |
-| 3 | NASA Goddard PGDA — produto 90 (relevo polar e sombra permanente do LOLA); arquivo `LDEM_80S_20MPP_ADJ.TIF` | https://pgda.gsfc.nasa.gov/products/90 · https://pgda.gsfc.nasa.gov/data/LOLA_20mpp/LDEM_80S_20MPP_ADJ.TIF | Horizonte (etapa 2); distância à sombra permanente (etapa 3) | 2026-11-14 |
+| 3 | NASA Goddard PGDA — produto 90 (relevo polar e sombra permanente do LOLA); arquivo `LDEM_80S_20MPP_ADJ.TIF` | https://pgda.gsfc.nasa.gov/products/90 · https://pgda.gsfc.nasa.gov/data/LOLA_20mpp/LDEM_80S_20MPP_ADJ.TIF | Horizonte (etapa 2) | 2026-11-14 |
+| 3a | NASA Goddard PGDA — produto 90, PSRs com área > 1 km² (`LPSR_80S_20MPP_ADJ_1km2` .SHP/.DBF/.PRJ) | https://pgda.gsfc.nasa.gov/data/LOLA_20mpp/LPSR_80S_20MPP_ADJ_1km2.SHP | Distância à sombra permanente (etapa 3) | 2026-11-14 |
 | 4 | NASA Goddard PGDA — produto 78 (recortes de 5 m do LOLA) e README | https://pgda.gsfc.nasa.gov/products/78 · https://pgda.gsfc.nasa.gov/data/LOLA_5mpp/README | Conferência das coordenadas; referencial; relevo de alta resolução (opcional) | 2026-11-14 |
 | 5 | NASA Goddard PGDA — produto 69 (iluminação média) | https://pgda.gsfc.nasa.gov/products/69 | Validação da iluminação calculada | |
 
@@ -43,6 +44,7 @@ Lista de fontes para a página de submissão. **Toda fonte externa usada no proj
 | 14 | OGC GeoTIFF Standard (OGC 19-008r4) | https://docs.ogc.org/is/19-008r4/19-008r4.html | Leitura do cabeçalho dos GeoTIFFs | — |
 | 15 | Mazarico, E. et al., "Illumination conditions of the lunar polar regions using LOLA topography", Icarus 211 (2011) 1066–1081 | https://doi.org/10.1016/j.icarus.2010.10.030 | Numeração dos locais (citada pelo PGDA 78) | — |
 | 16 | Barker, M. K. et al., "Improved LOLA Elevation Maps for South Pole Landing Sites", Planetary & Space Science 203 (2021) 105119 | https://doi.org/10.1016/j.pss.2020.105119 | Referência do PGDA produto 78 | — |
+| 18 | ESRI Shapefile Technical Description (1998) | — | Leitura do shapefile de PSRs | — |
 | 17 | Adobe Photoshop TIFF Technical Note 3 (preditor de ponto flutuante, `Predictor = 3`) | — | Decodificação dos blocos do COG | — |
 
 ## Bibliotecas de software

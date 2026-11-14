@@ -65,7 +65,7 @@ Observações: o README do produto 78 chama o Site11 de "de Gerlache rim"; a tab
 
 ## 2. Relevo e sombra permanente do LOLA (PGDA produto 90)
 
-- **Fornece:** modelo de elevação do polo sul (horizonte, etapa 2 — **em uso**) e mapa de sombra permanente (valor científico, etapa 3 — `PENDENTE:` escolher o arquivo).
+- **Fornece:** modelo de elevação do polo sul (horizonte, etapa 2) e regiões de sombra permanente (valor científico, etapa 3).
 - **Endereço:** https://pgda.gsfc.nasa.gov/products/90 ; arquivos em https://pgda.gsfc.nasa.gov/data/LOLA_20mpp/
 - **Arquivo usado no horizonte:** `LDEM_80S_20MPP_ADJ.TIF` — "LOLA Digital Elevation Model (LDEM) giving surface height (in meters)" (página do produto). 2.696.082.051 bytes no servidor; **lido por partes** (requisições HTTP com `Range`), ~41 MB lidos para os cinco locais, em cache em `data/raw/pgda90/`.
 - **Formato:** "All TIF files are cloud-optimized GeoTiffs (COGs) with south polar stereographic X/Y coordinates in meters and in the MOON_ME reference frame of the JPL DE421 ephemeris" (página). Lido do cabeçalho: BigTIFF, float32, DEFLATE com preditor de ponto flutuante, blocos de 512 × 512, valor ausente `nan`.
@@ -89,7 +89,8 @@ Observações: o README do produto 78 chama o Site11 de "de Gerlache rim"; a tab
   - Obstáculos menores que o pixel de cada faixa podem ser perdidos.
   - O DEM é um quadrado de ±304 km; além da borda, o horizonte é desconhecido. Com raio de 200 km, isso afeta só o Malapert massif (50 de 360 direções, cortadas entre 181 e 199 km).
 - **Pendências:**
-  - `PENDENTE:` (etapa 3) escolher o arquivo de sombra permanente e registrar nome, tamanho e formato.
+- **Sombra permanente (etapa 3):** `LPSR_80S_20MPP_ADJ_1km2.SHP/.DBF/.PRJ` — "Only PSRs with area > 1 km2 (N=1531)" (página). Shapefile de polígonos (20.743.300 bytes) com tabela DBF (369.101 bytes); campos `gid`, `area_km2` (km²) e `name`. Projeção no `.PRJ`: "Stereographic_South_Pole", esfera de 1.737.400 m, meridiano central 0. Os vértices seguem as bordas dos pixels de 20 m. Há também a versão com todas as PSRs (N = 506.349; não usada).
+  - **Limites:** a página não explica o formato do campo `name` (ex.: `HNP_542325_1281363`); usamos como identificador publicado, sem interpretar. O filtro do arquivo é "area > 1 km²"; o código reaplica "≥ 1 km²" (nenhuma diferença nos 1531 polígonos). A PSR é a da topografia LOLA de 20 m (sombra causada por relevo menor que o pixel não aparece).
 
 ## 3. Recortes de 5 m do LOLA (PGDA produto 78)
 
@@ -124,4 +125,5 @@ Observações: o README do produto 78 chama o Site11 de "de Gerlache rim"; a tab
 | 2026-11-14 | PGDA produto 78 | cabeçalhos (64 KB) de `Site01/04/11/23` e `Haworth` `_surf.tif` | 64 KB cada | `data/raw/pgda78/` | só georreferenciamento, conferência de coordenadas |
 | 2026-11-14 | JPL Horizons API | tabelas de observador Sol e Terra, 5 locais, 2027 | ~640 KB cada | `data/raw/horizons/` | etapa 1 |
 | 2026-11-14 | PGDA produto 90 | `LDEM_80S_20MPP_ADJ.TIF`: cabeçalho (1 MB) e blocos dos níveis 20, 80 e 320 m | ~41 MB no total | `data/raw/pgda90/` | etapa 2, leitura por faixa de bytes |
+| 2026-11-14 | PGDA produto 90 | `LPSR_80S_20MPP_ADJ_1km2` `.SHP`, `.DBF`, `.PRJ`, `.SHX` | 20,7 MB + 0,4 MB | `data/raw/pgda90/psr/` | etapa 3 |
 | 2026-11-14 | PGDA produto 78 | duas linhas do `_surf.tif` de cada recorte no local | 13–24 KB cada | `data/raw/pgda78/` | conferência das alturas |
