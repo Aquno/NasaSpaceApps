@@ -309,6 +309,15 @@ Formato: data, decisão, motivo, consequências. Decisões novas vão no fim. N�
   6. Ao fim de cada tarefa, dizer em uma linha: branch, último commit e se a `main` foi atualizada.
 - **Status:** em vigor (2026-11-14).
 
+### D49 — 2026-11-14 — Acabamentos da revisão visual
+
+- **Abertura:** o polo sul do globo fica voltado para o observador (câmera abaixo do equador, a cerca de 17° do eixo polar) e é marcado por um anel fino com brilho suave que pulsa devagar (estático com movimento reduzido). Números de destaque: luz do Sol média da NASA no ponto da borda do Shackleton e na parede interna (87% · 11%, a 2,8 km), dias de 2027 em que o melhor local do ano aceita pouso (Malapert massif, 229 de 352), dias sem nenhum local (71) e datas em que +21 dias troca um local por outro (110). Os antigos "5 pontos" e "8.760 horas" foram para "Data sources". O parágrafo do problema saiu da segunda seção e entrou em "What this tool covers".
+- **3D:** câmera padrão pelo lado de 90° O (os locais se espalham sobretudo no eixo polo–Terra, que assim ocupa a largura), mais próxima e mais inclinada: o relevo preenche a área com os cinco locais visíveis. As bordas do bloco de terreno esmaecem para o fundo (opacidade por vértice, `edgeFade`, com teste).
+- **Cartões:** o melhor compromisso, fechado, mostra nome, veredito, notas, motivo em uma linha e a linha de comunicação; data e hora do pouso, porcentagens, inclinação e "How the scores are built" só ao expandir (clique, Enter ou Espaço), como nos outros.
+- **Ligação mapa–cartões:** passar o mouse ou focar um cartão destaca o marcador no 3D; passar sobre um marcador destaca o cartão. O selecionado mantém o destaque.
+- **"Slip 21 days":** a direção do Sol e da Terra no 3D gira suavemente (0,9 s); os cartões se reordenam com animação de 0,6 s; o novo melhor compromisso entra com um realce breve. Tudo estático com movimento reduzido.
+- **Status:** aplicada (2026-11-14), branch `polish-visual-review`.
+
 ### Pendências abertas após a etapa 2
 - Nenhuma pendência de dados da etapa 2.
 

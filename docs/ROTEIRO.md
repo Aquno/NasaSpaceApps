@@ -153,3 +153,4 @@ Legenda de status: `a fazer` · `em andamento` · `concluído` · `plano B` · `
 | 2026-11-14 | 6 | D45: comparação com as médias da NASA (Sol −0,5 a +4,1 p.p.; Terra −3,6 a +3,6 p.p. nos cinco locais), no painel e em `data/validation/COMPARISON.md`; nada ajustado |
 | 2026-11-14 | 5 | D46: fluxo do GitHub Pages (lint, formatação, testes, build, publicação) a partir da `main`; conferido localmente com `/NasaSpaceApps/`; falta ativar Pages com origem "GitHub Actions" e juntar na `main` |
 | 2026-11-14 | — | D47: repositório privado; GitHub Pages só manual; fluxo de verificação (`ci.yml`) a cada push; build portátil documentado. D48: regra permanente de fluxo de git. Junção de `stage-5-interface` na `main` |
+| 2026-11-14 | 5 | D49: acabamentos da revisão visual (anel do polo no globo, números que contam a história, 3D preenchendo a área com bordas esmaecidas, cartão do melhor compromisso em camadas, ligação mapa–cartões, transição do "Slip 21 days"); capturas refeitas |

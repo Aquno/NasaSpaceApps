@@ -202,7 +202,7 @@ export function Intro({ ready }: Props) {
             <ul className="stats">
               {n.shackleton && (
                 <li>
-                  <span className="stat-value">
+                  <span className="stat-value pair">
                     {t('intro.statShackValue', {
                       a: n.shackleton.rimPct / PERCENT,
                       b: n.shackleton.wallPct / PERCENT,

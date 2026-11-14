@@ -36,6 +36,18 @@ const SHOTS: { name: string; route: string; js?: string }[] = [
   { name: 'opening-end', route: '/', js: 'window.scrollTo(0, document.body.scrollHeight)' },
   { name: 'mission', route: '/mission' },
   {
+    // After "Slip 21 days" (first button of the controls): new best compromise on top.
+    name: 'mission-slip',
+    route: '/mission',
+    js: `document.querySelector('.controls .linkbtn').click()`,
+  },
+  {
+    // Mouse over the second card: its 3D marker is highlighted (D49).
+    name: 'mission-linked',
+    route: '/mission',
+    js: `document.querySelectorAll('.cards .card')[1].dispatchEvent(new MouseEvent('mouseover', { bubbles: true }))`,
+  },
+  {
     name: 'small-move',
     route: '/mission',
     js: `(() => { const d = document.getElementById('small-move'); d.open = true; d.scrollIntoView(); })()`,

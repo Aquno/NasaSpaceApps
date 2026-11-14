@@ -54,12 +54,17 @@ const CAVITY_CONTRAST = 0.9;
 const EDGE_FADE_PX = 60;
 const LABEL_GAP_PX = 14;
 const GLOBE_PX = 116;
+/** Duration of the Sun/Earth direction change after a new date, ms. */
+const LIGHT_TRANSITION_MS = 900;
 
 interface Props {
   terrain: Terrain;
   sites: SiteSummary[];
   selectedId: string | null;
   bestId: string | null;
+  /** Site highlighted from a card or a marker (D49). */
+  hoveredId: string | null;
+  onHover: (id: string | null) => void;
   onSelect: (id: string) => void;
   sun: Vec3;
   earth: Vec3;
@@ -86,6 +91,8 @@ export function SouthPole3D(props: Props) {
     sites,
     selectedId,
     bestId,
+    hoveredId,
+    onHover,
     onSelect,
     sun,
     earth,
@@ -98,7 +105,6 @@ export function SouthPole3D(props: Props) {
   const labelRefs = useRef(new Map<string, HTMLButtonElement>());
   const dotRefs = useRef(new Map<string, HTMLSpanElement>());
   const lineRefs = useRef(new Map<string, SVGLineElement>());
-  const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [exaggeration, setExaggeration] = useState(DEFAULT_EXAGGERATION);
   const exagRef = useRef(exaggeration);
 
@@ -326,21 +332,42 @@ export function SouthPole3D(props: Props) {
     renderRef.current();
   }, [exaggeration, terrain]);
 
-  // Light and arrows: Sun/Earth directions, elevation tangent scaled like the heights.
+  // Light and arrows: Sun/Earth directions, elevation tangent scaled like the heights. A new date
+  // (e.g. "Slip 21 days") turns them smoothly from the previous directions (D49); instant with
+  // reduced motion.
+  const shownDirs = useRef<{ sun: THREE.Vector3; earth: THREE.Vector3 } | null>(null);
   useEffect(() => {
     const st = stage.current;
     if (!st) return;
-    const s = exaggerateDirection(sun, exaggeration);
-    const e = exaggerateDirection(earth, exaggeration);
-    st.light.position.set(
-      s[0] * LIGHT_DISTANCE_KM,
-      s[1] * LIGHT_DISTANCE_KM,
-      s[2] * LIGHT_DISTANCE_KM,
-    );
-    st.light.intensity = SUN_INTENSITY;
-    st.sunArrow.setDirection(new THREE.Vector3(...s));
-    st.earthArrow.setDirection(new THREE.Vector3(...e));
-    renderRef.current();
+    const toSun = new THREE.Vector3(...exaggerateDirection(sun, exaggeration));
+    const toEarth = new THREE.Vector3(...exaggerateDirection(earth, exaggeration));
+    const apply = (s: THREE.Vector3, e: THREE.Vector3) => {
+      st.light.position.copy(s).multiplyScalar(LIGHT_DISTANCE_KM);
+      st.light.intensity = SUN_INTENSITY;
+      st.sunArrow.setDirection(s);
+      st.earthArrow.setDirection(e);
+      shownDirs.current = { sun: s.clone(), earth: e.clone() };
+      renderRef.current();
+    };
+    const from = shownDirs.current;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!from || reduce) {
+      apply(toSun, toEarth);
+      return;
+    }
+    const start = performance.now();
+    let frame = 0;
+    const step = (now: number) => {
+      const k = Math.min(1, (now - start) / LIGHT_TRANSITION_MS);
+      const ease = k * k * (3 - 2 * k);
+      apply(
+        from.sun.clone().lerp(toSun, ease).normalize(),
+        from.earth.clone().lerp(toEarth, ease).normalize(),
+      );
+      if (k < 1) frame = requestAnimationFrame(step);
+    };
+    frame = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(frame);
   }, [sun, earth, exaggeration]);
 
   useEffect(() => {
@@ -413,10 +440,11 @@ export function SouthPole3D(props: Props) {
             s.purpose === 'sensitivity_demo' ? 'demo' : '',
             s.id === selectedId ? 'selected' : '',
             s.id === bestId ? 'best' : '',
+            s.id === hoveredId ? 'linked' : '',
           ].join(' ');
           const hover = {
-            onMouseEnter: () => setHoveredId(s.id),
-            onMouseLeave: () => setHoveredId(null),
+            onMouseEnter: () => onHover(s.id),
+            onMouseLeave: () => onHover(null),
           };
           return (
             <span key={s.id}>
@@ -438,8 +466,8 @@ export function SouthPole3D(props: Props) {
                 }}
                 className={`scene3d-label ${cls}${expanded(s.id) ? '' : ' collapsed'}`}
                 onClick={() => onSelect(s.id)}
-                onFocus={() => setHoveredId(s.id)}
-                onBlur={() => setHoveredId(null)}
+                onFocus={() => onHover(s.id)}
+                onBlur={() => onHover(null)}
                 aria-pressed={s.id === selectedId}
                 {...hover}
               >

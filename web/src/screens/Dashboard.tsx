@@ -42,6 +42,7 @@ export function Dashboard({ sites, data, terrain, inputs, onInputs, onOpenSite }
   const d = useEvaluations(pre, data, inputs);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [view3d, setView3d] = useState(true);
+  const [hoveredId, setHoveredId] = useState<string | null>(null);
   const focusId = selectedId ?? d.now.bestId;
   const lightSite = sites.find((s) => s.id === focusId) ?? d.ranked[0] ?? sites[0];
   const lightData = lightSite ? data.get(lightSite.id) : undefined;
@@ -105,6 +106,8 @@ export function Dashboard({ sites, data, terrain, inputs, onInputs, onOpenSite }
                   sites={sites}
                   selectedId={selectedId}
                   bestId={d.now.bestId}
+                  hoveredId={hoveredId}
+                  onHover={setHoveredId}
                   onSelect={setSelectedId}
                   sun={lightDirs.sun}
                   earth={lightDirs.earth}
@@ -155,12 +158,17 @@ export function Dashboard({ sites, data, terrain, inputs, onInputs, onOpenSite }
                 return (
                   <li key={id} ref={flipRef(id)}>
                     <SiteCard
+                      // Remounts when the card becomes (or stops being) the best compromise, so
+                      // its entrance highlight plays after a slip (D49).
+                      key={id === d.now.bestId ? 'best' : 'other'}
                       site={site}
                       evaluation={d.now.sites.find((e) => e.siteId === id)}
                       next={d.next.has(id) ? (d.next.get(id) ?? null) : undefined}
                       rank={k + 1}
                       best={id === d.now.bestId}
-                      expanded={id === focusId}
+                      expanded={id === selectedId}
+                      linked={id === hoveredId}
+                      onHover={(on) => setHoveredId(on ? id : null)}
                       onSelect={() => setSelectedId(id)}
                       onOpen={() => onOpenSite(id)}
                     />

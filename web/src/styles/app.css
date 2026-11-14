@@ -1360,3 +1360,64 @@ svg text {
 .limits .facts {
   grid-template-columns: 200px 1fr;
 }
+
+/* ---- map <-> card link and slip feedback (D49) ---- */
+.dash .card.glass.linked {
+  background: var(--card-glass-2);
+  box-shadow:
+    inset 0 0 0 1px rgb(233 237 242 / 0.45),
+    var(--glass-shadow);
+}
+.dash .card.glass.best {
+  box-shadow:
+    inset 3px 0 0 var(--text),
+    var(--glass-shadow);
+  animation: best-in 1.2s ease-out;
+}
+.dash .card.glass.best.linked {
+  box-shadow:
+    inset 3px 0 0 var(--text),
+    inset 0 0 0 1px rgb(233 237 242 / 0.45),
+    var(--glass-shadow);
+}
+@keyframes best-in {
+  0% {
+    background: rgb(233 237 242 / 0.16);
+  }
+  100% {
+    background: var(--card-glass);
+  }
+}
+.scene3d-dot,
+.scene3d-label {
+  transition:
+    width var(--ease),
+    height var(--ease),
+    margin var(--ease),
+    background var(--ease),
+    box-shadow var(--ease);
+}
+.scene3d-dot.linked {
+  width: 18px;
+  height: 18px;
+  margin: -9px 0 0 -9px;
+  box-shadow:
+    0 0 0 2px var(--bg),
+    0 0 0 5px rgb(233 237 242 / 0.6);
+}
+.scene3d-label.linked {
+  background: var(--text);
+  color: var(--bg);
+}
+.scene3d-label.linked.selected {
+  color: var(--bg);
+  background: var(--sun);
+}
+.card .link {
+  font-size: 0.88rem;
+}
+/* Two values in one indicator (Shackleton rim · inner wall): one line, slightly smaller. */
+.stat-value.pair {
+  white-space: nowrap;
+  font-size: clamp(1.9rem, 2.6vw, 2.8rem);
+}
