@@ -121,7 +121,12 @@ Formato: data, decisão, motivo, consequências. Decisões novas vão no fim. N�
 ### D25 — 2026-11-14 — Notas, veredito e melhor compromisso (escolhas do time)
 - **Nota de engenharia (0–100):** 35% fração da missão com Sol + 25% luz contínua a partir do pouso (fração da missão) + 25% fração com a Terra visível + 15% (1 − maior intervalo sem contato / duração).
 - **Nota de ciência (0–100):** 100 com a sombra permanente (≥ 1 km²) a até 1 km; cai linearmente até 0 a 15 km.
-- **Veredito:** *not viable* se houver menos de 24 h de Sol contínuo a partir do pouso, ou nota de engenharia < 35; *viable* se engenharia ≥ 60 e ciência ≥ 40; senão *marginal*. Sempre com um motivo em uma frase.
+- **Veredito (revisado em 2026-11-14, substitui a regra das 24 h de Sol contínuo após o pouso):** regras em `web/src/config/scoring.ts` (`DEFAULT_RULES`), ajustáveis na tela no bloco "Mission rules":
+  - *not viable* se: o Sol não está visível no pouso; **ou** a maior escuridão contínua da missão é ≥ 24 h (limite de sobrevivência); **ou** a fração de horas com Sol é < 50%;
+  - *marginal* se: Sol entre 50% e 70% da missão; **ou** nota de engenharia < 60 (a comunicação entra pela nota); **ou** nota de ciência < 40;
+  - *viable* caso contrário.
+  - O motivo cita a regra que decidiu e o valor medido (ex.: "Longest darkness 37 h exceeds the 24 h survival limit.").
+  - Efeito (missão de 14 dias, pouso 00:00 UTC, 352 dias com dados completos; `npm run report:census`): Shackleton rim 193 viáveis / 15 marginais / 144 inviáveis; de Gerlache rim 63 / 0 / 289; Connecting ridge 7 / 0 / 345; Malapert e Haworth 0 / 0 / 352. O Shackleton rim é o melhor compromisso em todos os 208 dias em que algum local se qualifica; nos outros 144, nenhum se qualifica. Com +21 dias, nenhuma data troca o melhor compromisso de um local para outro (`npm run report:delay`).
 - **Melhor compromisso:** entre os locais que não são *not viable*, o de maior `min(engenharia, ciência)` (o lado mais fraco decide); empate pela maior soma.
 - **Missões fora do intervalo de dados** (2027) não são calculadas; a interface avisa.
 - Pesos, limites, a altura de 2 m do observador e a sombra permanente como indicador científico são **escolhas do time, não requisitos da NASA**; ficam em `web/src/config/scoring.ts` e a tela mostra como cada nota é formada.

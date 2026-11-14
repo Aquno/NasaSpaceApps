@@ -102,6 +102,8 @@ export interface MissionMetrics {
   hoursToNextEarthSet: number | null;
   sunVisibleAtLanding: boolean;
   earthVisibleAtLanding: boolean;
+  /** Longest continuous period without any part of the Sun visible during the mission, hours. */
+  longestDarkHours: number;
 }
 
 /** Metrics of a mission window. Hours assume the data step (60 min). */
@@ -138,5 +140,6 @@ export function missionMetrics(
     hoursToNextEarthSet: toHours(recordsToNextSet(vis.earthAny, start)),
     sunVisibleAtLanding: vis.sunAny[start] === 1,
     earthVisibleAtLanding: vis.earthAny[start] === 1,
+    longestDarkHours: longestOffRun(vis.sunAny, start, length) * hoursPerRecord,
   };
 }

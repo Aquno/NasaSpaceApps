@@ -16,7 +16,9 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "test": "vitest run",
-    "report:scores": "tsx scripts/score-table.ts"
+    "report:scores": "tsx scripts/score-table.ts",
+    "report:census": "tsx scripts/day-census.ts",
+    "report:delay": "tsx scripts/delay-scenarios.ts"
   },
   "dependencies": {
     "react": "^19.3.1",

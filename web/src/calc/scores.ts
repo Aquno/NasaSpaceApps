@@ -9,8 +9,9 @@
 import {
   ENGINEERING_WEIGHTS,
   SCIENCE_FULL_SCORE_KM,
+  DEFAULT_RULES,
   SCIENCE_ZERO_SCORE_KM,
-  VERDICT,
+  type MissionRules,
 } from '../config/scoring';
 import type { MissionMetrics } from './metrics';
 
@@ -79,44 +80,79 @@ export interface Verdict {
 const pct = (x: number) => `${Math.round(x * 100)}%`;
 const hours = (h: number) => (h >= 48 ? `${Math.round(h / 24)} days` : `${Math.round(h)} h`);
 
-/** Verdict with a one-sentence reason (thresholds: VERDICT). */
+/** Which rule decided the verdict (for the interface to highlight it). */
+export type RuleKey =
+  | 'sunAtLanding'
+  | 'survivalDarkness'
+  | 'minSunFraction'
+  | 'marginalSunFraction'
+  | 'engineering'
+  | 'science'
+  | 'allPassed';
+
+/**
+ * Verdict with a one-sentence reason that cites the deciding rule and the measured value
+ * (rules: config/scoring.ts MissionRules, team choices, D25).
+ * Hard rules (any fails -> not viable): Sun visible at landing; longest darkness below the
+ * survival limit; sunlit fraction at least the minimum. Then: sunlit fraction below the
+ * marginal threshold, engineering (which includes Earth contact) or science below the viable
+ * minimum -> marginal; otherwise viable.
+ */
 export function verdict(
   m: MissionMetrics,
   eng: Score,
   sci: Score | null,
   psrDistanceKm: number | null,
-): Verdict {
-  if (m.sunHoursFromLanding < VERDICT.minSunlightAtLandingHours) {
+  rules: MissionRules = DEFAULT_RULES,
+): Verdict & { rule: RuleKey } {
+  if (rules.requireSunAtLanding && !m.sunVisibleAtLanding) {
     return {
       kind: 'not-viable',
-      reason: m.sunVisibleAtLanding
-        ? `The Sun sets ${hours(m.sunHoursFromLanding)} after landing.`
-        : 'Dark at landing: the Sun is behind the terrain.',
+      rule: 'sunAtLanding',
+      reason: 'Dark at landing: the Sun is behind the terrain (rule: Sun visible at landing).',
     };
   }
-  if (eng.total < VERDICT.notViableBelowEngineering) {
+  if (m.longestDarkHours >= rules.survivalDarknessHours) {
     return {
       kind: 'not-viable',
-      reason: `Too little power and contact: ${pct(m.sunFraction)} sunlit, Earth in view ${pct(m.earthFraction)}.`,
+      rule: 'survivalDarkness',
+      reason: `Longest darkness ${hours(m.longestDarkHours)} exceeds the ${hours(rules.survivalDarknessHours)} survival limit.`,
+    };
+  }
+  if (m.sunFraction < rules.minSunFraction) {
+    return {
+      kind: 'not-viable',
+      rule: 'minSunFraction',
+      reason: `Only ${pct(m.sunFraction)} of the mission in sunlight (minimum ${pct(rules.minSunFraction)}).`,
     };
   }
   const science = sci?.total ?? 0;
   const distance = psrDistanceKm === null ? 'unknown' : `${psrDistanceKm.toFixed(1)} km`;
-  if (eng.total >= VERDICT.viableMinEngineering && science >= VERDICT.viableMinScience) {
-    return {
-      kind: 'viable',
-      reason: `${pct(m.sunFraction)} sunlit, Earth in view ${pct(m.earthFraction)}, permanent shadow ${distance} away.`,
-    };
-  }
-  if (eng.total >= VERDICT.viableMinEngineering) {
+  if (m.sunFraction < rules.marginalBelowSunFraction) {
     return {
       kind: 'marginal',
-      reason: `Good power and contact, but permanent shadow is ${distance} away.`,
+      rule: 'marginalSunFraction',
+      reason: `${pct(m.sunFraction)} of the mission in sunlight, below the ${pct(rules.marginalBelowSunFraction)} comfort level.`,
+    };
+  }
+  if (eng.total < rules.viableMinEngineering) {
+    return {
+      kind: 'marginal',
+      rule: 'engineering',
+      reason: `Engineering score ${eng.total.toFixed(1)} below ${rules.viableMinEngineering}: Earth in view ${pct(m.earthFraction)}, longest contact gap ${hours(m.longestNoContactHours)}.`,
+    };
+  }
+  if (science < rules.viableMinScience) {
+    return {
+      kind: 'marginal',
+      rule: 'science',
+      reason: `Good power and contact, but permanent shadow is ${distance} away (science ${science.toFixed(1)} < ${rules.viableMinScience}).`,
     };
   }
   return {
-    kind: 'marginal',
-    reason: `Weak engineering: ${pct(m.sunFraction)} sunlit, longest contact gap ${hours(m.longestNoContactHours)}.`,
+    kind: 'viable',
+    rule: 'allPassed',
+    reason: `${pct(m.sunFraction)} sunlit, Earth in view ${pct(m.earthFraction)}, permanent shadow ${distance} away.`,
   };
 }
 

@@ -3,7 +3,8 @@
  * Roadmap stage: 5 — Interface (see docs/ROTEIRO.md); decision docs/DECISOES.md D25.
  * Inputs/outputs: constants only.
  * NASA data source: none. EVERY value here is a TEAM CHOICE for this demo, not a NASA
- *   requirement or criterion. The interface shows how each score is built from them.
+ *   requirement or criterion. The interface shows how each score is built from them, and the
+ *   mission rules can be changed on screen ("Mission rules").
  */
 
 /** Engineering score weights (sum = 1). Each term is a fraction in [0, 1] of the mission. */
@@ -26,16 +27,29 @@ export const ENGINEERING_WEIGHTS = {
 export const SCIENCE_FULL_SCORE_KM = 1;
 export const SCIENCE_ZERO_SCORE_KM = 15;
 
-/** Verdict thresholds (scores 0-100; hours). */
-export const VERDICT = {
-  /** Below this many hours of continuous sunlight right after landing: not viable. */
-  minSunlightAtLandingHours: 24,
-  /** Engineering score below this: not viable. */
-  notViableBelowEngineering: 35,
-  /** Both scores at or above these: viable. Anything in between: marginal. */
+/** Mission rules behind the verdict (adjustable on screen). Fractions in [0, 1], hours. */
+export interface MissionRules {
+  /** Hard rule: some part of the Sun must be visible at landing. */
+  requireSunAtLanding: boolean;
+  /** Hard rule: longest continuous darkness during the mission must be below this (h). */
+  survivalDarknessHours: number;
+  /** Hard rule: sunlit fraction of the mission must be at least this. */
+  minSunFraction: number;
+  /** Below this sunlit fraction (but above the minimum) the verdict is at best marginal. */
+  marginalBelowSunFraction: number;
+  /** Viable needs both scores at or above these (communication enters via engineering). */
+  viableMinEngineering: number;
+  viableMinScience: number;
+}
+
+export const DEFAULT_RULES: MissionRules = {
+  requireSunAtLanding: true,
+  survivalDarknessHours: 24,
+  minSunFraction: 0.5,
+  marginalBelowSunFraction: 0.7,
   viableMinEngineering: 60,
   viableMinScience: 40,
-} as const;
+};
 
 /** Mission duration choices offered in the interface (hours). Default: 14 days. */
 export const MISSION_DURATION_OPTIONS_H = [72, 168, 336, 504, 672] as const;
@@ -44,3 +58,5 @@ export const DEFAULT_MISSION_DURATION_H = 336;
 /** Default planned landing date (UTC) and delay range offered in the interface (days). */
 export const DEFAULT_LANDING_ISO = '2027-03-01T00:00:00Z';
 export const MAX_DELAY_DAYS = 60;
+/** Delay used in the pitch question ("Your launch just slipped three weeks"). */
+export const PITCH_DELAY_DAYS = 21;

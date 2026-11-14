@@ -7,6 +7,7 @@
  * Outputs: Evaluation per site (or the reason it cannot be computed) and the ranking.
  * NASA data source: Horizons ephemerides, LOLA horizon and PSRs via data/app.
  */
+import { DEFAULT_RULES, type MissionRules } from '../config/scoring';
 import type { SiteData, SiteSummary } from '../data/contract';
 import { missionMetrics, missionWindow, type MissionMetrics, type WindowResult } from './metrics';
 import {
@@ -15,6 +16,7 @@ import {
   rankCandidates,
   scienceScore,
   verdict,
+  type RuleKey,
   type Score,
   type Verdict,
 } from './scores';
@@ -27,7 +29,7 @@ export type SiteEvaluation =
       metrics: MissionMetrics;
       engineering: Score;
       science: Score | null;
-      verdict: Verdict;
+      verdict: Verdict & { rule: RuleKey };
     }
   | { ok: false; siteId: string; window: Extract<WindowResult, { ok: false }> };
 
@@ -43,6 +45,7 @@ export function evaluateSite(
   vis: VisibilitySeries,
   landingMs: number,
   durationHours: number,
+  rules: MissionRules = DEFAULT_RULES,
 ): SiteEvaluation {
   const w = missionWindow(data.meta, landingMs, durationHours);
   if (!w.ok) return { ok: false, siteId: site.id, window: w };
@@ -55,7 +58,7 @@ export function evaluateSite(
     metrics,
     engineering,
     science,
-    verdict: verdict(metrics, engineering, science, site.psrDistanceKm),
+    verdict: verdict(metrics, engineering, science, site.psrDistanceKm, rules),
   };
 }
 
@@ -66,12 +69,13 @@ export function evaluateSites(
   vis: Map<string, VisibilitySeries>,
   landingMs: number,
   durationHours: number,
+  rules: MissionRules = DEFAULT_RULES,
 ): Evaluation {
   const evaluations: SiteEvaluation[] = [];
   for (const s of sites) {
     const d = data.get(s.id);
     const v = vis.get(s.id);
-    if (d && v) evaluations.push(evaluateSite(s, d, v, landingMs, durationHours));
+    if (d && v) evaluations.push(evaluateSite(s, d, v, landingMs, durationHours, rules));
   }
   const candidates = evaluations.flatMap((e) =>
     e.ok

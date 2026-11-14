@@ -9,6 +9,7 @@ import {
   recordsToNextSet,
   runFrom,
 } from './metrics';
+import { DEFAULT_RULES } from '../config/scoring';
 import { bestCompromise, engineeringScore, scienceScore, verdict } from './scores';
 import {
   azimuthBin,
@@ -138,6 +139,7 @@ describe('scores', () => {
     hoursToNextEarthSet: 10,
     sunVisibleAtLanding: true,
     earthVisibleAtLanding: true,
+    longestDarkHours: 10,
   };
   it('engineering = weighted sum', () => {
     const s = engineeringScore(base);
@@ -156,14 +158,48 @@ describe('scores', () => {
     expect(scienceScore(20)?.total).toBeCloseTo(0);
     expect(scienceScore(null)).toBeNull();
   });
-  it('verdicts', () => {
-    const eng = engineeringScore(base);
-    expect(verdict(base, eng, scienceScore(2), 2).kind).toBe('viable');
-    expect(verdict(base, eng, scienceScore(14), 14).kind).toBe('marginal');
-    const dark = { ...base, sunHoursFromLanding: 0, sunVisibleAtLanding: false };
-    const v = verdict(dark, engineeringScore(dark), scienceScore(2), 2);
-    expect(v.kind).toBe('not-viable');
+  const check = (m: typeof base, km = 2, rules = DEFAULT_RULES) =>
+    verdict(m, engineeringScore(m), scienceScore(km), km, rules);
+
+  it('viable when every rule passes', () => {
+    expect(check(base)).toMatchObject({ kind: 'viable', rule: 'allPassed' });
+  });
+  it('hard rule: Sun visible at landing', () => {
+    const v = check({ ...base, sunVisibleAtLanding: false, sunHoursFromLanding: 0 });
+    expect(v).toMatchObject({ kind: 'not-viable', rule: 'sunAtLanding' });
     expect(v.reason).toContain('Dark at landing');
+  });
+  it('a short sunset does not make a well-lit site not viable (old 24 h rule removed)', () => {
+    // 95% sunlit, Sun sets 16 h after landing for 5 h: below the 24 h survival limit.
+    const v = check({ ...base, sunFraction: 0.95, sunHoursFromLanding: 16, longestDarkHours: 5 });
+    expect(v.kind).not.toBe('not-viable');
+  });
+  it('hard rule: survival darkness, reason cites rule and measured value', () => {
+    const v = check({ ...base, longestDarkHours: 30 });
+    expect(v).toMatchObject({ kind: 'not-viable', rule: 'survivalDarkness' });
+    expect(v.reason).toBe('Longest darkness 30 h exceeds the 24 h survival limit.');
+  });
+  it('hard rule: minimum sunlit fraction', () => {
+    const v = check({ ...base, sunFraction: 0.4 });
+    expect(v).toMatchObject({ kind: 'not-viable', rule: 'minSunFraction' });
+    expect(v.reason).toContain('Only 40%');
+  });
+  it('marginal: sunlight between minimum and comfort level', () => {
+    expect(check({ ...base, sunFraction: 0.6 })).toMatchObject({
+      kind: 'marginal',
+      rule: 'marginalSunFraction',
+    });
+  });
+  it('marginal: weak Earth contact lowers engineering', () => {
+    const weak = { ...base, earthFraction: 0.05, longestNoContactHours: 90 };
+    expect(check(weak)).toMatchObject({ kind: 'marginal', rule: 'engineering' });
+  });
+  it('marginal: far from permanent shadow', () => {
+    expect(check(base, 14)).toMatchObject({ kind: 'marginal', rule: 'science' });
+  });
+  it('rules are adjustable', () => {
+    const lenient = { ...DEFAULT_RULES, survivalDarknessHours: 48 };
+    expect(check({ ...base, longestDarkHours: 30 }, 2, lenient).kind).toBe('viable');
   });
   it('best compromise = highest min(eng, sci), ignoring not-viable', () => {
     expect(
