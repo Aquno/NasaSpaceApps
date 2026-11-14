@@ -62,7 +62,7 @@ Diagrama completo em `docs/ARQUITETURA.md`.
 | # | Etapa | Pasta |
 |---|-------|-------|
 | 0 | Base do repositório e documentação | raiz, `docs/` |
-| 1 | Efemérides (Horizons) | `pipeline/ephemeris/` |
+| 1 | Efemérides (Horizons) — **concluída** | `pipeline/ephemeris/` |
 | 2 | Horizonte (LOLA) | `pipeline/horizon/` |
 | 3 | Valor científico (sombra permanente) | `pipeline/science/` |
 | 4 | Exportação para a interface | `pipeline/export/` |
@@ -76,7 +76,9 @@ Status e critérios de pronto: `docs/ROTEIRO.md`.
 
 ```
 docs/        documentação do time (português)
-pipeline/    scripts Python, uma pasta por etapa 1–4
+pipeline/    scripts Python, uma pasta por etapa 1–4 (rodar como módulos: python -m pipeline....)
+pipeline/sites.json  lista de locais com coordenadas e fontes (D12)
+pipeline/config.py   constantes nomeadas com origem citada
 data/raw/        downloads brutos (fora do git)
 data/ephemeris/  saída da etapa 1 (fora do git, regenerável)
 data/horizon/    saída da etapa 2 (fora do git, regenerável)

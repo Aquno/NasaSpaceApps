@@ -6,10 +6,11 @@ Lista de fontes para a página de submissão. **Toda fonte externa usada no proj
 
 | # | Fonte | Endereço | Uso | Acesso |
 |---|-------|----------|-----|--------|
-| 1 | JPL Horizons System | https://ssd.jpl.nasa.gov/horizons/ | Efemérides do Sol e da Terra | |
-| 2 | JPL Horizons API — documentação | https://ssd-api.jpl.nasa.gov/doc/horizons.html | Consulta automatizada | |
+| 1 | JPL Horizons System | https://ssd.jpl.nasa.gov/horizons/ | Efemérides do Sol e da Terra | 2026-11-14 |
+| 2 | JPL Horizons API — documentação | https://ssd-api.jpl.nasa.gov/doc/horizons.html | Consulta automatizada (endpoint https://ssd.jpl.nasa.gov/api/horizons.api) | 2026-11-14 |
+| 2a | JPL Horizons — manual | https://ssd.jpl.nasa.gov/horizons/manual.html | Observador na superfície, referencial, convenções | 2026-11-14 |
 | 3 | NASA Goddard PGDA — produto 90 (relevo polar e sombra permanente do LOLA) | https://pgda.gsfc.nasa.gov/products/90 | Horizonte; distância à sombra permanente | |
-| 4 | NASA Goddard PGDA — produto 78 (recortes de 5 m do LOLA) | https://pgda.gsfc.nasa.gov/products/78 | Relevo de alta resolução (opcional) | |
+| 4 | NASA Goddard PGDA — produto 78 (recortes de 5 m do LOLA) e README | https://pgda.gsfc.nasa.gov/products/78 · https://pgda.gsfc.nasa.gov/data/LOLA_5mpp/README | Conferência das coordenadas; referencial; relevo de alta resolução (opcional) | 2026-11-14 |
 | 5 | NASA Goddard PGDA — produto 69 (iluminação média) | https://pgda.gsfc.nasa.gov/products/69 | Validação da iluminação calculada | |
 
 ## Ferramentas de apoio
@@ -27,11 +28,25 @@ Lista de fontes para a página de submissão. **Toda fonte externa usada no proj
 
 ## Coordenadas dos locais
 
-`PENDENTE:` cada coordenada usada deve ter sua fonte listada aqui (ver `DADOS.md`).
+| # | Fonte | Endereço | Uso | Acesso |
+|---|-------|----------|-----|--------|
+| 9 | NASA M2M-30044 Moon to Mars Lunar Surface Data Book, Baseline, 2025-03-18 (NASA/TP-20250002845), Tabela A2.1-1, p. 75 | https://ntrs.nasa.gov/api/citations/20250002845/downloads/M2M-30044%20Lunar%20Surface%20Data%20Book%20Baseline_Final.pdf | Coordenadas de Shackleton rim, de Gerlache rim, Malapert massif, Haworth | 2026-11-14 |
+| 10 | NASA ACD-50044 Lunar Surface Data Book, Initial Release, 2022-10-06, p. 26 (figura) e p. 32 (seção 7.3.3) | https://ntrs.nasa.gov/api/citations/20220015275/downloads/ACD-50044%20Lunar%20Surface%20Data%20Book_100622.pdf | Ponto CR1 do Connecting ridge | 2026-11-14 |
+| 11 | NASA ACD-50044 Lunar Surface Data Book, Rev A, 2023 (mesma tabela, p. 57) | https://ntrs.nasa.gov/api/citations/20230007818/downloads/ACD-50044%20Lunar%20Surface%20Data%20Book%20Rev%20A.pdf | Conferência | 2026-11-14 |
+
+## Outras fontes de referência
+
+| # | Fonte | Endereço | Uso | Acesso |
+|---|-------|----------|-----|--------|
+| 12 | NASA NSSDCA — Moon Fact Sheet | https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html | Período sinódico (29,53 d) nas verificações | 2026-11-14 |
+| 13 | Snyder, J. P., *Map Projections — A Working Manual*, USGS Professional Paper 1395, 1987 | https://doi.org/10.3133/pp1395 | Fórmulas da estereográfica polar | — |
+| 14 | OGC GeoTIFF Standard (OGC 19-008r4) | https://docs.ogc.org/is/19-008r4/19-008r4.html | Leitura do cabeçalho dos GeoTIFFs | — |
+| 15 | Mazarico, E. et al., "Illumination conditions of the lunar polar regions using LOLA topography", Icarus 211 (2011) 1066–1081 | https://doi.org/10.1016/j.icarus.2010.10.030 | Numeração dos locais (citada pelo PGDA 78) | — |
+| 16 | Barker, M. K. et al., "Improved LOLA Elevation Maps for South Pole Landing Sites", Planetary & Space Science 203 (2021) 105119 | https://doi.org/10.1016/j.pss.2020.105119 | Referência do PGDA produto 78 | — |
 
 ## Bibliotecas de software
 
-`PENDENTE:` listar ao adicionar (Python: `pipeline/requirements.txt`; web: `web/package.json`).
+Python (`pipeline/requirements.txt`): requests (HTTP), numpy (cálculo numérico), truststore (certificados do sistema operacional), ruff (lint), pytest (testes). Web: `PENDENTE:` (etapa 5).
 
 ## Artigos
 

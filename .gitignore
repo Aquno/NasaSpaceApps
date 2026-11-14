@@ -24,6 +24,7 @@ data/ephemeris/*
 data/horizon/*
 !data/raw/.gitkeep
 !data/ephemeris/.gitkeep
+!data/ephemeris/REPORT.md
 !data/horizon/.gitkeep
 
 # Large binary / archive formats anywhere

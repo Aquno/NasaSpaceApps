@@ -11,12 +11,12 @@ Qualquer mudança neste contrato precisa ser registrada em `DECISOES.md` e refle
 | Item | Convenção |
 |------|-----------|
 | Ângulos | graus decimais |
-| Azimute | `[0, 360)`. Origem e sentido: **iguais aos do JPL Horizons** — `PENDENTE:` confirmar e escrever aqui |
+| Azimute | `[0, 360)`, a partir do **norte**, crescendo no sentido **horário** (N=0, L=90, S=180, O=270) — convenção do JPL Horizons, confirmada na etapa 1 |
 | Elevação | `[-90, 90]`, graus acima do horizonte ideal (negativo = abaixo) |
 | Distâncias | km |
 | Tempo | UTC, ISO 8601 com `Z` (ex.: `2027-01-01T00:00:00Z`) |
 | Intervalo | `2027-01-01T00:00:00Z` a `2027-12-31T23:00:00Z`, passo de 60 min, 8.760 registros (D8) |
-| Coordenadas | latitude/longitude em graus, referencial `PENDENTE:` (MOON_ME esperado) |
+| Coordenadas | latitude/longitude em graus, referencial MOON_ME (mean Earth/polar axis do DE421, D14) |
 | Valor ausente | `null` (nunca `0` ou `-1` para "sem dado") |
 
 ## Arquivos
@@ -43,7 +43,7 @@ Lista de locais. Um objeto por local.
 | `id` | string | — | identificador em kebab-case, igual ao nome do arquivo em `sites/` |
 | `name` | string | — | nome para exibição |
 | `lat` | number | graus | latitude (referencial: ver convenções) |
-| `lon` | number | graus | longitude (referencial: ver convenções; `PENDENTE:` definir 0–360 ou −180–180) |
+| `lon` | number | graus | longitude leste, intervalo [-180, 180) (D12) |
 | `description` | string | — | uma ou duas frases sobre o local, em inglês |
 | `psr_distance_km` | number \| null | km | distância até a sombra permanente mais próxima (etapa 3) |
 | `nasa_avg_illumination_pct` | number \| null | % | iluminação média oficial (PGDA produto 69), para comparação/validação |

@@ -57,7 +57,17 @@ Full list: [`docs/REFERENCIAS.md`](docs/REFERENCIAS.md).
 
 Shackleton rim · Connecting ridge · de Gerlache rim · Malapert massif · Haworth
 
-> **[PLACEHOLDER — coordinates and sources will be listed here once confirmed]**
+These are **regional reference points**, not NASA-designated landing sites. Latitude/longitude in degrees, lunar mean-Earth frame (MOON_ME, DE421), east-positive longitude.
+
+| Site | Lat | Lon | Source |
+|---|---|---|---|
+| Shackleton rim | -89.7668 | -171.87 | NASA M2M-30044 Lunar Surface Data Book (2025), Table A2.1-1 (region centre) |
+| Connecting ridge | -89.468 | -137.4 (222.6° E) | NASA ACD-50044 Lunar Surface Data Book (2022), point CR1 |
+| de Gerlache rim | -88.6834 | -67.9321 | NASA M2M-30044 (2025), Table A2.1-1 ("de Gerlache Rim 1") |
+| Malapert massif | -85.9948 | -0.23578 | NASA M2M-30044 (2025), Table A2.1-1 |
+| Haworth | -86.7639 | -22.777 | NASA M2M-30044 (2025), Table A2.1-1 |
+
+Region centres were independently cross-checked against the extents of the LOLA 5 m DEM tiles (PGDA product 78): agreement within 1.3 m.
 
 ## Running locally
 
@@ -68,7 +78,10 @@ Shackleton rim · Connecting ridge · de Gerlache rim · Malapert massif · Hawo
 python -m venv .venv
 .venv/Scripts/activate        # Windows; use `source .venv/bin/activate` on Linux/macOS
 pip install -r pipeline/requirements.txt
-# stage scripts: TBD
+python -m pipeline.ephemeris.run_ephemeris     # stage 1: Sun/Earth ephemerides from JPL Horizons
+python -m pipeline.sites.verify_site_points    # cross-check site coordinates against PGDA tiles
+ruff check . && pytest                          # lint and tests
+# later stages: TBD
 
 # Web interface
 cd web
@@ -81,6 +94,8 @@ cd web
 - **Terrain resolution:** the horizon is computed from a downsampled LOLA product; small nearby obstacles may be missed. Exact resolution: **[PLACEHOLDER]**.
 - **Closed list of sites:** only the five sites above.
 - **Date range:** January 1 to December 31, 2027 (UTC), one-hour steps. Launch-slip comparisons only work within this year.
+- **Observer height:** ephemerides use an observer at 0 km above the 1737.4 km reference sphere; the effect on Sun/Earth angles is negligible.
+- **Leap seconds:** for 2027 JPL Horizons holds the last known leap second constant (possible 1 s offset).
 - **Sample data:** while the pipeline is incomplete, the interface may use sample files in the final format. These are always flagged as **sample** in the UI.
 - **No AI in the calculations:** all numbers come from NASA data or from fixed, verifiable code.
 

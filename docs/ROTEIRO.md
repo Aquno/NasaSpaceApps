@@ -4,13 +4,13 @@
 
 Legenda de status: `a fazer` · `em andamento` · `concluído` · `plano B` · `cortado`
 
-Última atualização: 2026-11-14 — etapa 0 concluída e revisada (decisões D8–D11).
+Última atualização: 2026-11-14 — etapa 1 concluída (decisões D12–D15).
 
 ## Pontos de controle
 
 | Quando | O que precisa estar pronto | Status |
 |--------|---------------------------|--------|
-| Sábado 14/11, 18h | Etapa 1 pronta para **um** local | a fazer |
+| Sábado 14/11, 18h | Etapa 1 pronta para **um** local | **cumprido** (etapa 1 pronta para os cinco locais, 14/11 à tarde) |
 | Fim de sábado 14/11 | Etapa 2 pronta **ou** decisão pelo plano B (horizonte liso) | a fazer |
 | Domingo 15/11, meio-dia | **Congelar funcionalidades** (daí em diante só correção, validação e entrega) | a fazer |
 
@@ -27,17 +27,19 @@ Legenda de status: `a fazer` · `em andamento` · `concluído` · `plano B` · `
 
 ### 1. Efemérides
 - Responsável:
-- Status: a fazer
-- O que é: consultar o JPL Horizons para os cinco locais, de 2027-01-01 a 2027-12-31 UTC, passo de uma hora (azimute e elevação do Sol e da Terra).
-- Pasta: `pipeline/ephemeris/` → `data/ephemeris/`
+- Status: **concluído** (2026-11-14), branch `stage-1-ephemeris`
+- O que é: consultar o JPL Horizons para os cinco locais, de 2027-01-01 a 2027-12-31 UTC, passo de uma hora (azimute, elevação e diâmetro angular do Sol e da Terra).
+- Pasta: `pipeline/ephemeris/` → `data/ephemeris/`; locais em `pipeline/sites.json`
 - Critério de pronto:
-  - [ ] Coordenadas dos cinco locais definidas, com fonte citada (`DADOS.md`)
+  - [x] Coordenadas dos cinco locais definidas, com fonte citada (`DADOS.md`, D12)
   - [x] Intervalo de datas definido e registrado (D8)
-  - [ ] Convenção de azimute do Horizons confirmada e registrada em `CONTRATO_DE_DADOS.md`
-  - [ ] Pendência de referencial (MOON_ME) resolvida ou decisão registrada
-  - [ ] Um arquivo por local em `data/ephemeris/`
-  - [ ] Verificações de sanidade passam (ex.: 8.760 registros, um por hora, sem lacunas; azimute em [0, 360); elevação em [-90, 90]; comparação manual de alguns pontos com a interface web do Horizons)
-- Ponto de controle: um local pronto até sábado 18h.
+  - [x] Convenção de azimute do Horizons confirmada e registrada em `CONTRATO_DE_DADOS.md`
+  - [x] Pendência de referencial (MOON_ME) resolvida (D14)
+  - [x] Um arquivo por local em `data/ephemeris/`
+  - [x] Verificações de sanidade passam: 8.760 registros por local, sem lacunas nem repetições; azimute em [0, 360); elevação em [-90, 90]; limite de elevação do Sol; período do azimute do Sol e da elevação da Terra (`data/ephemeris/REPORT.md`)
+  - [ ] Comparação manual de alguns pontos com a interface web do Horizons — **não feita**. A API é o mesmo sistema; os valores da consulta de teste foram conferidos linha a linha contra a resposta bruta. Opcional.
+- Como rodar: `python -m pipeline.ephemeris.run_ephemeris` (ver `pipeline/ephemeris/README.md`).
+- Ponto de controle: cumprido.
 
 ### 2. Horizonte
 - Responsável:
@@ -47,7 +49,8 @@ Legenda de status: `a fazer` · `em andamento` · `concluído` · `plano B` · `
 - Critério de pronto:
   - [ ] Produto LOLA escolhido; formato, projeção, referencial e resolução registrados em `DADOS.md`
   - [ ] 360 valores de elevação do terreno por local (um por grau de azimute)
-  - [ ] Convenção de azimute igual à do Horizons
+  - [ ] Convenção de azimute igual à do Horizons: a partir do norte, sentido horário (ver `DADOS.md`)
+  - [ ] Altura do observador tirada do DEM (D13)
   - [ ] Verificação visual de ao menos um local (ex.: comparação qualitativa com Quickmap/Moon Trek)
 - **Plano B:** horizonte liso (360 zeros), com o limite declarado no README e na interface. Decidir até o fim de sábado.
 
@@ -115,3 +118,4 @@ Legenda de status: `a fazer` · `em andamento` · `concluído` · `plano B` · `
 |------|-------|-------------|
 | 2026-11-14 | 0 | Estrutura do repositório e documentação inicial |
 | 2026-11-14 | 0 | Revisão aprovada (D7 e campos de `meta`); decisões D8–D11: intervalo 2027, visibilidade na interface, sync-data, página do desafio |
+| 2026-11-14 | 1 | Efemérides dos cinco locais (8.760 registros cada), todas as verificações OK; coordenadas do Data Book da NASA conferidas contra os GeoTIFFs do PGDA 78; decisões D12–D15 |
