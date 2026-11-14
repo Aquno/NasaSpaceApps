@@ -15,6 +15,8 @@ import { indexAtOrAfter, type SiteData, type SiteSummary } from '../data/contrac
 import { Footer } from '../components/Footer';
 import { Header } from '../components/Header';
 import { HorizonPanorama } from '../components/HorizonPanorama';
+import { InfoTip } from '../components/InfoTip';
+import { ruleMsg } from '../ui/ruleText';
 import { MissionTimeline } from '../components/MissionTimeline';
 import { ScoreParts } from '../components/ScoreParts';
 import { SiteFacts } from '../components/SiteFacts';
@@ -95,6 +97,7 @@ export function SiteDetail({ site, data, inputs }: Props) {
   const at = (arr: ArrayLike<number>) => arr[i] as number;
   const horizonAtAz = (az: number) => data.horizon[((Math.round(az) % 360) + 360) % 360] as number;
   const { verdict: v, engineering, science, metrics, link } = ev;
+  const rule = ruleMsg(v.rule, inputs.rules);
   const linkKey: MessageKey =
     link.kind === 'low'
       ? 'card.linkLow'
@@ -194,12 +197,14 @@ export function SiteDetail({ site, data, inputs }: Props) {
       <section className="glass detail-block" aria-label={t('detail.scores')}>
         <h2 className="caps">{t('detail.scores')}</h2>
         <p className="detail-reason">{msg(v.reason)}</p>
+        {rule && <p className="rule">{t('card.rule', { rule: msg(rule) })}</p>}
         <p className="next mono">
           {ev.landingHourFound ? t('card.landingAt', { t: ev.landingMs }) : t('card.noLandingHour')}
         </p>
         <p className={link.kind === 'low' ? 'link alert' : 'link earth'}>
           {link.kind === 'low' ? '△' : '▲'}{' '}
           {t(linkKey, { p: link.fraction, g: link.longestGapHours })}
+          {link.kind === 'gaps' && <InfoTip>{t('card.linkTip')}</InfoTip>}
         </p>
         <h3 className="caps">{t('card.howBuilt')}</h3>
         <ScoreParts engineering={engineering} science={science} metrics={metrics} />
@@ -226,12 +231,17 @@ export function SiteDetail({ site, data, inputs }: Props) {
                 ))}
               </ul>
             </dd>
+            <dt className="caps">{t('detail.limitBestCase')}</dt>
+            <dd>
+              {t('covers.bestCaseTitle')} {t('covers.bestCase')}
+            </dd>
+            <dt className="caps">{t('detail.limitLink')}</dt>
+            <dd>{t('detail.directOnly')}</dd>
+            <dt className="caps">{t('detail.limitSignal')}</dt>
+            <dd>{t('detail.signal')}</dd>
+            <dt className="caps">{t('detail.limitRules')}</dt>
+            <dd>{t('detail.teamRules')}</dd>
           </dl>
-          <p>
-            <strong>{t('covers.bestCaseTitle')}</strong> {t('covers.bestCase')}
-          </p>
-          <p>{t('detail.signal')}</p>
-          <p>{t('detail.directOnly')}</p>
         </div>
       </details>
       <Footer />

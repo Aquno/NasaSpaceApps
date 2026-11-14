@@ -9,6 +9,7 @@ import type { VisibilitySeries } from '../calc/visibility';
 import type { SiteSummary } from '../data/contract';
 import { useI18n } from '../i18n/I18nProvider';
 import type { MessageKey } from '../i18n/messages';
+import { InfoTip } from './InfoTip';
 
 interface Props {
   sites: SiteSummary[];
@@ -31,7 +32,9 @@ export function NasaCheck({ sites, vis, year }: Props) {
   };
   return (
     <div className="nasa-check">
-      <p>{t('check.lead', { year })}</p>
+      <p>
+        {t('check.lead', { year })} <InfoTip>{t('check.notTuned')}</InfoTip>
+      </p>
       <table className="compare small-table">
         <thead>
           <tr>
@@ -69,7 +72,6 @@ export function NasaCheck({ sites, vis, year }: Props) {
           <li key={k}>{t(k)}</li>
         ))}
       </ul>
-      <p className="note">{t('check.notTuned')}</p>
     </div>
   );
 }

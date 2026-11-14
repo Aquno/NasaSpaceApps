@@ -174,7 +174,7 @@ describe('scores', () => {
     const v = check({ ...base, sunVisibleAtLanding: false, sunHoursFromLanding: 0 });
     expect(v).toMatchObject({ kind: 'not-viable', rule: 'sunAtLanding' });
     expect(v.reason).toEqual({ key: 'reason.darkAtLanding' });
-    expect(EN.msg(v.reason)).toContain('Dark at landing');
+    expect(EN.msg(v.reason)).toContain('Sun behind the terrain at landing');
   });
   it('a short sunset does not make a well-lit site not viable (old 24 h rule removed)', () => {
     // 95% sunlit, Sun sets 16 h after landing for 5 h: below the 24 h survival limit.

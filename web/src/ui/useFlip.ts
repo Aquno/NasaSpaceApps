@@ -1,11 +1,12 @@
 /**
- * What: FLIP animation for reordered children (cards move to their new place in ~300 ms).
+ * What: FLIP animation for reordered children (cards move to their new place in ~600 ms).
  *   Skipped when the user prefers reduced motion.
  * Roadmap stage: 5 — Interface (see docs/ROTEIRO.md).
  */
 import { useLayoutEffect, useRef } from 'react';
 
-const DURATION_MS = 300;
+/** Long enough to follow which card moved where after a slip (D49). */
+const DURATION_MS = 600;
 
 export function useFlip<T extends HTMLElement>(orderKey: string) {
   const refs = useRef(new Map<string, T>());
@@ -24,7 +25,7 @@ export function useFlip<T extends HTMLElement>(orderKey: string) {
         if (dx !== 0 || dy !== 0) {
           el.animate(
             [{ transform: `translate(${dx}px, ${dy}px)` }, { transform: 'translate(0, 0)' }],
-            { duration: DURATION_MS, easing: 'ease-out' },
+            { duration: DURATION_MS, easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)' },
           );
         }
       }

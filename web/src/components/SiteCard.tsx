@@ -1,7 +1,9 @@
 /**
- * What: One site card, in two layers (D39). Compact: rank, name, verdict icon, the two scores and
- *   a one-line reason. Expanded (selected card): landing hour, next viable landing, direct-link
- *   line, key metrics, how each score is built and the details button. Display only.
+ * What: One site card, in two layers (D39, D49). Compact: rank, name, verdict icon, the two
+ *   scores and a one-line reason (the best compromise also shows its direct-link line).
+ *   Expanded (selected card): landing hour, next viable landing, direct-link line, key metrics,
+ *   how each score is built and the details button. Hover/focus highlights the matching marker
+ *   in the 3D view (onHover); Enter, Space or a click selects. Display only.
  * Roadmap stage: 5 — Interface (see docs/ROTEIRO.md).
  */
 import type { SiteEvaluation } from '../calc/evaluate';
@@ -11,6 +13,9 @@ import { useI18n } from '../i18n/I18nProvider';
 import type { MessageKey } from '../i18n/messages';
 import { VERDICT_ICON } from '../ui/format';
 import { ScoreParts } from './ScoreParts';
+import { InfoTip } from './InfoTip';
+import type { MissionRules } from '../config/scoring';
+import { ruleMsg } from '../ui/ruleText';
 
 interface Props {
   site: SiteSummary;
@@ -19,8 +24,13 @@ interface Props {
   next: ViableWindow | null | undefined;
   rank: number;
   best: boolean;
-  /** Shows the second layer (the selected card, or the best compromise when none is). */
+  /** Shows the second layer (the selected card). */
   expanded: boolean;
+  /** Mission rules, to name the rule that decided the verdict (D50). */
+  rules: MissionRules;
+  /** Highlighted because its 3D marker is hovered (D49). */
+  linked: boolean;
+  onHover: (hovered: boolean) => void;
   onSelect: () => void;
   onOpen: () => void;
 }
@@ -32,6 +42,9 @@ export function SiteCard({
   rank,
   best,
   expanded,
+  linked,
+  rules,
+  onHover,
   onSelect,
   onOpen,
 }: Props) {
@@ -45,15 +58,27 @@ export function SiteCard({
     );
   }
   const { engineering, science, verdict: v, metrics: m, link } = evaluation;
-  const classes = ['card', 'glass', v.kind, best ? 'best' : '', expanded ? 'expanded' : ''].join(
-    ' ',
-  );
+  const classes = [
+    'card',
+    'glass',
+    v.kind,
+    best ? 'best' : '',
+    expanded ? 'expanded' : '',
+    linked ? 'linked' : '',
+  ].join(' ');
   const linkKey: MessageKey =
     link.kind === 'low'
       ? 'card.linkLow'
       : link.kind === 'gaps'
         ? 'card.linkGaps'
         : 'card.linkContinuous';
+  const rule = ruleMsg(v.rule, rules);
+  const linkLine = (
+    <p className={link.kind === 'low' ? 'link alert' : 'link earth'}>
+      {link.kind === 'low' ? '△' : '▲'} {t(linkKey, { p: link.fraction, g: link.longestGapHours })}
+      {link.kind === 'gaps' && <InfoTip>{t('card.linkTip')}</InfoTip>}
+    </p>
+  );
   return (
     <article
       className={classes}
@@ -65,9 +90,16 @@ export function SiteCard({
       tabIndex={0}
       aria-expanded={expanded}
       onClick={onSelect}
-      onFocus={(e) => {
-        if (e.target === e.currentTarget) onSelect();
+      onKeyDown={(e) => {
+        if (e.target === e.currentTarget && (e.key === 'Enter' || e.key === ' ')) {
+          e.preventDefault();
+          onSelect();
+        }
       }}
+      onMouseEnter={() => onHover(true)}
+      onMouseLeave={() => onHover(false)}
+      onFocus={() => onHover(true)}
+      onBlur={() => onHover(false)}
     >
       <div className="card-head">
         <span className="rank">{rank}</span>
@@ -92,8 +124,10 @@ export function SiteCard({
       <p className="reason" title={msg(v.reason)}>
         {msg(v.reason)}
       </p>
+      {(best || expanded) && linkLine}
       {expanded && (
         <div className="card-more">
+          {rule && <p className="rule">{t('card.rule', { rule: msg(rule) })}</p>}
           <p className="next">
             {evaluation.landingHourFound
               ? t('card.landingAt', { t: evaluation.landingMs })
@@ -104,10 +138,6 @@ export function SiteCard({
               {next ? t('card.next', { date: next.startMs, n: next.windowDays }) : t('card.noNext')}
             </p>
           )}
-          <p className={link.kind === 'low' ? 'link alert' : 'link earth'}>
-            {link.kind === 'low' ? '△' : '▲'}{' '}
-            {t(linkKey, { p: link.fraction, g: link.longestGapHours })}
-          </p>
           <div className="metrics">
             <span className="sun" title={t('card.sunTitle')}>
               ● {t('card.sun', { p: m.sunFraction })}

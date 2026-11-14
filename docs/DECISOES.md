@@ -309,6 +309,26 @@ Formato: data, decisão, motivo, consequências. Decisões novas vão no fim. N�
   6. Ao fim de cada tarefa, dizer em uma linha: branch, último commit e se a `main` foi atualizada.
 - **Status:** em vigor (2026-11-14).
 
+### D49 — 2026-11-14 — Acabamentos da revisão visual
+
+- **Abertura:** o polo sul do globo fica voltado para o observador (câmera abaixo do equador, a cerca de 17° do eixo polar) e é marcado por um anel fino com brilho suave que pulsa devagar (estático com movimento reduzido). Números de destaque: luz do Sol média da NASA no ponto da borda do Shackleton e na parede interna (87% · 11%, a 2,8 km), dias de 2027 em que o melhor local do ano aceita pouso (Malapert massif, 229 de 352), dias sem nenhum local (71) e datas em que +21 dias troca um local por outro (110). Os antigos "5 pontos" e "8.760 horas" foram para "Data sources". O parágrafo do problema saiu da segunda seção e entrou em "What this tool covers".
+- **3D:** câmera padrão pelo lado de 90° O (os locais se espalham sobretudo no eixo polo–Terra, que assim ocupa a largura), mais próxima e mais inclinada: o relevo preenche a área com os cinco locais visíveis. As bordas do bloco de terreno esmaecem para o fundo (opacidade por vértice, `edgeFade`, com teste).
+- **Cartões:** o melhor compromisso, fechado, mostra nome, veredito, notas, motivo em uma linha e a linha de comunicação; data e hora do pouso, porcentagens, inclinação e "How the scores are built" só ao expandir (clique, Enter ou Espaço), como nos outros.
+- **Ligação mapa–cartões:** passar o mouse ou focar um cartão destaca o marcador no 3D; passar sobre um marcador destaca o cartão. O selecionado mantém o destaque.
+- **"Slip 21 days":** a direção do Sol e da Terra no 3D gira suavemente (0,9 s); os cartões se reordenam com animação de 0,6 s; o novo melhor compromisso entra com um realce breve. Tudo estático com movimento reduzido.
+- **Status:** aplicada (2026-11-14), branch `polish-visual-review`.
+
+### D50 — 2026-11-14 — Revisão de textos: rótulos curtos e funcionais
+
+- **Contexto:** havia frases de efeito e legendas explicativas de apresentação dentro do sistema.
+- **Regras aplicadas:** rótulos (substantivos) em vez de slogans; menos legendas, com as explicações num ícone ⓘ (dica ao passar o mouse ou focar) ou em "Data and limits"; uma ideia por texto; tom neutro e técnico nos dois idiomas; avisos obrigatórios discretos e em um só lugar por tela; na abertura, só o nome e a frase do que a ferramenta faz (a pergunta do atraso saiu).
+- **Mudanças principais:** "Best compromise" → "Best overall" / "Melhor no conjunto"; "Small move, big change" → "Position sensitivity" / "Sensibilidade à posição"; "What this adds" → "About" / "Sobre" (comparação com as ferramentas existentes, escopo e fontes, num só bloco, no cabeçalho e na abertura); "+21 days" / "+21 dias" e "Reset" / "Zerar"; "South pole" / "Polo sul" no globo; "2027 availability"; "Viable landing days, 2027"; "Score breakdown" / "Composição das notas"; título da vista "South pole, 3D" com a dica (resolução, controles, "os números não vêm desta vista", ponto de demonstração); rodapé só com os avisos (fontes foram para "Sobre"; a versão educacional fica no Roadmap).
+- **Singular e plural:** marcador `{n:plural:singular|plural}` no tradutor (1 → singular; 0 e demais → plural), com teste; aplicado a todas as contagens de dias.
+- **Ajustes visuais junto:** em "Data and limits", melhor caso por região, ligação com a Terra (só linha direta), atraso do sinal (~1,3 s) e notas (escolhas do time) viraram linhas da tabela; no 3D, rótulos "Sun"/"Earth" na ponta das setas e legenda reduzida ao Sol no local.
+- **Tabela completa e casos de dúvida:** `docs/REVISAO_DE_TEXTOS.md`. Os dez casos de dúvida ficam com o texto atual até decisão do time.
+- **Dez casos de dúvida, decididos pelo time:** "(relay needed during gaps)" saiu do cartão e foi para a dica ⓘ; em português, "Contato direto" na linha de comunicação; mantidos o rótulo da abertura e o link "How it works"; os três cartões da abertura reescritos em tom neutro; "Nothing was adjusted…" foi para a dica da comparação com a NASA (segue na documentação, D45); o motivo virou "Sun behind the terrain at landing." e a regra que decidiu o veredito aparece no cartão expandido e no detalhe ("Rule: …"); o texto dos vereditos em "Mission rules" ficou numa frase; "Only the first column exists." saiu do Roadmap; escopo encurtado para "Planning tool, used on Earth before launch."
+- **Status:** aplicada (2026-11-14), branch `polish-visual-review`, juntada na `main`.
+
 ### Pendências abertas após a etapa 2
 - Nenhuma pendência de dados da etapa 2.
 

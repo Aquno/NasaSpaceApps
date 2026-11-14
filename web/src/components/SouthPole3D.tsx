@@ -15,6 +15,7 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import {
   cavityShade,
+  edgeFade,
   exaggerateDirection,
   sceneHeightM,
   terrainPositions,
@@ -31,14 +32,17 @@ import { MoonGlobe } from './MoonGlobe';
 const DEFAULT_EXAGGERATION = 3;
 const MIN_EXAGGERATION = 1;
 const MAX_EXAGGERATION = 10;
-// Start view: from the Earth side (+y), about 55° down, aimed between the sites so the terrain
-// fills the frame (km).
-const CAMERA_TARGET: Vec3 = [-20, 72, 0];
-const CAMERA_START: Vec3 = [-20, 250, 205];
+// Start view (km): from the 90° W side (-x), about 55° down, so the sites (spread mostly along
+// the pole-Earth axis) run across the wide frame and the terrain fills it.
+const CAMERA_TARGET: Vec3 = [-5, 52, 0];
+const CAMERA_START: Vec3 = [-175, 52, 255];
 const LIGHT_DISTANCE_KM = 400;
 const SHADOW_HALF_EXTENT_KM = 165;
 const SHADOW_MAP_SIZE = 2048;
 const ARROW_LENGTH_KM = 70;
+/** Arrows start just above the pole; their labels sit a little past the tip (km). */
+const ARROW_ORIGIN: Vec3 = [0, 0, 15];
+const TIP_LABEL_OFFSET_KM = 8;
 const KEY_ROTATE_RAD = Math.PI / 36;
 // Ambient keeps shadowed relief readable; the Sun light stays on even when it grazes the pole
 // frame from slightly below (high terrain can still see it).
@@ -49,14 +53,21 @@ const REGOLITH_RGB: Vec3 = [0.62, 0.58, 0.53];
 const CAVITY_RADIUS_PX = 12;
 const CAVITY_RELIEF_M = 1800;
 const CAVITY_CONTRAST = 0.9;
+/** Width of the fade at the terrain block's edges, grid pixels (~35 km of 300). */
+const EDGE_FADE_PX = 60;
 const LABEL_GAP_PX = 14;
 const GLOBE_PX = 116;
+/** Duration of the Sun/Earth direction change after a new date, ms. */
+const LIGHT_TRANSITION_MS = 900;
 
 interface Props {
   terrain: Terrain;
   sites: SiteSummary[];
   selectedId: string | null;
   bestId: string | null;
+  /** Site highlighted from a card or a marker (D49). */
+  hoveredId: string | null;
+  onHover: (id: string | null) => void;
   onSelect: (id: string) => void;
   sun: Vec3;
   earth: Vec3;
@@ -83,6 +94,8 @@ export function SouthPole3D(props: Props) {
     sites,
     selectedId,
     bestId,
+    hoveredId,
+    onHover,
     onSelect,
     sun,
     earth,
@@ -95,7 +108,10 @@ export function SouthPole3D(props: Props) {
   const labelRefs = useRef(new Map<string, HTMLButtonElement>());
   const dotRefs = useRef(new Map<string, HTMLSpanElement>());
   const lineRefs = useRef(new Map<string, SVGLineElement>());
-  const [hoveredId, setHoveredId] = useState<string | null>(null);
+  const tipRefs = useRef<Record<'sun' | 'earth', HTMLSpanElement | null>>({
+    sun: null,
+    earth: null,
+  });
   const [exaggeration, setExaggeration] = useState(DEFAULT_EXAGGERATION);
   const exagRef = useRef(exaggeration);
 
@@ -173,6 +189,21 @@ export function SouthPole3D(props: Props) {
       line.setAttribute('y2', String(Math.min(Math.max(pt.y, box.top), box.top + size.h)));
       line.style.visibility = 'visible';
     }
+    // Short labels at the arrow tips (Sun, Earth).
+    for (const kind of ['sun', 'earth'] as const) {
+      const tip = tipRefs.current[kind];
+      const dir = shownDirs.current?.[kind];
+      if (!tip) continue;
+      if (!dir) {
+        tip.style.visibility = 'hidden';
+        continue;
+      }
+      const p = new THREE.Vector3(...ARROW_ORIGIN)
+        .addScaledVector(dir, ARROW_LENGTH_KM + TIP_LABEL_OFFSET_KM)
+        .project(st.camera);
+      tip.style.transform = `translate(${((p.x + 1) / 2) * w}px, ${((1 - p.y) / 2) * h}px)`;
+      tip.style.visibility = p.z < 1 ? 'visible' : 'hidden';
+    }
   };
   const renderRef = useRef(render);
   useLayoutEffect(() => {
@@ -223,15 +254,23 @@ export function SouthPole3D(props: Props) {
     );
     geometry.computeVertexNormals();
     const shade = cavityShade(terrain.heights, w, h, CAVITY_RADIUS_PX, CAVITY_RELIEF_M);
-    const colors = new Float32Array(w * h * 3);
+    const fade = edgeFade(w, h, EDGE_FADE_PX);
+    // RGBA per vertex: regolith x cavity shading, alpha fading the block's edges to the background.
+    const colors = new Float32Array(w * h * 4);
     for (let k = 0; k < w * h; k++) {
       const f = 1 + CAVITY_CONTRAST * ((shade[k] as number) - 0.5);
-      for (let j = 0; j < 3; j++) colors[k * 3 + j] = Math.min(1, (REGOLITH_RGB[j] as number) * f);
+      for (let j = 0; j < 3; j++) colors[k * 4 + j] = Math.min(1, (REGOLITH_RGB[j] as number) * f);
+      colors[k * 4 + 3] = fade[k] as number;
     }
-    geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+    geometry.setAttribute('color', new THREE.BufferAttribute(colors, 4));
     const mesh = new THREE.Mesh(
       geometry,
-      new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 1, metalness: 0 }),
+      new THREE.MeshStandardMaterial({
+        vertexColors: true,
+        transparent: true,
+        roughness: 1,
+        metalness: 0,
+      }),
     );
     mesh.castShadow = true;
     mesh.receiveShadow = true;
@@ -254,7 +293,7 @@ export function SouthPole3D(props: Props) {
 
     const sunArrow = new THREE.ArrowHelper(
       new THREE.Vector3(1, 0, 0),
-      new THREE.Vector3(0, 0, 15),
+      new THREE.Vector3(...ARROW_ORIGIN),
       ARROW_LENGTH_KM,
       0xf0a500,
       10,
@@ -262,7 +301,7 @@ export function SouthPole3D(props: Props) {
     );
     const earthArrow = new THREE.ArrowHelper(
       new THREE.Vector3(0, 1, 0),
-      new THREE.Vector3(0, 0, 15),
+      new THREE.Vector3(...ARROW_ORIGIN),
       ARROW_LENGTH_KM,
       0x56b4e9,
       10,
@@ -315,21 +354,42 @@ export function SouthPole3D(props: Props) {
     renderRef.current();
   }, [exaggeration, terrain]);
 
-  // Light and arrows: Sun/Earth directions, elevation tangent scaled like the heights.
+  // Light and arrows: Sun/Earth directions, elevation tangent scaled like the heights. A new date
+  // (e.g. "Slip 21 days") turns them smoothly from the previous directions (D49); instant with
+  // reduced motion.
+  const shownDirs = useRef<{ sun: THREE.Vector3; earth: THREE.Vector3 } | null>(null);
   useEffect(() => {
     const st = stage.current;
     if (!st) return;
-    const s = exaggerateDirection(sun, exaggeration);
-    const e = exaggerateDirection(earth, exaggeration);
-    st.light.position.set(
-      s[0] * LIGHT_DISTANCE_KM,
-      s[1] * LIGHT_DISTANCE_KM,
-      s[2] * LIGHT_DISTANCE_KM,
-    );
-    st.light.intensity = SUN_INTENSITY;
-    st.sunArrow.setDirection(new THREE.Vector3(...s));
-    st.earthArrow.setDirection(new THREE.Vector3(...e));
-    renderRef.current();
+    const toSun = new THREE.Vector3(...exaggerateDirection(sun, exaggeration));
+    const toEarth = new THREE.Vector3(...exaggerateDirection(earth, exaggeration));
+    const apply = (s: THREE.Vector3, e: THREE.Vector3) => {
+      st.light.position.copy(s).multiplyScalar(LIGHT_DISTANCE_KM);
+      st.light.intensity = SUN_INTENSITY;
+      st.sunArrow.setDirection(s);
+      st.earthArrow.setDirection(e);
+      shownDirs.current = { sun: s.clone(), earth: e.clone() };
+      renderRef.current();
+    };
+    const from = shownDirs.current;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!from || reduce) {
+      apply(toSun, toEarth);
+      return;
+    }
+    const start = performance.now();
+    let frame = 0;
+    const step = (now: number) => {
+      const k = Math.min(1, (now - start) / LIGHT_TRANSITION_MS);
+      const ease = k * k * (3 - 2 * k);
+      apply(
+        from.sun.clone().lerp(toSun, ease).normalize(),
+        from.earth.clone().lerp(toEarth, ease).normalize(),
+      );
+      if (k < 1) frame = requestAnimationFrame(step);
+    };
+    frame = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(frame);
   }, [sun, earth, exaggeration]);
 
   useEffect(() => {
@@ -402,10 +462,11 @@ export function SouthPole3D(props: Props) {
             s.purpose === 'sensitivity_demo' ? 'demo' : '',
             s.id === selectedId ? 'selected' : '',
             s.id === bestId ? 'best' : '',
+            s.id === hoveredId ? 'linked' : '',
           ].join(' ');
           const hover = {
-            onMouseEnter: () => setHoveredId(s.id),
-            onMouseLeave: () => setHoveredId(null),
+            onMouseEnter: () => onHover(s.id),
+            onMouseLeave: () => onHover(null),
           };
           return (
             <span key={s.id}>
@@ -427,8 +488,8 @@ export function SouthPole3D(props: Props) {
                 }}
                 className={`scene3d-label ${cls}${expanded(s.id) ? '' : ' collapsed'}`}
                 onClick={() => onSelect(s.id)}
-                onFocus={() => setHoveredId(s.id)}
-                onBlur={() => setHoveredId(null)}
+                onFocus={() => onHover(s.id)}
+                onBlur={() => onHover(null)}
                 aria-pressed={s.id === selectedId}
                 {...hover}
               >
@@ -437,6 +498,19 @@ export function SouthPole3D(props: Props) {
             </span>
           );
         })}
+        {(['sun', 'earth'] as const).map((kind) => (
+          <span
+            key={kind}
+            className={`scene3d-tip ${kind}`}
+            ref={(el) => {
+              if (el) tipRefs.current[kind] = el;
+              else tipRefs.current[kind] = null;
+            }}
+            aria-hidden="true"
+          >
+            {t(kind === 'sun' ? 'detail.sun' : 'detail.earth')}
+          </span>
+        ))}
         <div className="scene3d-globe">
           <MoonGlobe size={GLOBE_PX} />
         </div>
@@ -458,10 +532,8 @@ export function SouthPole3D(props: Props) {
           {t('scene.reset')}
         </button>
         <span className="note">
-          <span className="sun">━▶ {t('scene.sun', { el: sunElDeg })}</span>{' '}
-          {t('scene.at', { site: lightSiteName })} ·{' '}
-          <span className="earth">━▶ {t('scene.earth')}</span> · {t('scene.curvature')} ·{' '}
-          {t('scene.visualOnly')}
+          <span className="sun">{t('scene.sun', { el: sunElDeg })}</span>{' '}
+          {t('scene.at', { site: lightSiteName })}
         </span>
       </div>
     </div>

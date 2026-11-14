@@ -15,8 +15,14 @@ import { GlobeStill, MOON_TEXTURE } from './GlobeStill';
 
 /** Angular radius of the highlighted cap: the map covers about 85° S to the pole. */
 const CAP_DEG = 5;
-/** Soft glow around the cap (hero), angular radius in degrees. */
-const GLOW_DEG = 12;
+/** Hero ring and glow (degrees from the pole): ring width, glow from inside to outside. */
+const RING_WIDTH_DEG = 0.45;
+const GLOW_INNER_DEG = 1.2;
+const GLOW_DEG = 7;
+/** Glow opacity: mean and pulse amplitude; one slow pulse every few seconds. */
+const GLOW_OPACITY = 0.12;
+const GLOW_PULSE = 0.08;
+const PULSE_PERIOD_S = 3.5;
 /** Sphere segments: enough for a smooth outline at 640 px without stalling a laptop. */
 const SEGMENTS = 64;
 /** About one turn every 70 s. */
@@ -35,8 +41,8 @@ interface Variant {
 const VARIANTS: Record<'corner' | 'hero', Variant> = {
   // Seen from below the equator so the south pole faces the viewer.
   corner: { camera: [0, -4.0, 2.1], ambient: 0.9, sun: 1.6, sunPos: [3, 1, 3], glow: false },
-  // Pole tilted toward the viewer, light from the side (terminator visible).
-  hero: { camera: [0, -2.7, 3.7], ambient: 0.1, sun: 3.4, sunPos: [5, -0.8, 0.6], glow: true },
+  // Seen from well below the equator: the south polar region faces the viewer; side light.
+  hero: { camera: [0, -4.1, 1.3], ambient: 0.1, sun: 3.4, sunPos: [5, -0.8, 0.6], glow: true },
 };
 
 interface Props {
@@ -89,29 +95,26 @@ export function MoonGlobe({ size, variant = 'corner', spin = false, label = true
     globe.rotation.y = -Math.PI / 2;
     const material = new THREE.MeshStandardMaterial({ color: 0x9a9a9a, roughness: 1 });
     globe.add(new THREE.Mesh(new THREE.SphereGeometry(1, SEGMENTS, SEGMENTS / 2), material));
+    // Corner: filled cap. Hero: thin ring at the cap edge with a soft glow that pulses.
     globe.add(
       new THREE.Mesh(
-        polarBand(1.006, 0, CAP_DEG),
+        polarBand(1.006, v.glow ? CAP_DEG - RING_WIDTH_DEG : 0, CAP_DEG),
         new THREE.MeshBasicMaterial({
           color: 0xf0a500,
           transparent: true,
-          opacity: v.glow ? 0.55 : 0.75,
+          opacity: v.glow ? 0.95 : 0.75,
         }),
       ),
     );
+    const glow = new THREE.MeshBasicMaterial({
+      color: 0xf0a500,
+      transparent: true,
+      opacity: GLOW_OPACITY,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+    });
     if (v.glow) {
-      globe.add(
-        new THREE.Mesh(
-          polarBand(1.004, CAP_DEG, GLOW_DEG),
-          new THREE.MeshBasicMaterial({
-            color: 0xf0a500,
-            transparent: true,
-            opacity: 0.12,
-            blending: THREE.AdditiveBlending,
-            depthWrite: false,
-          }),
-        ),
-      );
+      globe.add(new THREE.Mesh(polarBand(1.004, CAP_DEG - GLOW_INNER_DEG, GLOW_DEG), glow));
     }
     scene.add(globe);
     scene.add(new THREE.AmbientLight(0xffffff, v.ambient));
@@ -143,6 +146,8 @@ export function MoonGlobe({ size, variant = 'corner', spin = false, label = true
     const tick = (now: number) => {
       globe.rotation.y += ((now - last) / 1000) * SPIN_RAD_PER_S;
       last = now;
+      glow.opacity =
+        GLOW_OPACITY + GLOW_PULSE * Math.sin(((2 * Math.PI) / PULSE_PERIOD_S) * (now / 1000));
       render();
       frame = requestAnimationFrame(tick);
     };

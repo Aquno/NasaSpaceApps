@@ -7,6 +7,7 @@ import {
   shadowLength,
   terrainPositions,
   cavityShade,
+  edgeFade,
 } from './scene3d';
 
 const R = 1_737_400;
@@ -86,5 +87,17 @@ describe('cavity shade', () => {
     expect(at(10, 10)).toBeLessThan(0.5);
     expect(at(10, 15)).toBeGreaterThan(0.5);
     expect(cavityShade([7, 7, 7, 7], 2, 2, 1, 100)[0]).toBeCloseTo(0.5);
+  });
+});
+
+describe('edgeFade', () => {
+  it('is 1 in the middle, 0 at the edges and in between near them', () => {
+    const a = edgeFade(11, 11, 4);
+    expect(a[5 * 11 + 5]).toBe(1);
+    expect(a[0]).toBe(0);
+    expect(a[5 * 11 + 0]).toBe(0);
+    const near = a[5 * 11 + 2] as number;
+    expect(near).toBeGreaterThan(0);
+    expect(near).toBeLessThan(1);
   });
 });

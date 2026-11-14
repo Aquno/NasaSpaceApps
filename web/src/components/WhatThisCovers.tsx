@@ -14,6 +14,7 @@ export function WhatThisCovers({ heading = true }: { heading?: boolean }) {
   return (
     <section aria-label={t('covers.title')}>
       {heading && <h2 className="caps">{t('covers.title')}</h2>}
+      <p>{t('intro.problem')}</p>
       <p className="note">{t('covers.planning')}</p>
       <p className="note">
         <strong>{t('covers.bestCaseTitle')}</strong> {t('covers.bestCase')}
