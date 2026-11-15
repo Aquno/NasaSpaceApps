@@ -129,7 +129,7 @@ Versão completa, com exemplos e o equilíbrio entre rigor e prazo: **`docs/BOAS
   4. Antes de juntar na `main`: testes, lint e build passando (web e pipeline). Depois juntar com commit de merge (`git merge --no-ff`) e enviar a `main`.
   5. **Nunca** usar push forçado, reescrever histórico já enviado, apagar branches remotas, nem mudar a visibilidade ou as configurações do repositório sem perguntar ao time.
   6. Ao fim de cada tarefa, dizer em uma linha: branch, último commit e se a `main` foi atualizada.
-- Verificação automática a cada push: `.github/workflows/ci.yml` (D47). Repositório **privado**; sem publicação automática.
+- Verificação automática a cada push: `.github/workflows/ci.yml` (D47). Repositório **público**; site publicado no Vercel (https://nasa-space-apps-tgau.vercel.app/), configurado fora do repositório (D54).
 - Nada de segredos nem arquivos grandes no repositório.
 - **Rodar testes e lint antes do commit.**
 
