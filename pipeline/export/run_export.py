@@ -31,8 +31,16 @@ ROUNDING_TOLERANCE = 0.0005 + 1e-9
 SOURCES = [
     "JPL Horizons API, observer tables (https://ssd-api.jpl.nasa.gov/doc/horizons.html)",
     "LOLA south polar DEM, PGDA product 90 (https://pgda.gsfc.nasa.gov/products/90)",
-    "Site coordinates: NASA Lunar Surface Data Book (M2M-30044, 2025; ACD-50044, 2022)",
 ]
+DATA_BOOK = "NASA Lunar Surface Data Book (M2M-30044, 2025; ACD-50044, 2022)"
+# Coordinate source by point type (D30, D52): a derived point keeps the Data Book region but the
+# point itself is the most-illuminated pixel of PGDA product 69.
+COORDINATE_SOURCE = {
+    "derived_point": (
+        f"Site coordinates: region: {DATA_BOOK}; point: most-illuminated pixel, PGDA product 69"
+    ),
+    "published_point": f"Site coordinates: {DATA_BOOK}",
+}
 
 
 def load_json(path: Path):
@@ -105,7 +113,9 @@ def main() -> int:
         entries.append(
             build_site_entry(site, horizon["meta"], science.get(sid), reference.get(sid))
         )
-        doc = build_site_file(ephemeris, horizon, sources, generated_at)
+        n = len(SOURCES)
+        site_sources = sources[:n] + [COORDINATE_SOURCE[site["source_type"]]] + sources[n:]
+        doc = build_site_file(ephemeris, horizon, site_sources, generated_at)
         errors += validate_site_file(doc, f"sites/{sid}.json", sid)
         errors += cross_check(sid, doc, ephemeris, horizon, expected_count)
         path = APP_DIR / "sites" / f"{sid}.json"

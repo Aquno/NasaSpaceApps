@@ -18,11 +18,11 @@ Format: docs/CONTRATO_DE_DADOS.md (version 2). No visibility or metric computed 
 
 | File | Bytes | KB |
 |---|---|---|
-| `data/app/sites/shackleton-rim.json` | 358136 | 350 |
-| `data/app/sites/connecting-ridge.json` | 358311 | 350 |
-| `data/app/sites/de-gerlache-rim.json` | 349600 | 341 |
-| `data/app/sites/malapert-massif.json` | 350578 | 342 |
-| `data/app/sites/haworth.json` | 348352 | 340 |
+| `data/app/sites/shackleton-rim.json` | 358192 | 350 |
+| `data/app/sites/connecting-ridge.json` | 358367 | 350 |
+| `data/app/sites/de-gerlache-rim.json` | 349656 | 341 |
+| `data/app/sites/malapert-massif.json` | 350634 | 342 |
+| `data/app/sites/haworth.json` | 348408 | 340 |
 | `data/app/sites/shackleton-inner-wall.json` | 357478 | 349 |
 | `data/app/sites.json` | 3926 | 4 |
 
