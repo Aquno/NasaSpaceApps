@@ -176,6 +176,12 @@ p {
   color: var(--text);
   text-decoration: none;
 }
+/* Former product name kept as a secondary description (D55). */
+.header .header-tagline {
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-weight: 400;
+}
 .header .context {
   color: var(--muted);
   font-size: 0.9rem;
@@ -946,6 +952,12 @@ svg text {
   font-weight: 600;
   line-height: 1.02;
   letter-spacing: -0.02em;
+}
+.hero-tagline {
+  margin: var(--s2) 0 0;
+  color: var(--muted);
+  font-size: clamp(1.1rem, 1.6vw, 1.6rem);
+  font-weight: 500;
 }
 .hero-lead {
   font-size: clamp(1.1rem, 1.5vw, 1.45rem);

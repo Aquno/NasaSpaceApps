@@ -169,6 +169,7 @@ export function Intro({ ready, error }: Props) {
         <div className="hero-text">
           <p className="caps hero-kicker">{t('intro.kicker')}</p>
           <h1 className="hero-title">{t('header.title')}</h1>
+          <p className="hero-tagline">{t('header.tagline')}</p>
           <p className="hero-lead">{t('intro.lead')}</p>
           <div className="hero-actions">
             <a className="btn-primary" href="#/mission">

@@ -160,3 +160,4 @@ Legenda de status: `a fazer` · `em andamento` · `concluído` · `plano B` · `
 | 2026-11-14 | 5 | D52: correções da revisão por perfis (folga do Sol e da Terra sobre o relevo, datas no idioma da interface, astro escondido atrás do relevo, totais explicados, carregamento, notas em dois blocos, navegação, miudezas, fonte do atraso do sinal) |
 | 2026-11-15 | 5 | D53: último lote de robustez (filtro de ciência coerente, campos de regras validados, datas só dentro dos dados, falha de dados com nova tentativa e locais indisponíveis, "Not found", dicas dentro da janela, textos, cenário padrão 10/01 → 31/01, nota da parede interna) |
 | 2026-11-15 | 7 | D54: repositório público; site no Vercel; vídeo, equipe e seção "Use of AI" no `README.md`; licença MIT (`LICENSE`) com nota sobre dados da NASA e fontes IBM Plex |
+| 2026-11-15 | 7 | D55: projeto renomeado para MoonCrux ("Lunar site navigator" como descrição secundária); capturas refeitas |

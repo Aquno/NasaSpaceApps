@@ -384,6 +384,14 @@ Origem: achados da segunda rodada leve (relatados na conversa, não guardados no
 - **Mantém:** `ci.yml` a cada push; `pages.yml` (GitHub Pages) continua só manual e não é usado para a publicação.
 - **Status:** aplicada (2026-11-15), branch `docs-public-release`. Só documentação; código e dados inalterados.
 
+### D55 — 2026-11-15 — Nome do projeto: MoonCrux
+
+- **Decisão:** o projeto passa a se chamar **MoonCrux**. "Lunar site navigator" fica como descrição secundária, logo abaixo ou ao lado do nome, nos dois idiomas e com o mesmo texto, para manter a coerência com o vídeo de demonstração já publicado.
+- **Origem do nome:** Crux é a constelação do Cruzeiro do Sul, usada para encontrar o sul; a ferramenta trata do polo sul da Lua.
+- **Na interface:** chaves `header.title` ("MoonCrux") e `header.tagline` ("Lunar site navigator") em `en.ts` e `ptBR.ts`, usadas na abertura e no cabeçalho; título da aba e descrição da página em `web/index.html`; nome do pacote `mooncrux` em `web/package.json`. O favicon não tem letras e ficou igual. Teste em `i18n.test.ts` garante que o nome antigo só aparece como descrição secundária.
+- **Mantém:** nome do repositório (`NasaSpaceApps`), endereço do site publicado e do vídeo; o nome do desafio ("Lunar Landing Site Navigator") continua citado onde se refere ao desafio. Nenhuma mudança de comportamento.
+- **Status:** aplicada (2026-11-15), branch `rename-mooncrux`.
+
 ### Pendências abertas após a etapa 2
 - Nenhuma pendência de dados da etapa 2.
 

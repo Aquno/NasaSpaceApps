@@ -10,6 +10,14 @@ describe('dictionaries', () => {
       expect([key, placeholders(ptBR[key])]).toEqual([key, placeholders(en[key])]);
     }
   });
+  it('names the product MoonCrux, with the former name only as the tagline (D55)', () => {
+    for (const dict of [en, ptBR]) {
+      expect(dict['header.title']).toBe('MoonCrux');
+      expect(dict['header.tagline']).toBe('Lunar site navigator');
+      const others = Object.entries(dict).filter(([k]) => k !== 'header.tagline');
+      expect(others.filter(([, v]) => /site navigator/i.test(v))).toEqual([]);
+    }
+  });
   it('formats numbers, percent, hours and dates per locale', () => {
     const EN = createTranslator(en, 'en');
     const PT = createTranslator(ptBR, 'pt-BR');
