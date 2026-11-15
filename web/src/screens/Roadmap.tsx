@@ -35,7 +35,7 @@ export function Roadmap({ sample }: { sample: boolean }) {
   return (
     <div className="app roadmap">
       <Starfield still maxAlpha={STAR_ALPHA} />
-      <Header sample={sample} />
+      <Header sample={sample} current="roadmap" />
       <h1 className="detail-title">{t('roadmap.title')}</h1>
       <div className="roadmap-cols">
         {COLUMNS.map((col) => (

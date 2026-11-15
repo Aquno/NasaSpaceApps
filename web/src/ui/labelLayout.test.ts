@@ -42,3 +42,18 @@ describe('placeBoxes obstacles', () => {
     expect(covers).toBe(false);
   });
 });
+
+describe('placeBoxes reserved boxes', () => {
+  it('does not overlap a box already on screen (arrow label)', () => {
+    const reserved = { left: 105, top: 75, w: 50, h: 20 };
+    const [a] = placeBoxes(
+      [{ id: 'a', x: 100, y: 100, w: 60, h: 20 }],
+      400,
+      300,
+      10,
+      [],
+      [reserved],
+    );
+    expect(a && overlap(a, reserved, 60, 20)).toBe(false);
+  });
+});

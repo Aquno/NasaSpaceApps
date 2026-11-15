@@ -22,6 +22,7 @@ import { LanguageSelect } from '../components/LanguageSelect';
 import { Starfield } from '../components/Starfield';
 import { About } from '../components/About';
 import { InfoTip } from '../components/InfoTip';
+import { Loading } from '../components/Loading';
 import type { SiteData, SiteSummary } from '../data/contract';
 import { useI18n } from '../i18n/I18nProvider';
 import type { MessageKey } from '../i18n/messages';
@@ -144,6 +145,10 @@ export function Intro({ ready }: Props) {
   const featuresRef = useReveal<HTMLElement>();
   const statsRef = useReveal<HTMLElement>();
   const moreRef = useReveal<HTMLElement>();
+  const totalTip = t('intro.totalTip', {
+    days: DEFAULT_MISSION_DURATION_H / 24,
+    year: n?.year ?? '',
+  });
 
   return (
     <div className="opening">
@@ -202,10 +207,14 @@ export function Intro({ ready }: Props) {
               {n.shackleton && (
                 <li>
                   <span className="stat-value pair">
-                    {t('intro.statShackValue', {
-                      a: n.shackleton.rimPct / PERCENT,
-                      b: n.shackleton.wallPct / PERCENT,
-                    })}
+                    <span className="pair-item">
+                      {t('intro.statShackValue', { a: n.shackleton.rimPct / PERCENT })}{' '}
+                      <span className="stat-name">{t('intro.statRim')}</span>
+                    </span>{' '}
+                    <span className="pair-item">
+                      {t('intro.statShackValue', { a: n.shackleton.wallPct / PERCENT })}{' '}
+                      <span className="stat-name">{t('intro.statWall')}</span>
+                    </span>
                   </span>
                   <span className="stat-caption">
                     {t('intro.statShack', { km: n.shackleton.km })}
@@ -220,14 +229,16 @@ export function Intro({ ready }: Props) {
                       year: n.year,
                       site: n.best.site,
                       total: n.census.daysInData,
-                    })}
+                    })}{' '}
+                    <InfoTip>{totalTip}</InfoTip>
                   </span>
                 </li>
               )}
               <li>
                 <span className="stat-value sun">{num(n.census.noViableDays)}</span>
                 <span className="stat-caption">
-                  {t('intro.statNone', { year: n.year, total: n.census.daysInData })}
+                  {t('intro.statNone', { year: n.year, total: n.census.daysInData })}{' '}
+                  <InfoTip>{totalTip}</InfoTip>
                 </span>
               </li>
               <li>
@@ -242,9 +253,7 @@ export function Intro({ ready }: Props) {
             </p>
           </>
         ) : (
-          <p className="note" role="status">
-            {t('app.loading')}
-          </p>
+          <Loading text={t('app.loading')} />
         )}
       </section>
 

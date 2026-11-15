@@ -49,6 +49,7 @@ Lista de fontes para a página de submissão. **Toda fonte externa usada no proj
 | 18 | ESRI Shapefile Technical Description (1998) | — | Leitura do shapefile de PSRs | — |
 | 19 | NASA Scientific Visualization Studio — CGI Moon Kit (LRO LROC color, `lroc_color_poles_1k.jpg`) | https://svs.gsfc.nasa.gov/4720 | Textura do globo de orientação (só visual; crédito no rodapé) | 2026-11-14 |
 | 17 | Adobe Photoshop TIFF Technical Note 3 (preditor de ponto flutuante, `Predictor = 3`) | — | Decodificação dos blocos do COG | — |
+| 20 | NASA Science — "Moon Facts" ("The Moon is an average of 238,855 miles (384,400 kilometers) away.") | https://science.nasa.gov/moon/facts/ | Atraso do sinal Terra–Lua no detalhe do local (D52). A página não dá o tempo de luz; conta: 384 400 km ÷ 299 792,458 km/s (velocidade da luz, valor exato do SI) = 1,282 s ≈ 1,3 s em cada sentido. É a distância média; a distância real varia ao longo da órbita (a ferramenta não usa este número em nenhum cálculo). | 2026-11-14 |
 
 ## Bibliotecas de software
 

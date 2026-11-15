@@ -28,6 +28,14 @@ export function horizonAt(horizon: ArrayLike<number>, azDeg: number): number {
   return horizon[azimuthBin(azDeg)] as number;
 }
 
+/**
+ * Clearance (degrees) of the disc centre above the terrain horizon in its direction; negative
+ * when the centre is below the terrain. Display aid (D52): visibility itself uses the disc rule.
+ */
+export function clearanceDeg(horizon: ArrayLike<number>, azDeg: number, elDeg: number): number {
+  return elDeg - horizonAt(horizon, azDeg);
+}
+
 /** True if some part of a disc (centre az/el, diameter, degrees) is above the horizon. */
 export function isAnyPartVisible(
   horizon: ArrayLike<number>,

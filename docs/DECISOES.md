@@ -126,6 +126,7 @@ Formato: data, decisão, motivo, consequências. Decisões novas vão no fim. N�
   - *marginal* se: Sol entre 50% e 70% da missão; **ou** nota de engenharia < 60 (a comunicação entra pela nota); **ou** nota de ciência < 40;
   - *viable* caso contrário.
   - O motivo cita a regra que decidiu e o valor medido (ex.: "Longest darkness 37 h exceeds the 24 h survival limit.").
+  - **Números substituídos (D52):** a contagem abaixo é anterior à D32 e à D36; os números vigentes estão na **D36** (hora do pouso dentro do dia).
   - Efeito com os pontos da D30 e a regra de inclinação da D31 (missão de 14 dias, pouso 00:00 UTC, 352 dias com dados completos; `npm run report:census`): viáveis / marginais / inviáveis — Shackleton rim 182 / 15 / 155; Connecting ridge 219 / 0 / 133; de Gerlache rim 200 / 1 / 151; Malapert massif 0 / 233 / 119; Haworth 0 / 117 / 235. Melhor compromisso por dia: Shackleton rim 159, Connecting ridge 68, de Gerlache rim 25, Malapert 16, Haworth 7, nenhum 77. Com +21 dias, 105 datas trocam o melhor compromisso de um local para outro, e em 139 datas outro local reabre antes do Shackleton rim (`npm run report:delay`). (Antes da D30, com centros de região, o Shackleton rim era o melhor em todos os 208 dias qualificados.)
 - **Melhor compromisso:** entre os locais que não são *not viable*, o de maior `min(engenharia, ciência)` (o lado mais fraco decide); empate pela maior soma.
 - **Missões fora do intervalo de dados** (2027) não são calculadas; a interface avisa.
@@ -180,13 +181,14 @@ Formato: data, decisão, motivo, consequências. Decisões novas vão no fim. N�
 ### D31 — 2026-11-14 — Inclinação, próxima janela viável e textos de escopo (ajustes de mentores)
 - **Inclinação:** nova regra em `MissionRules` (`maxSlopeDeg`, padrão **10°**, escolha do time, não requisito da NASA; ajustável em "Mission rules"): inclinação do terreno no local (DEM de 20 m) acima do limite **rebaixa o veredito em um nível** (viable → marginal → not viable), com motivo "Terrain slope X° exceeds the Y° limit". A inclinação aparece no cartão.
 - **Próxima janela viável:** `web/src/calc/nextViable.ts` procura, dia a dia (mesmo horário do pouso), a próxima data de pouso viável com as regras atuais e o tamanho da janela de dias viáveis consecutivos; o cartão mostra "Next viable landing: …" quando o veredito não é viável, e o painel mostra "Earliest viable site after the slip".
-- **Comunicação:** onde a Terra não está visível no pouso, o cartão mostra "No direct link: relay satellite required". `PENDENTE:` (detalhe do local) nota de que o sinal leva cerca de 1,3 s em cada sentido e de que a ferramenta avalia só a linha direta, não redes de retransmissão.
+- **Comunicação:** onde a Terra não está visível no pouso, o cartão mostra "No direct link: relay satellite required". (Resolvido na D52: fonte e conta em `REFERENCIAS.md` nº 20.) Nota no detalhe do local de que o sinal leva cerca de 1,3 s em cada sentido e de que a ferramenta avalia só a linha direta, não redes de retransmissão.
 - **Escopo:** bloco "What this tool covers" (cobre: luz solar, linha direta com a Terra, inclinação, proximidade de sombra permanente; não cobre: trajetória e combustível, ambiente térmico, obstáculos no solo, redes de retransmissão; ferramenta de planejamento, usada na Terra antes do lançamento) na abertura e no diálogo "What this adds · scope".
 - **Texto da abertura** atualizado; nenhuma parte do cálculo é descrita como inteligência artificial ("decision rules", "scoring").
 
 ### D32 — 2026-11-14 — Viabilidade separada do valor científico (revisa a D25)
 - **Decisão:** o veredito (viable / marginal / not viable) depende **só das regras de engenharia**: Sol no pouso, maior escuridão contínua, fração de horas com Sol, inclinação (D31) e a nota de engenharia (que inclui a comunicação). A **nota de ciência não reprova nem rebaixa** um local; entra no ranking e no melhor compromisso (max min(engenharia, ciência)).
 - **Filtro opcional** em "Mission rules": "Minimum science score" (padrão 40), **desligado por padrão**; quando ligado, só tira do melhor compromisso os locais abaixo do mínimo — nunca muda o veredito.
+- **Números substituídos (D52):** a contagem abaixo é anterior à D36; os números vigentes estão na **D36** (hora do pouso dentro do dia).
 - **Efeito** (missão de 14 dias, 352 dias de pouso com dados completos; `npm run report:census`): viáveis / marginais / inviáveis — Shackleton rim 182 / 15 / 155; Connecting ridge 219 / 0 / 133; de Gerlache rim 200 / 1 / 151; **Malapert massif 226 / 7 / 119**; **Haworth 116 / 1 / 235**; nenhum local viável em 77 dias. Melhor compromisso por dia: Shackleton rim 159, Connecting ridge 68, de Gerlache rim 25, Malapert 16, Haworth 7, nenhum 77 (inalterado, pois locais marginais já eram elegíveis). Com +21 dias, 105 datas trocam o melhor compromisso de um local para outro.
 
 ### D33 — 2026-11-14 — Cenário padrão da demonstração
@@ -337,6 +339,24 @@ Formato: data, decisão, motivo, consequências. Decisões novas vão no fim. N�
 - **Trajetórias:** traço forte onde o astro está visível (regra "qualquer parte do disco", módulo único D9), traço apagado atrás do relevo, ponto pequeno nos instantes de nascer e de ocaso (`trackRuns`, `trackEvents` em `calc/panorama.ts`, com testes). Em "Position sensitivity" a trajetória do Sol fica num só estilo, porque os dois pontos o veem de forma diferente.
 - **Instante atual:** o play move o mesmo marcador (com a hora) na linha do tempo da missão, na cor do controle de tempo; clicar nas faixas também move o instante.
 - **Status:** aplicada (2026-11-14), branch `panorama-polish`.
+
+### D52 — 2026-11-14 — Correções da revisão por perfis (leitura e acabamento)
+
+Origem: `docs/REVISAO_POR_PERFIS.md`. Nenhuma funcionalidade nova; pesos, limites, regras de viabilidade e cenário padrão inalterados.
+
+- **Sol e Terra contra o relevo:** na legenda do 3D e no painel do horizonte o número principal é a **folga do centro do disco em relação ao relevo naquela direção** (`clearanceDeg` em `calc/visibility.ts`, com teste), ex.: "Sun 0.5° above the terrain"; a elevação bruta e a altura do relevo vão para a dica. Evita ler "Sun −0.4°" como Sol abaixo do horizonte ao lado de "100% sunlit".
+- **Datas:** todas as datas usam o idioma da interface com o mês abreviado ("Mar 4, 2027" / "4 mar 2027"), nunca o formato do sistema operacional. O dia do pouso é um botão com o texto e um calendário nativo invisível, mais botões de dia anterior e seguinte; o "Delayed landing" só repete a data quando há atraso.
+- **Comparação com a NASA (etapa 6):** conferido que o módulo usa para a Terra a regra **"qualquer parte do disco"** (D24), a mesma convenção do produto 69; por isso não há segunda coluna. A simplificação da D24 é outra: o horizonte é consultado só no azimute do centro do disco (a Terra tem ~1,9°). Textos de "Why they differ" atualizados: 2027 é um único ano dentro do ciclo de 18,6 anos, e a consulta pelo centro do disco. Nada foi ajustado para aproximar números.
+- **Panorama:** astro atrás do relevo é desenhado **atrás da silhueta**, com contorno tracejado vazado e opacidade baixa; o nome fica legível por cima (relevo levemente translúcido).
+- **Números da abertura e do painel:** "(of 352)" virou "of 352 possible landing days in 2027", com o motivo na dica (a missão de 14 dias precisa terminar dentro dos dados); "87% · 11%" traz o nome de cada ponto (rim / inner wall); Malapert é "the site with the most viable landing days", não "best site".
+- **Carregamento:** cabeçalho visível e indicador discreto na área de conteúdo; o aviso do 3D fica centralizado dentro da área do 3D.
+- **Composição das notas:** dois blocos (Engineering, Science) com subtítulo, total e cor; dica explicando quando "Earth in view" e "Contact gaps" coincidem (todo o tempo sem contato num único intervalo); área da região de sombra permanente ao lado da distância (bloco de ciência e cartão).
+- **Cabeçalho:** navegação com "Mission panel" e "Roadmap", tela atual marcada (`aria-current`).
+- **Miudezas:** rótulos das setas do 3D reservam espaço e os nomes dos locais desviam deles; aviso no fim da lista de cartões quando ela continua; favicon; sombra `PCFShadowMap` (o tipo suave foi removido do three.js); nomes acessíveis em todos os campos de "Mission rules"; fonte das coordenadas por tipo de ponto no export (`Site coordinates: region: NASA Lunar Surface Data Book …; point: most-illuminated pixel, PGDA product 69`); datas sob as marcas de dia na linha do tempo da missão.
+- **Atraso do sinal:** fonte e conta em `REFERENCIAS.md` nº 20 (distância média 384 400 km, NASA; 384 400 ÷ 299 792,458 = 1,28 s). Pendência da D31 encerrada.
+- **D25 e D32:** contagens antigas marcadas como substituídas pela D36.
+- **Abertura:** rótulo pequeno "Mission planning · Lunar south pole · Real NASA data" / "Planejamento de missão · Polo sul da Lua · Dados reais da NASA".
+- **Status:** aplicada (2026-11-14), branch `profile-review-fixes`.
 
 ### Pendências abertas após a etapa 2
 - Nenhuma pendência de dados da etapa 2.

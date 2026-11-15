@@ -17,6 +17,7 @@ import { linkStatus } from './communication';
 import { bestCompromise, engineeringScore, scienceScore, verdict } from './scores';
 import {
   azimuthBin,
+  clearanceDeg,
   horizonAt,
   isAnyPartVisible,
   isFullyVisible,
@@ -264,5 +265,13 @@ describe('direct link status (D37)', () => {
       longestGapHours: 9,
     });
     expect(linkStatus({ earthFraction: 0.3, longestNoContactHours: 120 }).kind).toBe('low');
+  });
+});
+
+describe('clearanceDeg (D52)', () => {
+  it('gives the disc centre height above the terrain in its direction', () => {
+    const horizon = new Array<number>(360).fill(-0.9);
+    expect(clearanceDeg(horizon, 120.4, -0.4)).toBeCloseTo(0.5, 9);
+    expect(clearanceDeg(horizon, 120.4, -1.2)).toBeCloseTo(-0.3, 9);
   });
 });

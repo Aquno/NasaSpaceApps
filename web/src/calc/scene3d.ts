@@ -121,6 +121,9 @@ export interface BodyDirections {
   earth: Vec3;
   sunElDeg: number;
   earthElDeg: number;
+  /** Topocentric azimuths (degrees from north, clockwise) at the same record. */
+  sunAzDeg: number;
+  earthAzDeg: number;
   /** Record index used (clamped to the data). */
   index: number;
 }
@@ -149,6 +152,8 @@ export function bodyDirectionsAt(
     earth: bodyDirectionPoleFrame(site.lat, site.lon, s.earthAz[index] as number, earthEl),
     sunElDeg: sunEl,
     earthElDeg: earthEl,
+    sunAzDeg: s.sunAz[index] as number,
+    earthAzDeg: s.earthAz[index] as number,
     index,
   };
 }

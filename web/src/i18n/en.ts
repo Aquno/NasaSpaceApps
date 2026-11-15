@@ -22,7 +22,7 @@ export const en = {
   'lang.pt-BR': 'Português (Brasil)',
 
   // opening
-  'intro.kicker': 'Lunar south pole · Real NASA data',
+  'intro.kicker': 'Mission planning · Lunar south pole · Real NASA data',
   'intro.open': 'Open mission panel',
   'intro.lead':
     "Compare landing sites at the Moon's south pole by sunlight, Earth contact and science value, on any date.",
@@ -36,12 +36,13 @@ export const en = {
   'intro.f2': 'Science and engineering scores for all sites, side by side.',
   'intro.f3Title': 'Delay replanning',
   'intro.f3': 'Results for the new landing date when the launch moves.',
-  'intro.statShackValue': '{a:pct} · {b:pct}',
-  'intro.statShack': 'NASA average sunlight: Shackleton rim point and inner wall, {km:km1} apart',
-  'intro.statBest': 'viable landing days in {year} at the best site, {site} (of {total:int})',
+  'intro.statShackValue': '{a:pct}',
+  'intro.statShack': 'NASA average sunlight at two Shackleton points, {km:km1} apart',
+  'intro.statBest':
+    'viable landing days at {site}, the site with the most viable landing days, of {total:int} possible landing days in {year}',
   'intro.dataScope':
     '{n:int} reference points · {h:int} hours of Sun and Earth data per site, {year}.',
-  'intro.statNone': 'days in {year} with no viable site (of {total:int})',
+  'intro.statNone': 'days with no viable site, of {total:int} possible landing days in {year}',
   'intro.statDelay': 'landing dates where +{d:int} days changes the best site',
   'intro.statsNote':
     'Computed in the browser from the data files with the default rules ({days:int}-day mission).',
@@ -108,7 +109,7 @@ export const en = {
   'earliest.value': '{site}, {date:date} ({n:int} consecutive {n:plural:day|days})',
   'earliest.none': 'None in the data period.',
   'census.title': 'Viable landing days, {year}',
-  'census.noneShort': 'no viable site (of {total:int})',
+  'census.noneShort': 'no viable site, of {total:int} possible landing days',
   'aria.best': 'Best overall: {site}',
   'aria.noBest': 'No site qualifies with these rules.',
   'cards.aria': 'Sites ranked for this mission',
@@ -134,7 +135,7 @@ export const en = {
   'card.linkLow': 'Direct link only {p:pct} of mission: relay satellite required',
   'card.sun': 'Sun {p:pct}',
   'card.sunTitle': 'Mission hours with some part of the Sun visible',
-  'card.psr': '{km:km1} to permanent shadow',
+  'card.psr': '{km:km1} to permanent shadow ({a:dec1} km² region)',
   'card.psrTitle': 'Distance to the nearest permanently shadowed region',
   'card.slope': 'Slope {s:deg1}',
   'card.slopeTitle': 'Local terrain slope (20 m DEM)',
@@ -217,7 +218,6 @@ export const en = {
   'scene.vertical': 'Vertical ×{n:int}',
   'scene.verticalAria': 'Vertical exaggeration',
   'scene.reset': 'Reset view',
-  'scene.sun': 'Sun {el:deg1}',
   'scene.at': 'at {site}',
   'scene.aria': '3D south pole view. Arrow keys rotate and tilt, plus and minus zoom, R resets.',
   'scene.loading': 'Loading the 3D view…',
@@ -259,7 +259,6 @@ export const en = {
   'detail.play': 'Play',
   'detail.pause': 'Pause',
   'detail.hourOf': 'Hour {h:int} of {n:int}',
-  'detail.bodyAt': 'elevation {el:deg1} · terrain {h:deg1} in that direction',
   'detail.visible': 'visible',
   'detail.partial': 'partly visible',
   'detail.hidden': 'behind the terrain',
@@ -281,7 +280,8 @@ export const en = {
   'detail.band': '{px:int} m up to {km:int} km',
   'detail.observer': 'Observer height',
   'detail.observerValue': '{m:dec1} m above the ground (mast)',
-  'detail.signal': 'About 1.3 s each way between the Earth and the Moon.',
+  'detail.signal':
+    'About 1.3 s each way: mean Earth–Moon distance (384,400 km, NASA) divided by the speed of light.',
   'detail.directOnly': 'Direct line of sight only; relay satellites are not modelled.',
   'detail.notFound': 'This site is not in the data.',
   'dir.N': 'N',
@@ -339,19 +339,20 @@ export const en = {
   'check.diff': '{sign}{d:dec1} pts',
   'check.whyTitle': 'Why they differ',
   'check.why1':
-    'NASA averages 18.6 years of hourly steps (a lunar nutation cycle); this tool looks at one year.',
+    'NASA averages 18.6 years of hourly steps (a full lunar nutation cycle); this tool looks at 2027 only, a single year within that cycle, so the paths of the Sun and especially the Earth over the terrain differ from the long-term average.',
   'check.why2':
     'NASA uses a 60 m terrain map; this tool uses 20, 80 and 320 m maps by distance, with the observer on a 2 m mast.',
   'check.why3':
     'Each NASA value is one 60 m pixel; within about 90 m it can change by tens of points (see data/validation/COMPARISON.md).',
   'check.why4':
-    'The tool looks up the horizon at the whole degree of azimuth nearest the disc centre.',
+    'The tool looks up the horizon only at the whole degree of azimuth nearest the disc centre; the Earth is about 1.9° wide, so terrain under the edges of its disc is not checked.',
   'check.notTuned': 'Nothing was adjusted to bring the numbers closer.',
 
   // text review (D50)
   'map.resolution': 'LOLA relief, {px:int} m per pixel; vertical scale exaggerated. Visual only.',
   'info.label': 'More information',
-  'census.tip': '{days:int}-day mission, current rules.',
+  'census.tip':
+    '{days:int}-day mission, current rules. Possible landing days: the mission has to end within the data.',
   'detail.teamRules': 'Weights and limits of the scores are team choices, not NASA requirements.',
   'about.title': 'About',
   'about.compare': 'Compared with existing tools',
@@ -370,4 +371,25 @@ export const en = {
   'rule.marginalSunFraction': 'Sunlight in at least {p:pct} of the mission for viable',
   'rule.engineering': 'Engineering score at least {n:int} for viable',
   'rule.slope': 'Terrain slope at most {s:deg1}',
+
+  // profile review (D52)
+  'intro.statRim': 'rim',
+  'intro.statWall': 'inner wall',
+  'intro.totalTip':
+    'Possible landing days: the {days:int}-day mission has to end within the {year} data, so the last days of the year cannot be landing days.',
+  'controls.prevDay': 'Previous day',
+  'controls.nextDay': 'Next day',
+  'controls.pickDay': 'Landing day {date:date}. Open the calendar',
+  'controls.noDelayReadout': 'No delay',
+  'clear.above': '{d:deg1} above the terrain',
+  'clear.below': '{d:deg1} below the terrain',
+  'clear.level': 'at the terrain line',
+  'clear.tip': 'Disc centre: elevation {el:deg1}; terrain {h:deg1} in that direction.',
+  'header.nav': 'Screens',
+  'header.mission': 'Mission panel',
+  'cards.more': 'More sites below',
+  'part.gapsTip':
+    'Earth in view is the share of the mission with direct contact; Contact gaps is 1 minus the longest gap without contact as a share of the mission. When all the time without contact is one single gap, the two values are equal.',
+  'part.psrFact': 'Permanent shadow {km:km1} away · {a:dec1} km² region',
+  'detail.axisDate': '{t:daymonth}',
 } as const;

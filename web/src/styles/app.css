@@ -197,7 +197,7 @@ p {
   flex-direction: column;
   gap: var(--s1);
 }
-.control input[type='date'],
+
 .control select,
 .rules-grid input[type='number'] {
   background: var(--surface);
@@ -212,6 +212,47 @@ p {
 .delay-readout {
   font-family: var(--font-mono);
   font-size: 0.95rem;
+}
+/* Landing day: text in the interface language + invisible native calendar (D52). */
+.date-field {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s1);
+}
+.date-pick {
+  position: relative;
+}
+.date-display,
+.date-step {
+  background: var(--surface);
+  border: 0;
+  border-radius: 8px;
+  padding: var(--s1) var(--s2);
+  color: var(--text);
+  cursor: pointer;
+  font: inherit;
+}
+.date-display {
+  min-width: 9.5em;
+  text-align: left;
+}
+.date-step:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+.date-display:hover,
+.date-step:hover:not(:disabled) {
+  background: var(--surface-2);
+}
+.date-native {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  pointer-events: none;
+  border: 0;
+  padding: 0;
 }
 
 /* ---- dashboard: first screen without scrolling ---- */
@@ -273,7 +314,20 @@ p {
   gap: var(--s4);
   min-height: 0;
   overflow-y: auto;
+  overflow-x: hidden;
   padding-right: var(--s1);
+}
+/* The card list continues below (D52): a sticky hint over a fade at the bottom edge. */
+.more-hint {
+  position: sticky;
+  bottom: 0;
+  margin: calc(-1 * var(--s6)) 0 0;
+  padding: var(--s5) 0 var(--s1);
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--muted);
+  pointer-events: none;
+  background: linear-gradient(to bottom, transparent, var(--bg) 70%);
 }
 .earliest {
   font-size: 0.9rem;
@@ -1108,9 +1162,24 @@ svg text {
 .facts dd {
   margin: 0;
 }
+/* Score composition: Engineering and Science blocks, each with its total (D52). */
+.score-groups {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s3) var(--s6);
+}
+.score-group-title {
+  margin: 0 0 var(--s1);
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+.score-total {
+  font-family: var(--font-mono);
+  font-size: 1.1rem;
+}
 .score-parts {
   border-collapse: collapse;
-  max-width: 640px;
+  width: auto;
 }
 .score-parts td {
   padding: 2px var(--s4) 2px 0;
@@ -1129,7 +1198,8 @@ svg text {
   height: auto;
 }
 .pano-terrain {
-  fill: #3a3631;
+  /* Slightly translucent so a body behind the terrain still shows faintly (D52). */
+  fill: rgb(58 54 49 / 0.88);
   stroke: #b8ad9c;
   stroke-width: 1.5;
 }
@@ -1194,6 +1264,22 @@ svg text {
 .pano-label {
   font-size: 14px;
   fill: var(--text);
+}
+/* Behind the terrain: hollow, faint, under the silhouette (D52). */
+.pano-body.hidden .pano-disc {
+  fill: none;
+  stroke-width: 2;
+  stroke-dasharray: 4 3;
+  opacity: 0.45;
+}
+.pano-body.sun.hidden .pano-disc {
+  stroke: var(--sun);
+}
+.pano-body.earth.hidden .pano-disc {
+  stroke: var(--earth);
+}
+.pano-label.hidden {
+  fill: var(--muted);
 }
 .pano-caption {
   display: flex;
@@ -1277,6 +1363,22 @@ svg text {
 }
 .tl-tick {
   fill: var(--muted);
+}
+/* Dates under the day ticks (D52). */
+.timeline-dates {
+  position: relative;
+  height: 1.2em;
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+.tl-date {
+  position: absolute;
+  top: 0;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+.tl-date:first-child {
+  transform: none;
 }
 /* Current instant: same colour as the time control's thumb (D51). */
 .now-marker {
@@ -1471,10 +1573,21 @@ svg text {
 .card .link {
   font-size: 0.88rem;
 }
-/* Two values in one indicator (Shackleton rim · inner wall): one line, slightly smaller. */
+/* Two values in one indicator, each named (Shackleton rim / inner wall, D52). */
 .stat-value.pair {
-  white-space: nowrap;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s1) var(--s4);
   font-size: clamp(1.9rem, 2.6vw, 2.8rem);
+}
+.pair-item {
+  white-space: nowrap;
+}
+.stat-name {
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  color: var(--muted);
+  font-weight: 400;
 }
 
 /* ---- info tip (D50) ---- */
@@ -1567,4 +1680,46 @@ dialog h2 {
 .rule {
   font-size: 0.85rem;
   color: var(--muted);
+}
+
+/* ---- loading and header navigation (D52) ---- */
+.loading {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s2);
+}
+.spinner {
+  width: 1em;
+  height: 1em;
+  border: 2px solid var(--line);
+  border-top-color: var(--text);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .spinner {
+    animation: none;
+  }
+}
+.loading-area {
+  display: grid;
+  place-items: center;
+  min-height: 50vh;
+}
+.scene3d-loading {
+  display: grid;
+  place-items: center;
+}
+.header-nav {
+  display: flex;
+  gap: var(--s2);
+}
+.linkbtn.current {
+  background: var(--text);
+  color: var(--bg);
 }
