@@ -298,7 +298,7 @@ Formato: data, decisão, motivo, consequências. Decisões novas vão no fim. N�
 - **Contexto:** o repositório continua **privado**; o GitHub Pages gratuito não publica repositórios privados. Substitui a parte de publicação da D46.
 - **Decisão:** `.github/workflows/pages.yml` passa a rodar **só por acionamento manual** (comentário no arquivo explica como reativar). Novo fluxo `.github/workflows/ci.yml` roda a cada push (qualquer branch, incluindo junções na `main`) e em pull requests para a `main`: na interface, lint, formatação, testes e build; no pipeline, `ruff check`, `ruff format --check` e `pytest`. Não publica nada.
 - **Build portátil:** `BASE_PATH` define o caminho base (padrão `/`, raiz de um domínio; ou uma subpasta, ex.: `/lunar-navigator/`). A pasta `web/dist/` é o site inteiro, pronto para qualquer serviço estático; rotas com `#/` dispensam regra de reescrita. Conferido localmente na raiz e em subpasta. Instruções em `web/README.md`. Nenhum serviço de hospedagem escolhido.
-- **Status:** aplicada (2026-11-14).
+- **Status:** aplicada (2026-11-14). **Parte sobre o repositório privado e a hospedagem substituída pela D54** (repositório público, site no Vercel); o fluxo de verificação `ci.yml` e o build portátil continuam valendo.
 
 ### D48 — 2026-11-14 — Regra permanente de fluxo de git
 
@@ -374,6 +374,15 @@ Origem: achados da segunda rodada leve (relatados na conversa, não guardados no
 - **Comparação com a NASA:** nota na linha da parede interna do Shackleton: diferença não explicada; ponto numa encosta de cerca de 31°, o caso mais sensível do método. Nenhuma hipótese apresentada como causa.
 - **Testes:** `web/src/calc/robustness.test.ts` (filtro de ciência, entradas das regras e limite 0 h, último dia de pouso, falhas de carregamento, rotas, posição das dicas, longitudes).
 - **Status:** aplicada (2026-11-15), branch `robustness-final`.
+
+### D54 — 2026-11-15 — Repositório público e site publicado no Vercel
+
+- **Contexto:** substitui a parte da D47 que mantinha o repositório **privado** e nenhum serviço de hospedagem escolhido.
+- **Decisão:** o repositório passa a ser **público** (mudança feita pelo time) e o site estático é publicado no **Vercel**: https://nasa-space-apps-tgau.vercel.app/. A publicação foi configurada pelo time no Vercel, fora do repositório; nenhum arquivo de configuração do Vercel foi adicionado. Vídeo de demonstração: https://youtu.be/_4_Ka5h94uo. Equipe: AquinoTeam.
+- **Licença:** código sob MIT (`LICENSE`, AquinoTeam, 2026). Dados e textura da Lua são da NASA e seguem as diretrizes de uso da NASA; as fontes IBM Plex usam a SIL Open Font License. Nota no `README.md`.
+- **Uso de IA:** declarado no `README.md` (seção "Use of AI"): o assistente Claude, da Anthropic, ajudou em pesquisa, alinhamento de dados, conceitos, parte do código, testes e documentação (sob direção e revisão do time) e revisão da interface; nenhum modelo de IA roda dentro do produto e nenhuma imagem foi gerada por IA.
+- **Mantém:** `ci.yml` a cada push; `pages.yml` (GitHub Pages) continua só manual e não é usado para a publicação.
+- **Status:** aplicada (2026-11-15), branch `docs-public-release`. Só documentação; código e dados inalterados.
 
 ### Pendências abertas após a etapa 2
 - Nenhuma pendência de dados da etapa 2.

@@ -39,7 +39,7 @@ npx vite preview                             # conferir localmente o build (http
 - `BASE_PATH` precisa começar e terminar com `/`.
 - No PowerShell: `$env:BASE_PATH='/lunar-navigator/'; npm run build`. No Git Bash do Windows, a variável é convertida num caminho do Windows; use `MSYS2_ENV_CONV_EXCL=BASE_PATH BASE_PATH=/lunar-navigator/ npm run build`.
 - Para conferir uma subpasta localmente: `npx vite preview` com a mesma `BASE_PATH` e abrir `http://localhost:4173/lunar-navigator/`.
-- Nenhum serviço de hospedagem foi escolhido. O fluxo `.github/workflows/pages.yml` (GitHub Pages) existe só para acionamento manual, porque o repositório é privado.
+- O site está publicado no Vercel (https://nasa-space-apps-tgau.vercel.app/), configurado pelo time fora do repositório (D54). O fluxo `.github/workflows/pages.yml` (GitHub Pages) continua só para acionamento manual e não é usado na publicação.
 
 ## Onde fica cada coisa
 
