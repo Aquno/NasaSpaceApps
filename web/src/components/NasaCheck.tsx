@@ -54,7 +54,15 @@ export function NasaCheck({ sites, vis, year }: Props) {
             const y = yearVisibility(v);
             return (
               <tr key={s.id}>
-                <th scope="row">{s.name}</th>
+                <th scope="row">
+                  {s.name}
+                  {s.purpose !== null && (
+                    // Sensitivity demo point (inner wall): factual note, no cause asserted (D53).
+                    <span className="check-note">
+                      {t('check.wallNote', { s: s.terrainSlopeDeg })}
+                    </span>
+                  )}
+                </th>
                 <td className="num sun">{pct(y.sunPct)}</td>
                 <td className="num">{pct(s.nasaAvgIlluminationPct)}</td>
                 <td className="num">{diff(y.sunPct, s.nasaAvgIlluminationPct)}</td>

@@ -14,19 +14,27 @@ interface Props {
   inputs: MissionInputs;
   landingMs: number;
   dataStartMs: number;
-  dataEndMs: number;
+  /** Last landing day whose mission fits in the data for the chosen duration (calc, D53). */
+  lastLandingDayMs: number;
   onChange: (patch: Partial<MissionInputs>) => void;
 }
 
 /** yyyy-mm-dd for the native date input (UTC). */
 const isoDay = (ms: number) => new Date(ms).toISOString().slice(0, 10);
 
-export function MissionControls({ inputs, landingMs, dataStartMs, dataEndMs, onChange }: Props) {
+export function MissionControls({
+  inputs,
+  landingMs,
+  dataStartMs,
+  lastLandingDayMs,
+  onChange,
+}: Props) {
   const { t, date } = useI18n();
   const picker = useRef<HTMLInputElement>(null);
   const labelId = useId();
   const firstDay = Date.parse(`${isoDay(dataStartMs)}T00:00:00Z`);
-  const lastDay = Date.parse(`${isoDay(dataEndMs)}T00:00:00Z`);
+  // The delayed landing must still fit: the planned day stops `delay` days earlier (D53).
+  const lastDay = Math.max(firstDay, lastLandingDayMs - inputs.delayDays * DAY_MS);
   const setDay = (ms: number) => onChange({ plannedMs: Math.min(Math.max(ms, firstDay), lastDay) });
   const openPicker = () => {
     const el = picker.current;
@@ -71,7 +79,7 @@ export function MissionControls({ inputs, landingMs, dataStartMs, dataEndMs, onC
               aria-hidden="true"
               value={isoDay(inputs.plannedMs)}
               min={isoDay(dataStartMs)}
-              max={isoDay(dataEndMs)}
+              max={isoDay(lastDay)}
               onChange={(e) => {
                 const ms = Date.parse(`${e.target.value}T00:00:00Z`);
                 if (Number.isFinite(ms)) setDay(ms);

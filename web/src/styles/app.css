@@ -424,6 +424,10 @@ p {
 .verdict.not-viable {
   color: var(--dim);
 }
+/* Left out by the minimum science score filter (D53). */
+.verdict.below-science {
+  color: var(--science);
+}
 .scores {
   display: flex;
   gap: var(--s4);
@@ -590,6 +594,17 @@ p {
 }
 .rules-grid input[type='number'] {
   width: 80px;
+  border: 1px solid var(--line);
+}
+/* Invalid entry: the last valid value is kept (D53). */
+.rules-grid input.invalid {
+  border-color: var(--alert, #f08c6e);
+}
+.field-note {
+  display: block;
+  max-width: 14em;
+  font-size: 0.75rem;
+  color: var(--muted);
 }
 
 /* dialog */
@@ -1612,12 +1627,11 @@ svg text {
   color: var(--text);
 }
 .infotip-text {
-  position: absolute;
-  top: calc(100% + var(--s2));
-  left: 0;
-  z-index: 20;
+  /* Drawn on <body> and placed inside the window by ui/tipPosition.ts (D53). */
+  position: fixed;
+  z-index: 50;
   width: max-content;
-  max-width: 340px;
+  max-width: min(340px, calc(100vw - 16px));
   padding: var(--s3) var(--s4);
   border-radius: var(--radius);
   background: var(--glass-bg);
@@ -1626,22 +1640,14 @@ svg text {
   -webkit-backdrop-filter: blur(14px);
   backdrop-filter: blur(14px);
   color: var(--text);
+  font-family: var(--font-sans);
   font-size: 0.85rem;
   font-weight: 400;
   line-height: 1.45;
   white-space: normal;
-  visibility: hidden;
-  opacity: 0;
-  transition: opacity var(--ease);
-}
-.infotip.right .infotip-text {
-  left: auto;
-  right: 0;
-}
-.infotip:hover .infotip-text,
-.infotip:focus-within .infotip-text {
-  visibility: visible;
-  opacity: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  pointer-events: none;
 }
 .stage-title .infotip {
   pointer-events: auto;
@@ -1722,4 +1728,36 @@ dialog h2 {
 .linkbtn.current {
   background: var(--text);
   color: var(--bg);
+}
+
+/* ---- final robustness pass (D53) ---- */
+.data-error {
+  max-width: 640px;
+  padding: var(--s5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s3);
+  align-items: flex-start;
+}
+.data-error h2 {
+  margin: 0;
+}
+.not-found {
+  max-width: 640px;
+  margin: var(--s6) auto;
+  padding: var(--s5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s3);
+  align-items: flex-start;
+}
+.card.unavailable h3 {
+  color: var(--muted);
+}
+.check-note {
+  display: block;
+  max-width: 22em;
+  font-weight: 400;
+  font-size: 0.78rem;
+  color: var(--muted);
 }

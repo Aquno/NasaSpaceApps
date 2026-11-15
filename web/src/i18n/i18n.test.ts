@@ -16,7 +16,9 @@ describe('dictionaries', () => {
     expect(EN.t('card.sun', { p: 0.86 })).toBe('Sun 86%');
     expect(PT.t('card.sun', { p: 0.86 })).toBe('Sol 86%');
     expect(EN.hours(9)).toBe('9 h');
-    expect(PT.hours(120)).toBe('5 dias');
+    expect(PT.hours(120)).toBe('5,0 dias');
+    expect(EN.hours(72)).toBe('72 h');
+    expect(EN.hours(100)).toBe('4.2 days');
     expect(EN.t('card.psr', { km: 2.657, a: 1.96 })).toBe(
       '2.7 km to permanent shadow (2.0 km² region)',
     );
@@ -42,7 +44,7 @@ describe('dictionaries', () => {
     expect(EN.t('controls.slip', { n: 21 })).toBe('+21 days');
     expect(EN.t('controls.delayAria', { d: 0 })).toBe('0 days');
     const day = Date.parse('2027-03-25T00:00:00Z');
-    expect(PT.t('earliest.value', { site: 'X', date: day, n: 1 })).toContain('(1 dia seguido)');
+    expect(PT.t('earliest.value', { site: 'X', date: day, n: 1 })).toContain('(1 dia)');
     expect(PT.t('earliest.value', { site: 'X', date: day, n: 3 })).toContain('(3 dias seguidos)');
   });
 });

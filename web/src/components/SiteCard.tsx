@@ -15,7 +15,8 @@ import { VERDICT_ICON } from '../ui/format';
 import { ScoreParts } from './ScoreParts';
 import { InfoTip } from './InfoTip';
 import type { MissionRules } from '../config/scoring';
-import { ruleMsg } from '../ui/ruleText';
+import { ruleMsg, scienceReason, scienceRule } from '../ui/ruleText';
+import { siteStatus } from '../calc/evaluate';
 
 interface Props {
   site: SiteSummary;
@@ -58,10 +59,14 @@ export function SiteCard({
     );
   }
   const { engineering, science, verdict: v, metrics: m, link } = evaluation;
+  // Displayed status: a site left out by the science filter is never shown as viable (D53).
+  const status = siteStatus(evaluation);
+  const belowScience = status === 'below-science';
+  const reason = belowScience ? scienceReason(science, rules) : v.reason;
   const classes = [
     'card',
     'glass',
-    v.kind,
+    status,
     best ? 'best' : '',
     expanded ? 'expanded' : '',
     linked ? 'linked' : '',
@@ -72,7 +77,7 @@ export function SiteCard({
       : link.kind === 'gaps'
         ? 'card.linkGaps'
         : 'card.linkContinuous';
-  const rule = ruleMsg(v.rule, rules);
+  const rule = belowScience ? scienceRule(rules) : ruleMsg(v.rule, rules);
   const linkLine = (
     <p className={link.kind === 'low' ? 'link alert' : 'link earth'}>
       {link.kind === 'low' ? '△' : '▲'} {t(linkKey, { p: link.fraction, g: link.longestGapHours })}
@@ -85,7 +90,7 @@ export function SiteCard({
       aria-label={t(best ? 'card.ariaBest' : 'card.aria', {
         site: site.name,
         rank,
-        verdict: v.kind,
+        verdict: status,
       })}
       tabIndex={0}
       aria-expanded={expanded}
@@ -106,8 +111,8 @@ export function SiteCard({
         <div className="card-title">
           {best && <span className="tag-best caps">{t('card.best')}</span>}
           <h3>{site.name}</h3>
-          <span className={`verdict ${v.kind}`}>
-            <span aria-hidden="true">{VERDICT_ICON[v.kind]}</span> {t(`verdict.${v.kind}`)}
+          <span className={`verdict ${status}`}>
+            <span aria-hidden="true">{VERDICT_ICON[status]}</span> {t(`verdict.${status}`)}
           </span>
         </div>
         <div className="scores">
@@ -121,8 +126,8 @@ export function SiteCard({
           </div>
         </div>
       </div>
-      <p className="reason" title={msg(v.reason)}>
-        {msg(v.reason)}
+      <p className="reason" title={msg(reason)}>
+        {msg(reason)}
       </p>
       {(best || expanded) && linkLine}
       {expanded && (

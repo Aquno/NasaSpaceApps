@@ -12,6 +12,7 @@ import { indexAtOrAfter, type SiteData, type SiteSummary } from '../data/contrac
 import { linkStatus, type LinkStatus } from './communication';
 import { missionMetrics, missionWindow, type MissionMetrics, type WindowResult } from './metrics';
 import {
+  belowScienceMinimum,
   bestCompromise,
   engineeringScore,
   rankCandidates,
@@ -20,6 +21,7 @@ import {
   type RuleKey,
   type Score,
   type Verdict,
+  type VerdictKind,
 } from './scores';
 import type { VisibilitySeries } from './visibility';
 
@@ -37,6 +39,8 @@ export type SiteEvaluation =
       landingHourFound: boolean;
       /** Direct-to-Earth link summary (D37). */
       link: LinkStatus;
+      /** Excluded by the optional minimum science score filter (D53). */
+      belowScienceMin: boolean;
     }
   | { ok: false; siteId: string; window: Extract<WindowResult, { ok: false }> };
 
@@ -108,7 +112,29 @@ export function evaluateAt(
     landingMs,
     landingHourFound: true,
     link: linkStatus(metrics, rules),
+    belowScienceMin: belowScienceMinimum(science, rules),
   };
+}
+
+/**
+ * A landing that counts as viable for the mission: verdict "viable" and not excluded by the
+ * optional science filter (D53). Used by the earliest-viable search and the day census so the
+ * screen never calls a filtered site viable.
+ */
+export function isViableLanding(e: SiteEvaluation): boolean {
+  return e.ok && e.verdict.kind === 'viable' && !e.belowScienceMin;
+}
+
+/** What the screen shows for a site (D53). */
+export type SiteStatus = VerdictKind | 'below-science';
+
+/**
+ * Displayed status: "not viable" stays (an engineering failure is the stronger message);
+ * otherwise a site excluded by the science filter is "below-science", never "viable".
+ */
+export function siteStatus(e: Extract<SiteEvaluation, { ok: true }>): SiteStatus {
+  if (e.verdict.kind === 'not-viable') return 'not-viable';
+  return e.belowScienceMin ? 'below-science' : e.verdict.kind;
 }
 
 /** Evaluate a set of sites (typically the five ranked ones) and rank them. */

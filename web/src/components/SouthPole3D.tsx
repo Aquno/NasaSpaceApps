@@ -77,6 +77,8 @@ interface Props {
   sunElDeg: number;
   lightHorizon: ArrayLike<number>;
   lightSiteName: string;
+  /** The mission is outside the data: no Sun, no Earth, no numbers (D53). */
+  outside: boolean;
   onUnavailable: () => void;
 }
 
@@ -107,6 +109,7 @@ export function SouthPole3D(props: Props) {
     sunElDeg,
     lightHorizon,
     lightSiteName,
+    outside,
     onUnavailable,
   } = props;
   const host = useRef<HTMLDivElement>(null);
@@ -380,6 +383,21 @@ export function SouthPole3D(props: Props) {
   useEffect(() => {
     const st = stage.current;
     if (!st) return;
+    const showBodies = (on: boolean) => {
+      st.sunArrow.visible = on;
+      st.earthArrow.visible = on;
+      if (!on) {
+        // No data for this date: no light direction, no arrows (D53). Ambient light only.
+        st.light.intensity = 0;
+        shownDirs.current = null;
+      }
+    };
+    if (outside) {
+      showBodies(false);
+      renderRef.current();
+      return;
+    }
+    showBodies(true);
     const toSun = new THREE.Vector3(...exaggerateDirection(sun, exaggeration));
     const toEarth = new THREE.Vector3(...exaggerateDirection(earth, exaggeration));
     const apply = (s: THREE.Vector3, e: THREE.Vector3) => {
@@ -409,7 +427,7 @@ export function SouthPole3D(props: Props) {
     };
     frame = requestAnimationFrame(step);
     return () => cancelAnimationFrame(frame);
-  }, [sun, earth, exaggeration]);
+  }, [sun, earth, exaggeration, outside]);
 
   useEffect(() => {
     renderRef.current();
@@ -551,10 +569,16 @@ export function SouthPole3D(props: Props) {
           {t('scene.reset')}
         </button>
         <span className="note">
-          <span className="sun">
-            {t('detail.sun')} <Clearance horizon={lightHorizon} az={sunAzDeg} el={sunElDeg} />
-          </span>{' '}
-          {t('scene.at', { site: lightSiteName })}
+          {outside ? (
+            t('scene.outside')
+          ) : (
+            <>
+              <span className="sun">
+                {t('detail.sun')} <Clearance horizon={lightHorizon} az={sunAzDeg} el={sunElDeg} />
+              </span>{' '}
+              {t('scene.at', { site: lightSiteName })}
+            </>
+          )}
         </span>
       </div>
     </div>

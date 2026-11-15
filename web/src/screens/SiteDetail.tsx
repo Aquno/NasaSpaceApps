@@ -8,7 +8,7 @@
  * Inputs: one site's summary and data, the mission inputs of the dashboard.
  */
 import { useEffect, useMemo, useState } from 'react';
-import { evaluateSite } from '../calc/evaluate';
+import { evaluateSite, siteStatus } from '../calc/evaluate';
 import { trackEvents, trackRuns } from '../calc/panorama';
 import { visibilitySeries } from '../calc/visibility';
 import { indexAtOrAfter, type SiteData, type SiteSummary } from '../data/contract';
@@ -17,7 +17,7 @@ import { Footer } from '../components/Footer';
 import { Header } from '../components/Header';
 import { HorizonPanorama } from '../components/HorizonPanorama';
 import { InfoTip } from '../components/InfoTip';
-import { ruleMsg } from '../ui/ruleText';
+import { ruleMsg, scienceReason, scienceRule } from '../ui/ruleText';
 import { MissionTimeline } from '../components/MissionTimeline';
 import { ScoreParts } from '../components/ScoreParts';
 import { SiteFacts } from '../components/SiteFacts';
@@ -99,7 +99,10 @@ export function SiteDetail({ site, data, inputs }: Props) {
   const nowMs = data.meta.startMs + i * data.meta.stepMinutes * 60_000;
   const at = (arr: ArrayLike<number>) => arr[i] as number;
   const { verdict: v, engineering, science, metrics, link } = ev;
-  const rule = ruleMsg(v.rule, inputs.rules);
+  const status = siteStatus(ev);
+  const belowScience = status === 'below-science';
+  const reason = belowScience ? scienceReason(science, inputs.rules) : v.reason;
+  const rule = belowScience ? scienceRule(inputs.rules) : ruleMsg(v.rule, inputs.rules);
   const linkKey: MessageKey =
     link.kind === 'low'
       ? 'card.linkLow'
@@ -116,8 +119,8 @@ export function SiteDetail({ site, data, inputs }: Props) {
           ◂ {t('app.backToDashboard')}
         </a>
         <h1 className="detail-title">{site.name}</h1>
-        <span className={`verdict ${v.kind}`}>
-          <span aria-hidden="true">{VERDICT_ICON[v.kind]}</span> {t(`verdict.${v.kind}`)}
+        <span className={`verdict ${status}`}>
+          <span aria-hidden="true">{VERDICT_ICON[status]}</span> {t(`verdict.${status}`)}
         </span>
         <span className="detail-scores">
           <span className="sun">{num(engineering.total)}</span>{' '}
@@ -216,7 +219,7 @@ export function SiteDetail({ site, data, inputs }: Props) {
 
       <section className="glass detail-block" aria-label={t('detail.scores')}>
         <h2 className="caps">{t('detail.scores')}</h2>
-        <p className="detail-reason">{msg(v.reason)}</p>
+        <p className="detail-reason">{msg(reason)}</p>
         {rule && <p className="rule">{t('card.rule', { rule: msg(rule) })}</p>}
         <p className="next mono">
           {ev.landingHourFound ? t('card.landingAt', { t: ev.landingMs }) : t('card.noLandingHour')}

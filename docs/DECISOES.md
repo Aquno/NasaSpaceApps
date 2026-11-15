@@ -192,6 +192,7 @@ Formato: data, decisão, motivo, consequências. Decisões novas vão no fim. N�
 - **Efeito** (missão de 14 dias, 352 dias de pouso com dados completos; `npm run report:census`): viáveis / marginais / inviáveis — Shackleton rim 182 / 15 / 155; Connecting ridge 219 / 0 / 133; de Gerlache rim 200 / 1 / 151; **Malapert massif 226 / 7 / 119**; **Haworth 116 / 1 / 235**; nenhum local viável em 77 dias. Melhor compromisso por dia: Shackleton rim 159, Connecting ridge 68, de Gerlache rim 25, Malapert 16, Haworth 7, nenhum 77 (inalterado, pois locais marginais já eram elegíveis). Com +21 dias, 105 datas trocam o melhor compromisso de um local para outro.
 
 ### D33 — 2026-11-14 — Cenário padrão da demonstração
+- **Substituída pela D53 (2026-11-15):** o padrão passou a 2027-01-10 → 2027-01-31; o cenário abaixo (2027-03-04 → 2027-03-25) fica anotado como alternativa.
 - **Decisão:** ao abrir o painel: pouso planejado **2027-03-04**, missão de **14 dias**, atraso **0**; o botão "Slip launch 21 days" leva o pouso a **2027-03-25**.
 - **Por quê:** é o caso mais claro do relatório de atraso (`npm run report:delay`), e continua valendo depois da D32: Shackleton rim viável e melhor compromisso (eng 94 / sci 88) → depois do atraso, not viable ("Dark at landing"), e o de Gerlache rim passa a melhor compromisso (viável, eng 80 / sci 58).
 
@@ -357,6 +358,22 @@ Origem: `docs/REVISAO_POR_PERFIS.md`. Nenhuma funcionalidade nova; pesos, limite
 - **D25 e D32:** contagens antigas marcadas como substituídas pela D36.
 - **Abertura:** rótulo pequeno "Mission planning · Lunar south pole · Real NASA data" / "Planejamento de missão · Polo sul da Lua · Dados reais da NASA".
 - **Status:** aplicada (2026-11-14), branch `profile-review-fixes`.
+
+### D53 — 2026-11-15 — Último lote de robustez e acabamento (segunda rodada de revisão)
+
+Origem: achados da segunda rodada leve (relatados na conversa, não guardados no repositório). Nenhuma funcionalidade nova; pesos e limites padrão inalterados.
+
+- **Filtro de ciência coerente:** quando "Minimum science score" está ligado e exclui um local, o local aparece como **"Below science minimum"** (nunca "Viable") e fica fora do melhor local, do "Earliest viable landing" e da contagem de dias viáveis (`belowScienceMin`, `isViableLanding`, `siteStatus` em `calc/evaluate.ts`). Se as regras de engenharia já reprovam, continua "Not viable".
+- **Campos de "Mission rules":** cada campo tem intervalo e passo (`RULE_LIMITS` em `config/scoring.ts`: sobrevivência 0–720 h, porcentagens 0–100, notas 0–100, inclinação 0–45° em passos de 0,5°). Vazio ou inválido mantém o último valor válido e mostra uma nota discreta (`ui/ruleInput.ts`). "Reset to defaults" continua no bloco. **Limite de sobrevivência 0 h** = nenhuma escuridão admitida: missão sem escuridão passa; com escuridão, o motivo diz "the survival limit allows no darkness".
+- **Datas fora dos dados:** calendário e botões de dia só oferecem dias em que a missão (duração e atraso) cabe nos dados (`lastLandingDayMs` em `calc/metrics.ts`). Se o atraso leva a data para fora, a tela mostra o estado "fora dos dados", inclusive o 3D (sem Sol, sem Terra, sem luz direcional) e a legenda ("Outside the data").
+- **Falha de dados:** classificação em rede (sem resposta ou HTTP) e contrato (JSON inválido ou fora do contrato); mensagem traduzida, cabeçalho visível, botão "Try again" em todas as telas, inclusive a abertura (nada de "carregando" para sempre). Se só o arquivo de um local falha, os demais funcionam e o local aparece como indisponível (cartão e detalhe).
+- **Rotas:** endereço inexistente e local inexistente mostram "Not found" com cabeçalho e link para o painel (`ui/route.ts`).
+- **Dicas ⓘ:** desenhadas sobre a página e posicionadas dentro da janela (abrem para cima quando não há espaço abaixo, `ui/tipPosition.ts`), fecham com Esc e, fechadas, não ocupam espaço (sem rolagem horizontal).
+- **Textos:** mensagens de erro em português; durações em horas até 72 h e depois em dias com uma casa decimal (100 h = 4,2 dias); "(1 day)" / "(1 dia)" no lugar de "1 consecutive day"; longitudes de 0 a 180 com E/W (L/O em português), só na exibição.
+- **Cenário padrão:** pouso **2027-01-10**, 14 dias, sem atraso; "+21 days" leva a **2027-01-31** (Shackleton rim viável e melhor, eng 99 / sci 88 → not viable; Connecting ridge passa a melhor, eng 83 / sci 66; viáveis 4 → 2). O cenário anterior (2027-03-04 → 2027-03-25, D33) fica como alternativa.
+- **Comparação com a NASA:** nota na linha da parede interna do Shackleton: diferença não explicada; ponto numa encosta de cerca de 31°, o caso mais sensível do método. Nenhuma hipótese apresentada como causa.
+- **Testes:** `web/src/calc/robustness.test.ts` (filtro de ciência, entradas das regras e limite 0 h, último dia de pouso, falhas de carregamento, rotas, posição das dicas, longitudes).
+- **Status:** aplicada (2026-11-15), branch `robustness-final`.
 
 ### Pendências abertas após a etapa 2
 - Nenhuma pendência de dados da etapa 2.

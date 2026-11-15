@@ -9,7 +9,7 @@
  */
 import { DEFAULT_RULES, type MissionRules } from '../config/scoring';
 import type { SiteData, SiteSummary } from '../data/contract';
-import { evaluateSite, evaluateSites } from './evaluate';
+import { evaluateSite, evaluateSites, isViableLanding, siteStatus } from './evaluate';
 import type { VerdictKind } from './scores';
 import type { VisibilitySeries } from './visibility';
 
@@ -18,7 +18,8 @@ const DAY_MS = 86_400_000;
 export interface LandingCensus {
   /** Landing days whose whole mission fits in the data. */
   daysInData: number;
-  perSite: Map<string, Record<VerdictKind, number>>;
+  /** Days per verdict; `belowScience` counts days excluded by the science filter (D53). */
+  perSite: Map<string, Record<VerdictKind | 'belowScience', number>>;
   /** Landing days on which no site is viable. */
   noViableDays: number;
 }
@@ -30,8 +31,10 @@ export function landingCensus(
   durationH: number,
   rules: MissionRules = DEFAULT_RULES,
 ): LandingCensus {
-  const perSite = new Map<string, Record<VerdictKind, number>>();
-  for (const s of sites) perSite.set(s.id, { viable: 0, marginal: 0, 'not-viable': 0 });
+  const perSite = new Map<string, Record<VerdictKind | 'belowScience', number>>();
+  for (const s of sites) {
+    perSite.set(s.id, { viable: 0, marginal: 0, 'not-viable': 0, belowScience: 0 });
+  }
   const meta = data.values().next().value?.meta;
   if (!meta) return { daysInData: 0, perSite, noViableDays: 0 };
   let daysInData = 0;
@@ -50,8 +53,8 @@ export function landingCensus(
       if (!d || !v || !counts) continue;
       const e = evaluateSite(s, d, v, t, durationH, rules);
       if (!e.ok) continue;
-      counts[e.verdict.kind]++;
-      if (e.verdict.kind === 'viable') anyViable = true;
+      counts[siteStatus(e) === 'below-science' ? 'belowScience' : e.verdict.kind]++;
+      if (isViableLanding(e)) anyViable = true;
     }
     if (!anyViable) noViableDays++;
   }

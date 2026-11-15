@@ -28,7 +28,8 @@ export interface Msg {
 /** {name}, {name:type} or {name:plural:one|other}. */
 const PLACEHOLDER = /\{(\w+)(?::(\w+)(?::([^}]*))?)?\}/g;
 const DAY_HOURS = 24;
-const DAYS_FROM_HOURS = 48; // durations of 48 h or more are shown in days
+// Durations up to 72 h are shown in hours; longer ones in days with one decimal (D53).
+const MAX_HOURS_SHOWN = 72;
 
 export interface Translator {
   locale: Locale;
@@ -118,8 +119,8 @@ export function createTranslator(messages: Messages, locale: Locale): Translator
 
   function hours(h: number | null): string {
     if (h === null) return t('unit.beyondData');
-    return h >= DAYS_FROM_HOURS
-      ? t('unit.days', { n: num(Math.round(h / DAY_HOURS), 0) })
+    return h > MAX_HOURS_SHOWN
+      ? t('unit.days', { n: num(h / DAY_HOURS, 1) })
       : t('unit.hours', { n: num(Math.round(h), 0) });
   }
 

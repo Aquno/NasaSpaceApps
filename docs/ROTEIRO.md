@@ -158,3 +158,4 @@ Legenda de status: `a fazer` · `em andamento` · `concluído` · `plano B` · `
 | 2026-11-14 | 5 | D50: decisões dos 10 casos de dúvida aplicadas; capturas refeitas; `polish-visual-review` juntada na `main` |
 | 2026-11-14 | 5 | D51: acabamentos do panorama (escala com margem, discos circulares, eixo fora do relevo, trechos visível/escondido com nascer e ocaso, marcador comum na linha do tempo) |
 | 2026-11-14 | 5 | D52: correções da revisão por perfis (folga do Sol e da Terra sobre o relevo, datas no idioma da interface, astro escondido atrás do relevo, totais explicados, carregamento, notas em dois blocos, navegação, miudezas, fonte do atraso do sinal) |
+| 2026-11-15 | 5 | D53: último lote de robustez (filtro de ciência coerente, campos de regras validados, datas só dentro dos dados, falha de dados com nova tentativa e locais indisponíveis, "Not found", dicas dentro da janela, textos, cenário padrão 10/01 → 31/01, nota da parede interna) |
