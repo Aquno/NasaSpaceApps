@@ -6,6 +6,7 @@
  * Roadmap stage: 5 — Interface (see docs/ROTEIRO.md).
  */
 import { lazy, Suspense, useMemo, useRef, useState } from 'react';
+import { lastLandingDayMs } from '../calc/metrics';
 import { bodyDirectionsAt } from '../calc/scene3d';
 import { AnnualStrips } from '../components/AnnualStrips';
 import { Footer } from '../components/Footer';
@@ -33,13 +34,23 @@ const DASH_STAR_ALPHA = 0.1;
 interface Props {
   sites: SiteSummary[];
   data: Map<string, SiteData>;
+  /** Sites whose data file failed to load: shown as unavailable cards (D53). */
+  unavailable: string[];
   terrain: Terrain;
   inputs: MissionInputs;
   onInputs: (patch: Partial<MissionInputs>) => void;
   onOpenSite: (id: string) => void;
 }
 
-export function Dashboard({ sites, data, terrain, inputs, onInputs, onOpenSite }: Props) {
+export function Dashboard({
+  sites,
+  data,
+  unavailable,
+  terrain,
+  inputs,
+  onInputs,
+  onOpenSite,
+}: Props) {
   const { t } = useI18n();
   const pre = usePrecomputed(sites, data);
   const d = useEvaluations(pre, data, inputs);
@@ -89,7 +100,7 @@ export function Dashboard({ sites, data, terrain, inputs, onInputs, onOpenSite }
             inputs={inputs}
             landingMs={d.landingMs}
             dataStartMs={anyMeta.startMs}
-            dataEndMs={anyMeta.endMs}
+            lastLandingDayMs={lastLandingDayMs(anyMeta, inputs.durationH)}
             onChange={onInputs}
           />
         )}
@@ -140,6 +151,7 @@ export function Dashboard({ sites, data, terrain, inputs, onInputs, onOpenSite }
                   sunElDeg={lightDirs.sunElDeg}
                   lightHorizon={lightDirs.horizon}
                   lightSiteName={lightSite.name}
+                  outside={Boolean(outside)}
                   onUnavailable={() => setView3d(false)}
                 />
               </Suspense>
@@ -202,6 +214,16 @@ export function Dashboard({ sites, data, terrain, inputs, onInputs, onOpenSite }
                   </li>
                 );
               })}
+              {sites
+                .filter((s) => unavailable.includes(s.id) && s.purpose === null)
+                .map((s) => (
+                  <li key={s.id}>
+                    <article className="card glass unavailable">
+                      <h3>{s.name}</h3>
+                      <p className="reason">{t('unavailable.card')}</p>
+                    </article>
+                  </li>
+                ))}
             </ol>
             {sideMore && (
               <p className="more-hint" aria-hidden="true">

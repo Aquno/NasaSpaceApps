@@ -1,11 +1,14 @@
 /**
  * What: "Mission rules" block: shows and edits the verdict rules (team choices, not NASA
- *   requirements). Input only; the rules are applied by the calc module.
- * Roadmap stage: 5 — Interface (see docs/ROTEIRO.md); decisions D25, D31, D32, D37.
+ *   requirements). Each number is limited to a valid range and step (config RULE_LIMITS, D53);
+ *   an empty or invalid entry keeps the last valid value and shows a short note, never zero.
+ *   Input only; the rules are applied by the calc module.
+ * Roadmap stage: 5 — Interface (see docs/ROTEIRO.md); decisions D25, D31, D32, D37, D53.
  */
-import type { ReactNode } from 'react';
-import { DEFAULT_RULES, type MissionRules } from '../config/scoring';
+import { useId, useState, type ReactNode } from 'react';
+import { DEFAULT_RULES, RULE_LIMITS, type MissionRules } from '../config/scoring';
 import { useI18n } from '../i18n/I18nProvider';
+import { parseRuleInput, type RuleLimit } from '../ui/ruleInput';
 
 interface Props {
   rules: MissionRules;
@@ -23,18 +26,65 @@ function Field({ label, children }: { label: string; children: ReactNode }) {
   );
 }
 
+interface NumberInputProps {
+  label: string;
+  /** Current valid value, in screen units. */
+  value: number;
+  limit: RuleLimit;
+  disabled?: boolean;
+  onCommit: (value: number) => void;
+}
+
+/** Number field that only commits values inside its range (D53). */
+function NumberInput({ label, value, limit, disabled = false, onCommit }: NumberInputProps) {
+  const { t } = useI18n();
+  const noteId = useId();
+  // Draft text while typing; it follows the value when the value changes from outside (reset).
+  const [draft, setDraft] = useState({ text: String(value), forValue: value });
+  if (draft.forValue !== value) setDraft({ text: String(value), forValue: value });
+  const invalid = parseRuleInput(draft.text, limit) === null;
+  return (
+    <>
+      <input
+        type="number"
+        inputMode="decimal"
+        aria-label={label}
+        aria-invalid={invalid}
+        aria-describedby={invalid ? noteId : undefined}
+        className={invalid ? 'invalid' : undefined}
+        min={limit.min}
+        max={limit.max}
+        step={limit.step}
+        disabled={disabled}
+        value={draft.text}
+        onChange={(e) => {
+          const text = e.target.value;
+          const parsed = parseRuleInput(text, limit);
+          setDraft({ text, forValue: parsed ?? value });
+          if (parsed !== null && parsed !== value) onCommit(parsed);
+        }}
+        onBlur={() => {
+          if (invalid) setDraft({ text: String(value), forValue: value });
+        }}
+      />
+      {invalid && (
+        <span id={noteId} className="field-note" role="status">
+          {t('rules.invalid', { min: limit.min, max: limit.max, v: String(value) })}
+        </span>
+      )}
+    </>
+  );
+}
+
 export function MissionRulesPanel({ rules, onChange }: Props) {
   const { t } = useI18n();
   const set = (patch: Partial<MissionRules>) => onChange({ ...rules, ...patch });
-  const num = (v: string, fallback: number) => (Number.isFinite(Number(v)) ? Number(v) : fallback);
-  const pctInput = (key: keyof MissionRules, value: number, label: string) => (
-    <input
-      type="number"
-      aria-label={label}
-      min={0}
-      max={100}
-      value={Math.round(value * PERCENT)}
-      onChange={(e) => set({ [key]: num(e.target.value, 0) / PERCENT } as Partial<MissionRules>)}
+  const pct = (key: keyof MissionRules, label: string) => (
+    <NumberInput
+      label={label}
+      value={Math.round((rules[key] as number) * PERCENT)}
+      limit={RULE_LIMITS.percent}
+      onCommit={(v) => set({ [key]: v / PERCENT } as Partial<MissionRules>)}
     />
   );
   return (
@@ -50,34 +100,23 @@ export function MissionRulesPanel({ rules, onChange }: Props) {
           />
         </Field>
         <Field label={t('rules.survival')}>
-          <input
-            type="number"
-            aria-label={t('rules.survival')}
-            min={1}
+          <NumberInput
+            label={t('rules.survival')}
             value={rules.survivalDarknessHours}
-            onChange={(e) =>
-              set({ survivalDarknessHours: num(e.target.value, rules.survivalDarknessHours) })
-            }
+            limit={RULE_LIMITS.survivalDarknessHours}
+            onCommit={(v) => set({ survivalDarknessHours: v })}
           />
         </Field>
-        <Field label={t('rules.minSun')}>
-          {pctInput('minSunFraction', rules.minSunFraction, t('rules.minSun'))}
-        </Field>
+        <Field label={t('rules.minSun')}>{pct('minSunFraction', t('rules.minSun'))}</Field>
         <Field label={t('rules.marginalSun')}>
-          {pctInput(
-            'marginalBelowSunFraction',
-            rules.marginalBelowSunFraction,
-            t('rules.marginalSun'),
-          )}
+          {pct('marginalBelowSunFraction', t('rules.marginalSun'))}
         </Field>
         <Field label={t('rules.viableEng')}>
-          <input
-            type="number"
-            min={0}
-            max={100}
-            aria-label={t('rules.viableEng')}
+          <NumberInput
+            label={t('rules.viableEng')}
             value={rules.viableMinEngineering}
-            onChange={(e) => set({ viableMinEngineering: num(e.target.value, 0) })}
+            limit={RULE_LIMITS.score}
+            onCommit={(v) => set({ viableMinEngineering: v })}
           />
         </Field>
         <Field label={t('rules.scienceFilter')}>
@@ -88,28 +127,22 @@ export function MissionRulesPanel({ rules, onChange }: Props) {
               onChange={(e) => set({ minScienceEnabled: e.target.checked })}
               aria-label={t('rules.scienceFilterEnable')}
             />{' '}
-            <input
-              type="number"
-              min={0}
-              max={100}
+            <NumberInput
+              label={t('rules.scienceFilterValue')}
               value={rules.minScienceScore}
+              limit={RULE_LIMITS.score}
               disabled={!rules.minScienceEnabled}
-              onChange={(e) => set({ minScienceScore: num(e.target.value, 0) })}
-              aria-label={t('rules.scienceFilterValue')}
+              onCommit={(v) => set({ minScienceScore: v })}
             />
           </span>
         </Field>
-        <Field label={t('rules.relay')}>
-          {pctInput('lowLinkBelowEarthFraction', rules.lowLinkBelowEarthFraction, t('rules.relay'))}
-        </Field>
+        <Field label={t('rules.relay')}>{pct('lowLinkBelowEarthFraction', t('rules.relay'))}</Field>
         <Field label={t('rules.slope')}>
-          <input
-            type="number"
-            min={0}
-            max={45}
-            aria-label={t('rules.slope')}
+          <NumberInput
+            label={t('rules.slope')}
             value={rules.maxSlopeDeg}
-            onChange={(e) => set({ maxSlopeDeg: num(e.target.value, rules.maxSlopeDeg) })}
+            limit={RULE_LIMITS.maxSlopeDeg}
+            onCommit={(v) => set({ maxSlopeDeg: v })}
           />
         </Field>
         <button type="button" className="linkbtn" onClick={() => onChange(DEFAULT_RULES)}>

@@ -6,7 +6,7 @@
  * Roadmap stage: 5 — Interface (see docs/ROTEIRO.md).
  */
 import { useMemo } from 'react';
-import { evaluateSite } from '../calc/evaluate';
+import { evaluateSite, siteStatus } from '../calc/evaluate';
 import { surfaceDistanceKm } from '../calc/mapGeometry';
 import { trackSegments } from '../calc/panorama';
 import { visibilitySeries } from '../calc/visibility';
@@ -59,10 +59,7 @@ export function SmallMove({ sites, data, landingDayMs, durationH, rules, sphereR
   const cell = (e: typeof ea, f: (x: Extract<NonNullable<typeof ea>, { ok: true }>) => string) =>
     e && e.ok ? f(e) : t('unit.na');
   const rows: [string, (x: Extract<NonNullable<typeof ea>, { ok: true }>) => string][] = [
-    [
-      t('small.verdict'),
-      (x) => `${VERDICT_ICON[x.verdict.kind]} ${t(`verdict.${x.verdict.kind}`)}`,
-    ],
+    [t('small.verdict'), (x) => `${VERDICT_ICON[siteStatus(x)]} ${t(`verdict.${siteStatus(x)}`)}`],
     [t('card.engineering'), (x) => num(x.engineering.total)],
     [t('card.science'), (x) => (x.science ? num(x.science.total) : t('unit.na'))],
     [t('small.sun'), (x) => t('small.pct', { p: x.metrics.sunFraction })],

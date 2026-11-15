@@ -63,12 +63,28 @@ export const DEFAULT_RULES: MissionRules = {
   lowLinkBelowEarthFraction: 0.5,
 };
 
+/**
+ * Accepted range and step of each editable rule (D53), in the units shown on screen (hours,
+ * percent, score points, degrees). Presentation limits, not NASA values: survival up to 720 h
+ * (30 days, longer than the longest mission offered); slope up to 45°.
+ */
+export const RULE_LIMITS = {
+  survivalDarknessHours: { min: 0, max: 720, step: 1 },
+  percent: { min: 0, max: 100, step: 1 },
+  score: { min: 0, max: 100, step: 1 },
+  maxSlopeDeg: { min: 0, max: 45, step: 0.5 },
+} as const;
+
 /** Mission duration choices offered in the interface (hours). Default: 14 days. */
 export const MISSION_DURATION_OPTIONS_H = [72, 168, 336, 504, 672] as const;
 export const DEFAULT_MISSION_DURATION_H = 336;
 
-/** Default demo scenario (D33): landing 2027-03-04, 14 days, no delay; "Slip launch 21 days" -> 2027-03-25. */
-export const DEFAULT_LANDING_ISO = '2027-03-04T00:00:00Z';
+/**
+ * Default demo scenario (D53, replaces D33): landing 2027-01-10, 14 days, no delay; "+21 days"
+ * -> 2027-01-31 (Shackleton rim best and viable -> not viable; Connecting ridge becomes best).
+ * Previous default kept as an alternative: 2027-03-04 -> 2027-03-25 (D33).
+ */
+export const DEFAULT_LANDING_ISO = '2027-01-10T00:00:00Z';
 export const MAX_DELAY_DAYS = 60;
 /** Delay used in the pitch question ("Your launch just slipped three weeks"). */
 export const PITCH_DELAY_DAYS = 21;

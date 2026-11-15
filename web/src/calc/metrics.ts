@@ -35,6 +35,19 @@ export function missionWindow(
   return { ok: true, window: { start, length } };
 }
 
+const DAY_MS = 86_400_000;
+
+/**
+ * Last landing DAY (ms UTC at 00:00) whose whole mission fits in the data, with the same test as
+ * missionWindow (D53): the date controls never offer a day whose mission runs past the data.
+ */
+export function lastLandingDayMs(meta: SiteData['meta'], durationHours: number): number {
+  const stepMs = meta.stepMinutes * 60_000;
+  const length = Math.round((durationHours * 60) / meta.stepMinutes);
+  const lastStartMs = meta.startMs + (meta.count - length) * stepMs;
+  return Math.floor(lastStartMs / DAY_MS) * DAY_MS;
+}
+
 /** Number of 1s in flags[start, start + length). */
 export function countOn(flags: Uint8Array, start: number, length: number): number {
   let n = 0;

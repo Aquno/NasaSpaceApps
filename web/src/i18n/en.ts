@@ -6,8 +6,6 @@
 export const en = {
   // app shell
   'app.loading': 'Loading site data…',
-  'app.dataErrorTitle': 'Data error',
-  'app.dataErrorIntro': 'The data files do not match the data contract:',
   'app.noSites': 'No sites in sites.json.',
   'app.backToDashboard': 'Back to the mission dashboard',
 
@@ -106,7 +104,7 @@ export const en = {
   'warn.noSite': 'No viable site on {date:date}.',
   'earliest.after': 'Earliest viable landing',
   'earliest.from': 'Earliest viable landing',
-  'earliest.value': '{site}, {date:date} ({n:int} consecutive {n:plural:day|days})',
+  'earliest.value': '{site}, {date:date} ({n:int} {n:plural:day|consecutive days})',
   'earliest.none': 'None in the data period.',
   'census.title': 'Viable landing days, {year}',
   'census.noneShort': 'no viable site, of {total:int} possible landing days',
@@ -128,7 +126,7 @@ export const en = {
   'card.ariaBest': '{site}, rank {rank:int}, {verdict:verdict}, best overall',
   'card.landingAt': 'Landing {t:datetime}',
   'card.noLandingHour': 'No hour of this day meets the landing rules.',
-  'card.next': 'Next viable: {date:date} ({n:int} consecutive {n:plural:day|days})',
+  'card.next': 'Next viable: {date:date} ({n:int} {n:plural:day|consecutive days})',
   'card.noNext': 'No viable landing before the end of the data.',
   'card.linkContinuous': 'Direct link {p:pct} of mission',
   'card.linkGaps': 'Direct link {p:pct} of mission · longest gap {g:hours}',
@@ -144,7 +142,8 @@ export const en = {
   'card.partPoints': '= {p:dec1}',
   'card.fullDisc': 'Full disc: Sun {s:hours}, Earth {e:hours}.',
   'card.details': 'Site details',
-  'card.outside': 'The mission runs past the end of the data. Choose an earlier day.',
+  'card.outside':
+    'The mission runs past the end of the data. Choose an earlier day or a shorter delay.',
   'card.outsideAria': '{site}: outside the data',
 
   // score parts
@@ -230,7 +229,6 @@ export const en = {
   'facts.published': 'Published point (NASA Lunar Surface Data Book)',
   'facts.derived': 'Derived: most-illuminated 60 m pixel of its NASA region (best case)',
   'facts.position': 'Position',
-  'facts.positionValue': '{lat:dec1}°, {lon:dec1}° E',
   'facts.terrain': 'Terrain',
   'facts.terrainValue': '{h:int} m · slope {s:deg1}',
   'facts.psr': 'Permanent shadow',
@@ -283,7 +281,6 @@ export const en = {
   'detail.signal':
     'About 1.3 s each way: mean Earth–Moon distance (384,400 km, NASA) divided by the speed of light.',
   'detail.directOnly': 'Direct line of sight only; relay satellites are not modelled.',
-  'detail.notFound': 'This site is not in the data.',
   'dir.N': 'N',
   'dir.E': 'E',
   'dir.S': 'S',
@@ -392,4 +389,40 @@ export const en = {
     'Earth in view is the share of the mission with direct contact; Contact gaps is 1 minus the longest gap without contact as a share of the mission. When all the time without contact is one single gap, the two values are equal.',
   'part.psrFact': 'Permanent shadow {km:km1} away · {a:dec1} km² region',
   'detail.axisDate': '{t:daymonth}',
+
+  // final robustness pass (D53)
+  'app.noSitesTitle': 'No sites',
+  'verdict.below-science': 'Below science minimum',
+  'reason.belowScience':
+    'Science score {score:dec1floor} below the minimum {min:int} of the science filter.',
+  'rule.scienceMin': 'Science score at least {n:int} (filter on)',
+  'reason.noDarkness':
+    'Darkness of {h:hours} during the mission; the survival limit allows no darkness.',
+  'rule.noDarkness': 'No darkness allowed',
+  'rules.invalid': 'Enter a number from {min} to {max}. Keeping {v}.',
+  'scene.outside': 'Outside the data: no Sun or Earth position for this date.',
+  'error.networkTitle': 'Could not load the data',
+  'error.networkText':
+    'The data files could not be downloaded. Check the connection or the server and try again.',
+  'error.contractTitle': 'Data files in an unexpected format',
+  'error.contractText':
+    'A data file was downloaded but does not match the data contract, so no results are shown.',
+  'error.fileNoResponse': '{file}: no response',
+  'error.fileHttp': '{file}: the server answered {status:int}',
+  'error.fileContract': '{file}: content does not match the contract',
+  'error.details': 'Technical details',
+  'error.retry': 'Try again',
+  'unavailable.title': '{site}: data unavailable',
+  'unavailable.text':
+    'The data file for this site could not be loaded. The other sites are not affected.',
+  'unavailable.card': 'Data unavailable: the file for this site could not be loaded.',
+  'notFound.title': 'Not found',
+  'notFound.text': 'There is no page at this address.',
+  'notFound.siteTitle': 'Site not found',
+  'notFound.siteText': 'This site is not in the data.',
+  'notFound.toPanel': 'Go to the mission panel',
+  'facts.positionEast': '{lat:dec1}°, {lon:dec1}° E',
+  'facts.positionWest': '{lat:dec1}°, {lon:dec1}° W',
+  'check.wallNote':
+    'Difference not explained. The point is on a slope of about {s:int}°, the most sensitive case for the method.',
 } as const;

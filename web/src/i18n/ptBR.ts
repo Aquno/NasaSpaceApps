@@ -7,8 +7,6 @@ import type { Messages } from './messages';
 
 export const ptBR: Messages = {
   'app.loading': 'Carregando os dados dos locais…',
-  'app.dataErrorTitle': 'Erro nos dados',
-  'app.dataErrorIntro': 'Os arquivos de dados não seguem o contrato de dados:',
   'app.noSites': 'Nenhum local em sites.json.',
   'app.backToDashboard': 'Voltar ao painel da missão',
 
@@ -101,7 +99,7 @@ export const ptBR: Messages = {
   'warn.noSite': 'Nenhum local viável em {date:date}.',
   'earliest.after': 'Primeiro pouso viável',
   'earliest.from': 'Primeiro pouso viável',
-  'earliest.value': '{site}, {date:date} ({n:int} {n:plural:dia seguido|dias seguidos})',
+  'earliest.value': '{site}, {date:date} ({n:int} {n:plural:dia|dias seguidos})',
   'earliest.none': 'Nenhum no período dos dados.',
   'census.title': 'Dias de pouso viáveis, {year}',
   'census.noneShort': 'nenhum local viável, de {total:int} dias de pouso possíveis',
@@ -121,7 +119,7 @@ export const ptBR: Messages = {
   'card.ariaBest': '{site}, posição {rank:int}, {verdict:verdict}, melhor no conjunto',
   'card.landingAt': 'Pouso {t:datetime}',
   'card.noLandingHour': 'Nenhuma hora deste dia atende às regras de pouso.',
-  'card.next': 'Próximo viável: {date:date} ({n:int} {n:plural:dia seguido|dias seguidos})',
+  'card.next': 'Próximo viável: {date:date} ({n:int} {n:plural:dia|dias seguidos})',
   'card.noNext': 'Nenhum pouso viável até o fim dos dados.',
   'card.linkContinuous': 'Contato direto {p:pct} da missão',
   'card.linkGaps': 'Contato direto {p:pct} da missão · maior intervalo {g:hours}',
@@ -137,7 +135,7 @@ export const ptBR: Messages = {
   'card.partPoints': '= {p:dec1}',
   'card.fullDisc': 'Disco inteiro: Sol {s:hours}, Terra {e:hours}.',
   'card.details': 'Detalhes do local',
-  'card.outside': 'A missão passa do fim dos dados. Escolha um dia anterior.',
+  'card.outside': 'A missão passa do fim dos dados. Escolha um dia anterior ou um atraso menor.',
   'card.outsideAria': '{site}: fora dos dados',
 
   'part.sunlight': 'Luz do Sol',
@@ -217,7 +215,6 @@ export const ptBR: Messages = {
   'facts.published': 'Ponto publicado (NASA Lunar Surface Data Book)',
   'facts.derived': 'Derivado: pixel de 60 m mais iluminado da região da NASA (melhor caso)',
   'facts.position': 'Posição',
-  'facts.positionValue': '{lat:dec1}°, {lon:dec1}° L',
   'facts.terrain': 'Terreno',
   'facts.terrainValue': '{h:int} m · inclinação {s:deg1}',
   'facts.psr': 'Sombra permanente',
@@ -269,7 +266,6 @@ export const ptBR: Messages = {
   'detail.signal':
     'Cerca de 1,3 s em cada sentido: distância média Terra–Lua (384.400 km, NASA) dividida pela velocidade da luz.',
   'detail.directOnly': 'Só a linha de visada direta; satélites retransmissores não são modelados.',
-  'detail.notFound': 'Este local não está nos dados.',
   'dir.N': 'N',
   'dir.E': 'L',
   'dir.S': 'S',
@@ -380,4 +376,40 @@ export const ptBR: Messages = {
     'Terra visível é a fração da missão com contato direto; Intervalos sem contato é 1 menos o maior intervalo sem contato como fração da missão. Quando todo o tempo sem contato é um único intervalo, os dois valores são iguais.',
   'part.psrFact': 'Sombra permanente a {km:km1} · região de {a:dec1} km²',
   'detail.axisDate': '{t:daymonth}',
+
+  // final robustness pass (D53)
+  'app.noSitesTitle': 'Nenhum local',
+  'verdict.below-science': 'Abaixo do mínimo de ciência',
+  'reason.belowScience':
+    'Nota de ciência {score:dec1floor} abaixo do mínimo {min:int} do filtro de ciência.',
+  'rule.scienceMin': 'Nota de ciência de pelo menos {n:int} (filtro ligado)',
+  'reason.noDarkness':
+    'Escuridão de {h:hours} durante a missão; o limite de sobrevivência não admite escuridão.',
+  'rule.noDarkness': 'Nenhuma escuridão admitida',
+  'rules.invalid': 'Digite um número de {min} a {max}. Mantido: {v}.',
+  'scene.outside': 'Fora dos dados: sem posição do Sol e da Terra para esta data.',
+  'error.networkTitle': 'Não foi possível carregar os dados',
+  'error.networkText':
+    'Os arquivos de dados não puderam ser baixados. Verifique a conexão ou o servidor e tente de novo.',
+  'error.contractTitle': 'Arquivos de dados em formato inesperado',
+  'error.contractText':
+    'Um arquivo de dados foi baixado, mas não segue o contrato de dados; por isso nenhum resultado é mostrado.',
+  'error.fileNoResponse': '{file}: sem resposta',
+  'error.fileHttp': '{file}: o servidor respondeu {status:int}',
+  'error.fileContract': '{file}: conteúdo fora do contrato',
+  'error.details': 'Detalhes técnicos',
+  'error.retry': 'Tentar de novo',
+  'unavailable.title': '{site}: dados indisponíveis',
+  'unavailable.text':
+    'Não foi possível carregar o arquivo de dados deste local. Os demais locais não são afetados.',
+  'unavailable.card': 'Dados indisponíveis: não foi possível carregar o arquivo deste local.',
+  'notFound.title': 'Página não encontrada',
+  'notFound.text': 'Não há página neste endereço.',
+  'notFound.siteTitle': 'Local não encontrado',
+  'notFound.siteText': 'Este local não está nos dados.',
+  'notFound.toPanel': 'Ir para o painel da missão',
+  'facts.positionEast': '{lat:dec1}°, {lon:dec1}° L',
+  'facts.positionWest': '{lat:dec1}°, {lon:dec1}° O',
+  'check.wallNote':
+    'Diferença não explicada. O ponto fica numa encosta de cerca de {s:int}°, o caso mais sensível do método.',
 };

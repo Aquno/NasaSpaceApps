@@ -9,7 +9,7 @@
 import { useMemo, useState } from 'react';
 import { dailyFractions, type DailyFractions } from '../calc/annual';
 import { landingCensus, type LandingCensus } from '../calc/census';
-import { evaluateSites, rankedSites, type Evaluation } from '../calc/evaluate';
+import { evaluateSites, isViableLanding, rankedSites, type Evaluation } from '../calc/evaluate';
 import {
   earliestViableSite,
   nextViableWindow,
@@ -97,7 +97,7 @@ export function useEvaluations(
       const site = pre.ranked.find((s) => s.id === e.siteId);
       const d = data.get(e.siteId);
       const v = pre.vis.get(e.siteId);
-      if (!site || !d || !v || (e.ok && e.verdict.kind === 'viable')) continue;
+      if (!site || !d || !v || isViableLanding(e)) continue;
       out.set(e.siteId, nextViableWindow(site, d, v, landingMs, inputs.durationH, inputs.rules));
     }
     return out;

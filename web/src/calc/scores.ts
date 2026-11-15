@@ -126,14 +126,18 @@ function baseVerdict(
   if (rules.requireSunAtLanding && !m.sunVisibleAtLanding) {
     return { kind: 'not-viable', rule: 'sunAtLanding', reason: { key: 'reason.darkAtLanding' } };
   }
-  if (m.longestDarkHours >= rules.survivalDarknessHours) {
+  // A limit of 0 h means no darkness at all is allowed (D53): a mission without darkness passes.
+  const noDarkAllowed = rules.survivalDarknessHours <= 0;
+  if (noDarkAllowed ? m.longestDarkHours > 0 : m.longestDarkHours >= rules.survivalDarknessHours) {
     return {
       kind: 'not-viable',
       rule: 'survivalDarkness',
-      reason: {
-        key: 'reason.survivalDarkness',
-        params: { h: m.longestDarkHours, limit: rules.survivalDarknessHours },
-      },
+      reason: noDarkAllowed
+        ? { key: 'reason.noDarkness', params: { h: m.longestDarkHours } }
+        : {
+            key: 'reason.survivalDarkness',
+            params: { h: m.longestDarkHours, limit: rules.survivalDarknessHours },
+          },
     };
   }
   if (m.sunFraction < rules.minSunFraction) {
@@ -183,6 +187,15 @@ function baseVerdict(
             params: { p: m.sunFraction, earth: m.earthFraction, km: psrDistanceKm },
           },
   };
+}
+
+/**
+ * True when the optional science filter is on and the site's science score is below its
+ * minimum (D32, D53): the site is then left out of "viable", the best compromise, the earliest
+ * viable landing and the viable-day counts, and is shown as "Below science minimum".
+ */
+export function belowScienceMinimum(sci: Score | null, rules: MissionRules): boolean {
+  return rules.minScienceEnabled && (sci?.total ?? 0) < rules.minScienceScore;
 }
 
 export interface Candidate {

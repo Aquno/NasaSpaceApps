@@ -11,7 +11,7 @@
  */
 import { DEFAULT_RULES, type MissionRules } from '../config/scoring';
 import type { SiteData, SiteSummary } from '../data/contract';
-import { evaluateSite } from './evaluate';
+import { evaluateSite, isViableLanding } from './evaluate';
 import type { VisibilitySeries } from './visibility';
 
 export const LANDING_STEP_MS = 86_400_000;
@@ -31,8 +31,7 @@ const isViable = (
   durationH: number,
   rules: MissionRules,
 ) => {
-  const e = evaluateSite(site, data, vis, t, durationH, rules);
-  return e.ok && e.verdict.kind === 'viable';
+  return isViableLanding(evaluateSite(site, data, vis, t, durationH, rules));
 };
 
 /** Next viable landing at or after `fromMs` and how many consecutive days stay viable. */

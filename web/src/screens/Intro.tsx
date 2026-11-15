@@ -23,6 +23,8 @@ import { Starfield } from '../components/Starfield';
 import { About } from '../components/About';
 import { InfoTip } from '../components/InfoTip';
 import { Loading } from '../components/Loading';
+import { DataErrorView } from '../components/DataErrorView';
+import type { DataProblem } from '../data/load';
 import type { SiteData, SiteSummary } from '../data/contract';
 import { useI18n } from '../i18n/I18nProvider';
 import type { MessageKey } from '../i18n/messages';
@@ -39,6 +41,8 @@ const PERCENT = 100;
 interface Props {
   /** Site data once loaded (the numbers wait for it; the rest does not). */
   ready: { sites: SiteSummary[]; data: Map<string, SiteData>; sphereRadiusM: number } | null;
+  /** Data could not be used: the numbers area shows why, with "Try again" (D53). */
+  error: { problems: DataProblem[]; onRetry: () => void } | null;
 }
 
 const FEATURES: { icon: ReactNode; title: MessageKey; text: MessageKey }[] = [
@@ -136,7 +140,7 @@ function useOpeningNumbers(ready: Props['ready']) {
   }, [sites, data, radiusM]);
 }
 
-export function Intro({ ready }: Props) {
+export function Intro({ ready, error }: Props) {
   const { t, num } = useI18n();
   const [globePx] = useState(() =>
     Math.round(Math.min(window.innerHeight * GLOBE_VH, window.innerWidth * GLOBE_VW)),
@@ -252,6 +256,8 @@ export function Intro({ ready }: Props) {
               <InfoTip>{t('intro.statsNote', { days: DEFAULT_MISSION_DURATION_H / 24 })}</InfoTip>
             </p>
           </>
+        ) : error ? (
+          <DataErrorView problems={error.problems} onRetry={error.onRetry} />
         ) : (
           <Loading text={t('app.loading')} />
         )}
