@@ -1,4 +1,4 @@
-# CLAUDE.md — Lunar Landing Site Navigator
+# CLAUDE.md — MoonCrux (Lunar site navigator)
 
 Contexto para qualquer sessão do Claude (ou pessoa do time) que entre no projeto sem memória das conversas anteriores.
 
@@ -18,6 +18,8 @@ Contexto para qualquer sessão do Claude (ou pessoa do time) que entre no projet
 - **Rode testes e lint antes do commit** (ver `docs/BOAS_PRATICAS.md`).
 
 ## O projeto em poucas linhas
+
+- **Nome:** **MoonCrux** (D55), com "Lunar site navigator" como descrição secundária. Crux é a constelação do Cruzeiro do Sul, usada para encontrar o sul. O repositório e os endereços publicados mantêm os nomes antigos.
 
 - **Evento:** NASA Space Apps Challenge 2026, hackathon de 14 e 15 de novembro de 2026.
 - **Desafio:** "Lunar Landing Site Navigator" — ferramenta intuitiva para comparar locais e datas de pouso na Lua, vendo a posição do Sol e da Terra em relação ao horizonte, para avaliar energia e janelas de comunicação direta com a Terra.

@@ -10,7 +10,9 @@ export const ptBR: Messages = {
   'app.noSites': 'Nenhum local em sites.json.',
   'app.backToDashboard': 'Voltar ao painel da missão',
 
-  'header.title': 'Lunar Site Navigator',
+  'header.title': 'MoonCrux',
+  // Former product name, kept as a secondary description in both languages (D55).
+  'header.tagline': 'Lunar site navigator',
   'header.context': 'Polo sul da Lua · dados reais da NASA',
   'header.sample': 'DADOS DE EXEMPLO',
   'header.whatThisAdds': 'Sobre',

@@ -10,7 +10,9 @@ export const en = {
   'app.backToDashboard': 'Back to the mission dashboard',
 
   // header
-  'header.title': 'Lunar Site Navigator',
+  'header.title': 'MoonCrux',
+  // Former product name, kept as a secondary description in both languages (D55).
+  'header.tagline': 'Lunar site navigator',
   'header.context': 'Lunar south pole · real NASA data',
   'header.sample': 'SAMPLE DATA',
   'header.whatThisAdds': 'About',

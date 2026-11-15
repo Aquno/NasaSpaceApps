@@ -1,5 +1,9 @@
 # Visão do produto
 
+## Nome
+
+**MoonCrux**, com "Lunar site navigator" como descrição secundária (D55). Crux é a constelação do Cruzeiro do Sul, usada para encontrar o sul.
+
 ## Desafio
 
 **NASA Space Apps Challenge 2026 — "Lunar Landing Site Navigator".**

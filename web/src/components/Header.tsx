@@ -27,7 +27,8 @@ export function Header({ sample, current = null, dataScope = null }: Props) {
   return (
     <header className="header">
       <h1>
-        <a href="#/">{t('header.title')}</a>
+        <a href="#/">{t('header.title')}</a>{' '}
+        <span className="header-tagline">{t('header.tagline')}</span>
       </h1>
       <span className="context">{t('header.context')}</span>
       {sample && <span className="badge-sample">{t('header.sample')}</span>}

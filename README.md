@@ -1,5 +1,7 @@
-# Lunar Landing Site Navigator
+# MoonCrux — Lunar site navigator
 
+> The name: **Crux** is the Southern Cross constellation, used to find the south — and MoonCrux is about the Moon's south pole.
+>
 > NASA Space Apps Challenge 2026 — challenge: **[Lunar Landing Site Navigator](https://www.spaceappschallenge.org/2026/challenges/lunar-landing-site-navigator/)**
 > Status: early development (hackathon, November 14–15, 2026). See [`docs/ROTEIRO.md`](docs/ROTEIRO.md) for current progress (team docs are in Portuguese).
 
