@@ -146,7 +146,7 @@ export function SiteCard({
               ◆{' '}
               {site.psrDistanceKm === null
                 ? t('unit.na')
-                : t('card.psr', { km: site.psrDistanceKm })}
+                : t('card.psr', { km: site.psrDistanceKm, a: site.psrAreaKm2 ?? 0 })}
             </span>
             <span title={t('card.slopeTitle')}>
               ⟋ {t('card.slope', { s: site.terrainSlopeDeg })}
@@ -154,7 +154,7 @@ export function SiteCard({
           </div>
           <details onClick={(e) => e.stopPropagation()}>
             <summary>{t('card.howBuilt')}</summary>
-            <ScoreParts engineering={engineering} science={science} metrics={m} />
+            <ScoreParts engineering={engineering} science={science} metrics={m} site={site} />
           </details>
           <button
             type="button"

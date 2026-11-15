@@ -11,6 +11,7 @@ import { AnnualStrips } from '../components/AnnualStrips';
 import { Footer } from '../components/Footer';
 import { Header } from '../components/Header';
 import { InfoTip } from '../components/InfoTip';
+import { Loading } from '../components/Loading';
 import { MissionControls } from '../components/MissionControls';
 import { MissionRulesPanel } from '../components/MissionRulesPanel';
 import { NasaCheck } from '../components/NasaCheck';
@@ -23,6 +24,7 @@ import type { SiteData, SiteSummary, Terrain } from '../data/contract';
 import { useI18n } from '../i18n/I18nProvider';
 import { useEvaluations, usePrecomputed, type MissionInputs } from '../state/useMission';
 import { useFlip } from '../ui/useFlip';
+import { useMoreBelow } from '../ui/useMoreBelow';
 
 const SouthPole3D = lazy(() => import('../components/SouthPole3D'));
 /** Faint, still sky behind the panel (contrast checked in D41). */
@@ -48,9 +50,13 @@ export function Dashboard({ sites, data, terrain, inputs, onInputs, onOpenSite }
   const lightSite = sites.find((s) => s.id === focusId) ?? d.ranked[0] ?? sites[0];
   const lightData = lightSite ? data.get(lightSite.id) : undefined;
   const lightDirs = useMemo(
-    () => (lightSite && lightData ? bodyDirectionsAt(lightSite, lightData, d.landingMs) : null),
+    () =>
+      lightSite && lightData
+        ? { ...bodyDirectionsAt(lightSite, lightData, d.landingMs), horizon: lightData.horizon }
+        : null,
     [lightSite, lightData, d.landingMs],
   );
+  const { ref: sideRef, more: sideMore } = useMoreBelow<HTMLElement>();
   const flipRef = useFlip<HTMLLIElement>(d.now.order.join('|'));
   const anyMeta = data.values().next().value?.meta;
   const year = anyMeta ? String(new Date(anyMeta.startMs).getUTCFullYear()) : '';
@@ -75,6 +81,7 @@ export function Dashboard({ sites, data, terrain, inputs, onInputs, onOpenSite }
       <div className="dash-screen">
         <Header
           sample={sample}
+          current="mission"
           dataScope={anyMeta ? { points: d.ranked.length, hours: anyMeta.count, year } : null}
         />
         {anyMeta && (
@@ -110,7 +117,15 @@ export function Dashboard({ sites, data, terrain, inputs, onInputs, onOpenSite }
               </InfoTip>
             </p>
             {view3d && lightSite && lightDirs ? (
-              <Suspense fallback={<p className="note">{t('scene.loading')}</p>}>
+              <Suspense
+                fallback={
+                  <div className="scene3d fill">
+                    <div className="scene3d-canvas scene3d-loading">
+                      <Loading text={t('scene.loading')} />
+                    </div>
+                  </div>
+                }
+              >
                 <SouthPole3D
                   terrain={terrain}
                   sites={sites}
@@ -121,7 +136,9 @@ export function Dashboard({ sites, data, terrain, inputs, onInputs, onOpenSite }
                   onSelect={setSelectedId}
                   sun={lightDirs.sun}
                   earth={lightDirs.earth}
+                  sunAzDeg={lightDirs.sunAzDeg}
                   sunElDeg={lightDirs.sunElDeg}
+                  lightHorizon={lightDirs.horizon}
                   lightSiteName={lightSite.name}
                   onUnavailable={() => setView3d(false)}
                 />
@@ -146,7 +163,7 @@ export function Dashboard({ sites, data, terrain, inputs, onInputs, onOpenSite }
             </p>
           </section>
 
-          <aside className="dash-side">
+          <aside className={`dash-side${sideMore ? ' more-below' : ''}`} ref={sideRef}>
             <p className={`earliest${d.now.bestId === null ? ' warning' : ''}`} aria-live="polite">
               {d.now.bestId === null && !outside && <>{t('warn.noSite', { date: d.landingMs })} </>}
               <span className="caps">
@@ -186,6 +203,11 @@ export function Dashboard({ sites, data, terrain, inputs, onInputs, onOpenSite }
                 );
               })}
             </ol>
+            {sideMore && (
+              <p className="more-hint" aria-hidden="true">
+                ↓ {t('cards.more')}
+              </p>
+            )}
           </aside>
         </div>
       </div>

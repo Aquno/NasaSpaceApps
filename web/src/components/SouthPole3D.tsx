@@ -26,6 +26,7 @@ import type { SiteSummary, Terrain } from '../data/contract';
 import { useI18n } from '../i18n/I18nProvider';
 import { shortName } from '../ui/format';
 import { placeBoxes } from '../ui/labelLayout';
+import { Clearance } from './Clearance';
 import { MoonGlobe } from './MoonGlobe';
 
 /** Visual parameters (presentation only). */
@@ -71,7 +72,10 @@ interface Props {
   onSelect: (id: string) => void;
   sun: Vec3;
   earth: Vec3;
+  /** Sun position seen from the light site (degrees) and that site's terrain horizon. */
+  sunAzDeg: number;
   sunElDeg: number;
+  lightHorizon: ArrayLike<number>;
   lightSiteName: string;
   onUnavailable: () => void;
 }
@@ -99,7 +103,9 @@ export function SouthPole3D(props: Props) {
     onSelect,
     sun,
     earth,
+    sunAzDeg,
     sunElDeg,
+    lightHorizon,
     lightSiteName,
     onUnavailable,
   } = props;
@@ -154,6 +160,34 @@ export function SouthPole3D(props: Props) {
       }
       if (visible) anchors.set(a.id, pt);
     }
+    // Short labels at the arrow tips (Sun, Earth), placed first: site labels avoid them (D52).
+    const reserved: { left: number; top: number; w: number; h: number }[] = [];
+    for (const kind of ['sun', 'earth'] as const) {
+      const tip = tipRefs.current[kind];
+      const dir = shownDirs.current?.[kind];
+      if (!tip) continue;
+      if (!dir) {
+        tip.style.visibility = 'hidden';
+        continue;
+      }
+      const p = new THREE.Vector3(...ARROW_ORIGIN)
+        .addScaledVector(dir, ARROW_LENGTH_KM + TIP_LABEL_OFFSET_KM)
+        .project(st.camera);
+      const tx = ((p.x + 1) / 2) * w;
+      const ty = ((1 - p.y) / 2) * h;
+      tip.style.transform = `translate(${tx}px, ${ty}px)`;
+      const onScreen = p.z < 1;
+      tip.style.visibility = onScreen ? 'visible' : 'hidden';
+      if (onScreen) {
+        const cs = getComputedStyle(tip);
+        reserved.push({
+          left: tx + parseFloat(cs.marginLeft),
+          top: ty + parseFloat(cs.marginTop),
+          w: tip.offsetWidth,
+          h: tip.offsetHeight,
+        });
+      }
+    }
     // Priority: selected, best compromise, then the others top to bottom.
     const rank = (id: string) => (id === selectedId ? 0 : id === bestId ? 1 : 2);
     const boxes = [...anchors.entries()]
@@ -164,7 +198,7 @@ export function SouthPole3D(props: Props) {
         return { id, x: pt.x, y: pt.y, w: label?.offsetWidth ?? 0, h: label?.offsetHeight ?? 0 };
       });
     const placed = new Map(
-      placeBoxes(boxes, w, h, LABEL_GAP_PX, [...anchors.values()]).map((b) => [b.id, b]),
+      placeBoxes(boxes, w, h, LABEL_GAP_PX, [...anchors.values()], reserved).map((b) => [b.id, b]),
     );
     for (const a of siteAnchors) {
       const label = labelRefs.current.get(a.id);
@@ -189,21 +223,6 @@ export function SouthPole3D(props: Props) {
       line.setAttribute('y2', String(Math.min(Math.max(pt.y, box.top), box.top + size.h)));
       line.style.visibility = 'visible';
     }
-    // Short labels at the arrow tips (Sun, Earth).
-    for (const kind of ['sun', 'earth'] as const) {
-      const tip = tipRefs.current[kind];
-      const dir = shownDirs.current?.[kind];
-      if (!tip) continue;
-      if (!dir) {
-        tip.style.visibility = 'hidden';
-        continue;
-      }
-      const p = new THREE.Vector3(...ARROW_ORIGIN)
-        .addScaledVector(dir, ARROW_LENGTH_KM + TIP_LABEL_OFFSET_KM)
-        .project(st.camera);
-      tip.style.transform = `translate(${((p.x + 1) / 2) * w}px, ${((1 - p.y) / 2) * h}px)`;
-      tip.style.visibility = p.z < 1 ? 'visible' : 'hidden';
-    }
   };
   const renderRef = useRef(render);
   useLayoutEffect(() => {
@@ -224,7 +243,7 @@ export function SouthPole3D(props: Props) {
     }
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    renderer.shadowMap.type = THREE.PCFShadowMap;
     renderer.setClearColor(0x0d1117);
     el.prepend(renderer.domElement);
 
@@ -532,7 +551,9 @@ export function SouthPole3D(props: Props) {
           {t('scene.reset')}
         </button>
         <span className="note">
-          <span className="sun">{t('scene.sun', { el: sunElDeg })}</span>{' '}
+          <span className="sun">
+            {t('detail.sun')} <Clearance horizon={lightHorizon} az={sunAzDeg} el={sunElDeg} />
+          </span>{' '}
           {t('scene.at', { site: lightSiteName })}
         </span>
       </div>

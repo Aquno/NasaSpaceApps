@@ -3,7 +3,9 @@
  *   line, Sun and Earth paths during the mission (strong where the body is visible, faint where
  *   it is behind the terrain, small dots at rises and sets), and both discs at the selected
  *   record drawn as circles whose diameter is the real angular size on the vertical scale (the
- *   horizontal scale is compressed, so widths are not to scale; D51). Elevation labels sit in
+ *   horizontal scale is compressed, so widths are not to scale; D51). A body behind the terrain
+ *   is drawn behind the silhouette as a faint hollow outline, never as a full disc over the
+ *   terrain (D52); its name stays readable on top. Elevation labels sit in
  *   a gutter left of the plot. Can draw several horizons ("Position sensitivity"). Display only.
  * Roadmap stage: 5 — Interface (see docs/ROTEIRO.md); decisions D42, D43, D51.
  * Inputs: horizon(s) [360] in degrees; path runs, events and current positions in degrees
@@ -52,7 +54,8 @@ export interface PanoramaBody {
   kind: 'sun' | 'earth';
   runs: TrackRun[];
   events?: TrackEvent[];
-  now: (AzEl & { diam: number }) | null;
+  /** Position at the selected record; `visible` comes from the calc module's disc rule. */
+  now: (AzEl & { diam: number; visible: boolean }) | null;
 }
 
 interface Props {
@@ -114,6 +117,11 @@ export function HorizonPanorama({ horizons, bodies, ariaLabel, range }: Props) {
             </text>
           </g>
         ))}
+        {bodies.map(
+          (b) =>
+            b.now &&
+            !b.now.visible && <Disc key={b.kind} b={b} pxPerDegY={pxPerDegY} x={x} y={y} />,
+        )}
         {horizons.map((h, k) => (
           <polygon
             key={k}
@@ -141,21 +149,21 @@ export function HorizonPanorama({ horizons, bodies, ariaLabel, range }: Props) {
             />
           )),
         )}
+        {bodies.map(
+          (b) => b.now?.visible && <Disc key={b.kind} b={b} pxPerDegY={pxPerDegY} x={x} y={y} />,
+        )}
         {bodies.map((b) => {
           if (!b.now) return null;
-          const discR = (b.now.diam / 2) * pxPerDegY;
-          const ringR = Math.max(SUN_RING_MIN_R, discR + SUN_RING_GAP_PX);
-          const labelR = b.kind === 'sun' ? ringR : discR;
+          const labelR = bodyRadii(b, pxPerDegY).label;
           return (
-            <g key={b.kind} className={`pano-body ${b.kind}`}>
-              {b.kind === 'sun' && (
-                <circle className="pano-ring" cx={x(b.now.az)} cy={y(b.now.el)} r={ringR} />
-              )}
-              <circle className="pano-disc" cx={x(b.now.az)} cy={y(b.now.el)} r={discR} />
-              <text x={x(b.now.az) + labelR + 4} y={y(b.now.el) - labelR} className="pano-label">
-                {t(b.kind === 'sun' ? 'detail.sun' : 'detail.earth')}
-              </text>
-            </g>
+            <text
+              key={`${b.kind}-label`}
+              x={x(b.now.az) + labelR + 4}
+              y={y(b.now.el) - labelR}
+              className={`pano-label${b.now.visible ? '' : ' hidden'}`}
+            >
+              {t(b.kind === 'sun' ? 'detail.sun' : 'detail.earth')}
+            </text>
           );
         })}
         {CARDINALS.map(([az, key]) => (
@@ -183,5 +191,35 @@ export function HorizonPanorama({ horizons, bodies, ariaLabel, range }: Props) {
         )}
       </figcaption>
     </figure>
+  );
+}
+
+/** Disc radius (real angular size on the vertical scale), Sun ring radius and label offset, px. */
+function bodyRadii(b: PanoramaBody, pxPerDegY: number) {
+  const disc = ((b.now?.diam ?? 0) / 2) * pxPerDegY;
+  const ring = Math.max(SUN_RING_MIN_R, disc + SUN_RING_GAP_PX);
+  return { disc, ring, label: b.kind === 'sun' ? ring : disc };
+}
+
+interface DiscProps {
+  b: PanoramaBody;
+  pxPerDegY: number;
+  x: (az: number) => number;
+  y: (el: number) => number;
+}
+
+/** One body at the selected record: full disc when visible, faint hollow outline when hidden. */
+function Disc({ b, pxPerDegY, x, y }: DiscProps) {
+  if (!b.now) return null;
+  const { disc, ring } = bodyRadii(b, pxPerDegY);
+  const cx = x(b.now.az);
+  const cy = y(b.now.el);
+  return (
+    <g className={`pano-body ${b.kind}${b.now.visible ? '' : ' hidden'}`}>
+      {b.kind === 'sun' && b.now.visible && (
+        <circle className="pano-ring" cx={cx} cy={cy} r={ring} />
+      )}
+      <circle className="pano-disc" cx={cx} cy={cy} r={disc} />
+    </g>
   );
 }

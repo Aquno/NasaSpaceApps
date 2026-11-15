@@ -12,6 +12,7 @@ import { evaluateSite } from '../calc/evaluate';
 import { trackEvents, trackRuns } from '../calc/panorama';
 import { visibilitySeries } from '../calc/visibility';
 import { indexAtOrAfter, type SiteData, type SiteSummary } from '../data/contract';
+import { Clearance } from '../components/Clearance';
 import { Footer } from '../components/Footer';
 import { Header } from '../components/Header';
 import { HorizonPanorama } from '../components/HorizonPanorama';
@@ -97,7 +98,6 @@ export function SiteDetail({ site, data, inputs }: Props) {
   const i = start + Math.min(cursor, length - 1);
   const nowMs = data.meta.startMs + i * data.meta.stepMinutes * 60_000;
   const at = (arr: ArrayLike<number>) => arr[i] as number;
-  const horizonAtAz = (az: number) => data.horizon[((Math.round(az) % 360) + 360) % 360] as number;
   const { verdict: v, engineering, science, metrics, link } = ev;
   const rule = ruleMsg(v.rule, inputs.rules);
   const linkKey: MessageKey =
@@ -136,13 +136,23 @@ export function SiteDetail({ site, data, inputs }: Props) {
               kind: 'sun',
               runs: paths.sun,
               events: paths.sunEvents,
-              now: { az: at(s.sunAz), el: at(s.sunEl), diam: at(s.sunDiam) },
+              now: {
+                az: at(s.sunAz),
+                el: at(s.sunEl),
+                diam: at(s.sunDiam),
+                visible: vis.sunAny[i] === 1,
+              },
             },
             {
               kind: 'earth',
               runs: paths.earth,
               events: paths.earthEvents,
-              now: { az: at(s.earthAz), el: at(s.earthEl), diam: at(s.earthDiam) },
+              now: {
+                az: at(s.earthAz),
+                el: at(s.earthEl),
+                diam: at(s.earthDiam),
+                visible: vis.earthAny[i] === 1,
+              },
             },
           ]}
           ariaLabel={t('detail.panoramaAria', { site: site.name, t: nowMs })}
@@ -178,11 +188,11 @@ export function SiteDetail({ site, data, inputs }: Props) {
         <p className="body-readout">
           <span className="sun">
             ● {t('detail.sun')}: {t(stateKey(vis.sunAny[i], vis.sunFull[i]))} ·{' '}
-            {t('detail.bodyAt', { el: at(s.sunEl), h: horizonAtAz(at(s.sunAz)) })}
+            <Clearance horizon={data.horizon} az={at(s.sunAz)} el={at(s.sunEl)} />
           </span>
           <span className="earth">
             ▲ {t('detail.earth')}: {t(stateKey(vis.earthAny[i], vis.earthFull[i]))} ·{' '}
-            {t('detail.bodyAt', { el: at(s.earthEl), h: horizonAtAz(at(s.earthAz)) })}
+            <Clearance horizon={data.horizon} az={at(s.earthAz)} el={at(s.earthEl)} />
           </span>
         </p>
       </section>
@@ -191,6 +201,7 @@ export function SiteDetail({ site, data, inputs }: Props) {
         <h2 className="caps">{t('detail.timeline')}</h2>
         <MissionTimeline
           nowMs={nowMs}
+          startMs={data.meta.startMs + start * data.meta.stepMinutes * 60_000}
           onSeek={(k) => {
             setPlaying(false);
             setCursor(k);
@@ -216,7 +227,7 @@ export function SiteDetail({ site, data, inputs }: Props) {
           {link.kind === 'gaps' && <InfoTip>{t('card.linkTip')}</InfoTip>}
         </p>
         <h3 className="caps">{t('card.howBuilt')}</h3>
-        <ScoreParts engineering={engineering} science={science} metrics={metrics} />
+        <ScoreParts engineering={engineering} science={science} metrics={metrics} site={site} />
       </section>
 
       <details className="glass detail-block section-details">

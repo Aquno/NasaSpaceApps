@@ -27,9 +27,10 @@ export function MissionRulesPanel({ rules, onChange }: Props) {
   const { t } = useI18n();
   const set = (patch: Partial<MissionRules>) => onChange({ ...rules, ...patch });
   const num = (v: string, fallback: number) => (Number.isFinite(Number(v)) ? Number(v) : fallback);
-  const pctInput = (key: keyof MissionRules, value: number) => (
+  const pctInput = (key: keyof MissionRules, value: number, label: string) => (
     <input
       type="number"
+      aria-label={label}
       min={0}
       max={100}
       value={Math.round(value * PERCENT)}
@@ -43,6 +44,7 @@ export function MissionRulesPanel({ rules, onChange }: Props) {
         <Field label={t('rules.sunAtLanding')}>
           <input
             type="checkbox"
+            aria-label={t('rules.sunAtLanding')}
             checked={rules.requireSunAtLanding}
             onChange={(e) => set({ requireSunAtLanding: e.target.checked })}
           />
@@ -50,6 +52,7 @@ export function MissionRulesPanel({ rules, onChange }: Props) {
         <Field label={t('rules.survival')}>
           <input
             type="number"
+            aria-label={t('rules.survival')}
             min={1}
             value={rules.survivalDarknessHours}
             onChange={(e) =>
@@ -57,15 +60,22 @@ export function MissionRulesPanel({ rules, onChange }: Props) {
             }
           />
         </Field>
-        <Field label={t('rules.minSun')}>{pctInput('minSunFraction', rules.minSunFraction)}</Field>
+        <Field label={t('rules.minSun')}>
+          {pctInput('minSunFraction', rules.minSunFraction, t('rules.minSun'))}
+        </Field>
         <Field label={t('rules.marginalSun')}>
-          {pctInput('marginalBelowSunFraction', rules.marginalBelowSunFraction)}
+          {pctInput(
+            'marginalBelowSunFraction',
+            rules.marginalBelowSunFraction,
+            t('rules.marginalSun'),
+          )}
         </Field>
         <Field label={t('rules.viableEng')}>
           <input
             type="number"
             min={0}
             max={100}
+            aria-label={t('rules.viableEng')}
             value={rules.viableMinEngineering}
             onChange={(e) => set({ viableMinEngineering: num(e.target.value, 0) })}
           />
@@ -90,13 +100,14 @@ export function MissionRulesPanel({ rules, onChange }: Props) {
           </span>
         </Field>
         <Field label={t('rules.relay')}>
-          {pctInput('lowLinkBelowEarthFraction', rules.lowLinkBelowEarthFraction)}
+          {pctInput('lowLinkBelowEarthFraction', rules.lowLinkBelowEarthFraction, t('rules.relay'))}
         </Field>
         <Field label={t('rules.slope')}>
           <input
             type="number"
             min={0}
             max={45}
+            aria-label={t('rules.slope')}
             value={rules.maxSlopeDeg}
             onChange={(e) => set({ maxSlopeDeg: num(e.target.value, rules.maxSlopeDeg) })}
           />

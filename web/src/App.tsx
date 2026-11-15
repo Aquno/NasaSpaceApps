@@ -5,6 +5,8 @@
  * Roadmap stage: 5 — Interface (see docs/ROTEIRO.md).
  */
 import { useEffect, useState } from 'react';
+import { Header } from './components/Header';
+import { Loading } from './components/Loading';
 import { useSites } from './data/useSites';
 import { useI18n } from './i18n/I18nProvider';
 import { Dashboard } from './screens/Dashboard';
@@ -45,10 +47,14 @@ export function App() {
     return <Roadmap sample={sample} />;
   }
   if (state.status === 'loading') {
+    // Header stays visible; a discreet indicator sits in the content area (D52).
     return (
-      <p className="app" role="status">
-        {t('app.loading')}
-      </p>
+      <div className="app">
+        <Header sample={false} current={hash === '#/mission' ? 'mission' : null} />
+        <div className="loading-area">
+          <Loading text={t('app.loading')} />
+        </div>
+      </div>
     );
   }
   if (state.status === 'error') {

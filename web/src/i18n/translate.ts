@@ -6,7 +6,7 @@
  * Outputs: the translated string.
  *
  * Placeholder syntax: {name} or {name:type} with type in
- *   int, dec1, dec1floor, pct (fraction 0-1), deg1, km1, hours (h or days), date, datetime,
+ *   int, dec1, dec1floor, pct (fraction 0-1), deg1, km1, hours (h or days), date, daymonth, datetime,
  *   verdict (VerdictKind, translated with the verdict.* keys), msg (another message key).
  * Plural: {name:plural:singular|plural} picks the singular form when the value is exactly 1 and
  *   the plural form otherwise (0 too), in both languages (D50). Write the number separately,
@@ -50,10 +50,32 @@ export function createTranslator(messages: Messages, locale: Locale): Translator
   const num = (value: number, decimals = 0) => nf(decimals).format(value);
   const pct = (fraction: number) =>
     new Intl.NumberFormat(locale, { style: 'percent', maximumFractionDigits: 0 }).format(fraction);
-  const date = (ms: number) =>
-    new Intl.DateTimeFormat(locale, { dateStyle: 'medium', timeZone: 'UTC' }).format(ms);
-  const dateTime = (ms: number) =>
-    `${new Intl.DateTimeFormat(locale, { dateStyle: 'medium', timeStyle: 'short', hourCycle: 'h23', timeZone: 'UTC' }).format(ms)} UTC`;
+  // Day, abbreviated month (and year) in the interface language, never the OS format (D52):
+  // "Mar 4, 2027" / "4 mar 2027" (word separators such as "de" and the month's dot dropped).
+  const shortDate = (withYear: boolean) => (ms: number) =>
+    new Intl.DateTimeFormat(locale, {
+      day: 'numeric',
+      month: 'short',
+      ...(withYear ? { year: 'numeric' } : {}),
+      timeZone: 'UTC',
+    })
+      .formatToParts(ms)
+      .map((p) => {
+        if (p.type === 'month') return p.value.replace(/\.$/, '');
+        if (p.type === 'literal' && /^\s*\p{L}+\s*$/u.test(p.value)) return ' ';
+        return p.value;
+      })
+      .join('');
+  const date = shortDate(true);
+  const dayMonth = shortDate(false);
+  const time = (ms: number) =>
+    new Intl.DateTimeFormat(locale, {
+      hour: '2-digit',
+      minute: '2-digit',
+      hourCycle: 'h23',
+      timeZone: 'UTC',
+    }).format(ms);
+  const dateTime = (ms: number) => `${date(ms)} ${time(ms)} UTC`;
 
   const t = (key: MessageKey, params: Params = {}): string =>
     messages[key].replace(PLACEHOLDER, (_m, name: string, type?: string, forms?: string) => {
@@ -81,6 +103,8 @@ export function createTranslator(messages: Messages, locale: Locale): Translator
           return hours(Number(v));
         case 'date':
           return date(Number(v));
+        case 'daymonth':
+          return dayMonth(Number(v));
         case 'datetime':
           return dateTime(Number(v));
         case 'verdict':

@@ -1,7 +1,8 @@
 /**
  * What: Mission timeline of one site: Sunlight and Direct-contact bands hour by hour (any part
  *   of the disc visible), a cursor at the selected hour, day ticks, and the count to the next
- *   sunset / loss of contact (or next rise when the body is down). The current-instant marker
+ *   sunset / loss of contact (or next rise when the body is down). Date labels under the day
+ *   ticks (D52). The current-instant marker
  *   matches the time control and moves with play; a click on the bands moves it. Display only.
  * Roadmap stage: 5 — Interface (see docs/ROTEIRO.md); decision D42.
  * Inputs: visibility flags (calc/visibility.ts), mission window start/length (records = hours),
@@ -16,10 +17,15 @@ import type { MessageKey } from '../i18n/messages';
 const W = 1440;
 const ROW_H = 22;
 const HOURS_PER_DAY = 24;
+const HOUR_MS = 3_600_000;
+/** At most this many date labels under the axis (every n days otherwise). */
+const MAX_DATE_LABELS = 8;
 
 interface Props {
   /** Time of the cursor (ms UTC), shown on the marker. */
   nowMs: number;
+  /** Time of the first mission record (ms UTC), for the axis dates. */
+  startMs: number;
   /** Moves the cursor when the timeline is clicked (record offset). */
   onSeek?: (offset: number) => void;
   sunAny: Uint8Array;
@@ -36,7 +42,16 @@ function untilChange(flags: Uint8Array, index: number, end: number): number | nu
   return n !== null && index + n <= end ? n : null;
 }
 
-export function MissionTimeline({ nowMs, onSeek, sunAny, earthAny, start, length, cursor }: Props) {
+export function MissionTimeline({
+  nowMs,
+  startMs,
+  onSeek,
+  sunAny,
+  earthAny,
+  start,
+  length,
+  cursor,
+}: Props) {
   const { t } = useI18n();
   const sx = (k: number) => (k / length) * W;
   const end = start + length;
@@ -50,6 +65,7 @@ export function MissionTimeline({ nowMs, onSeek, sunAny, earthAny, start, length
   const sunUp = sunAny[index] === 1;
   const earthUp = earthAny[index] === 1;
   const days = Math.floor(length / HOURS_PER_DAY);
+  const labelEvery = Math.max(1, Math.ceil((days + 1) / MAX_DATE_LABELS));
 
   const seek = (e: MouseEvent<HTMLDivElement>) => {
     if (!onSeek) return;
@@ -100,6 +116,19 @@ export function MissionTimeline({ nowMs, onSeek, sunAny, earthAny, start, length
               />
             ))}
           </svg>
+          <div className="timeline-dates" aria-hidden="true">
+            {Array.from({ length: days + 1 }, (_, d) => d)
+              .filter((d) => d % labelEvery === 0)
+              .map((d) => (
+                <span
+                  key={d}
+                  className="tl-date"
+                  style={{ left: `${(sx(d * HOURS_PER_DAY) / W) * 100}%` }}
+                >
+                  {t('detail.axisDate', { t: startMs + d * HOURS_PER_DAY * HOUR_MS })}
+                </span>
+              ))}
+          </div>
           {/* Current instant: the same marker as the time control above (D51). */}
           <div
             className="now-marker"

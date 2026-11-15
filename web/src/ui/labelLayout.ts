@@ -73,6 +73,8 @@ const BOX_CANDIDATES: [number, number][] = [
  * first candidate clamped to the box. Pixels, top-left origin. Presentation only.
  * @param gap distance from the anchor to the label, pixels
  * @param obstacles points (markers) that labels should not cover, pixels
+ * @param reserved boxes already on screen (e.g. the Sun/Earth arrow labels) that labels must not
+ *   overlap, pixels (D52)
  */
 export function placeBoxes(
   boxes: BoxInput[],
@@ -80,8 +82,9 @@ export function placeBoxes(
   height: number,
   gap: number,
   obstacles: { x: number; y: number }[] = [],
+  reserved: { left: number; top: number; w: number; h: number }[] = [],
 ): BoxPlacement[] {
-  const placed: { left: number; top: number; w: number; h: number }[] = [];
+  const placed: { left: number; top: number; w: number; h: number }[] = [...reserved];
   const out: BoxPlacement[] = [];
   const clamp = (v: number, lo: number, hi: number) => Math.min(Math.max(v, lo), Math.max(lo, hi));
   for (const b of boxes) {

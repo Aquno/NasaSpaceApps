@@ -21,7 +21,7 @@ export const ptBR: Messages = {
   'lang.en': 'English',
   'lang.pt-BR': 'Português (Brasil)',
 
-  'intro.kicker': 'Polo sul da Lua · Dados reais da NASA',
+  'intro.kicker': 'Planejamento de missão · Polo sul da Lua · Dados reais da NASA',
   'intro.open': 'Abrir painel da missão',
   'intro.lead':
     'Compare locais de pouso no polo sul da Lua por luz do Sol, contato com a Terra e valor científico, em qualquer data.',
@@ -35,13 +35,14 @@ export const ptBR: Messages = {
   'intro.f2': 'Notas de ciência e de engenharia de todos os locais, lado a lado.',
   'intro.f3Title': 'Replanejamento por atraso',
   'intro.f3': 'Resultados para a nova data de pouso quando o lançamento muda.',
-  'intro.statShackValue': '{a:pct} · {b:pct}',
+  'intro.statShackValue': '{a:pct}',
   'intro.statShack':
-    'Luz do Sol média da NASA: ponto da borda e parede interna do Shackleton, a {km:km1}',
-  'intro.statBest': 'dias de pouso viáveis em {year} no melhor local, {site} (de {total:int})',
+    'Luz do Sol média da NASA em dois pontos do Shackleton, a {km:km1} um do outro',
+  'intro.statBest':
+    'dias de pouso viáveis em {site}, o local com mais dias de pouso viáveis, de {total:int} dias de pouso possíveis em {year}',
   'intro.dataScope':
     '{n:int} pontos de referência · {h:int} horas de dados do Sol e da Terra por local, {year}.',
-  'intro.statNone': 'dias de {year} sem local viável (de {total:int})',
+  'intro.statNone': 'dias sem local viável, de {total:int} dias de pouso possíveis em {year}',
   'intro.statDelay': 'datas de pouso em que +{d:int} dias trocam o melhor local',
   'intro.statsNote':
     'Calculado no navegador a partir dos arquivos de dados, com as regras padrão (missão de {days:int} dias).',
@@ -103,7 +104,7 @@ export const ptBR: Messages = {
   'earliest.value': '{site}, {date:date} ({n:int} {n:plural:dia seguido|dias seguidos})',
   'earliest.none': 'Nenhum no período dos dados.',
   'census.title': 'Dias de pouso viáveis, {year}',
-  'census.noneShort': 'nenhum local viável (de {total:int})',
+  'census.noneShort': 'nenhum local viável, de {total:int} dias de pouso possíveis',
   'aria.best': 'Melhor no conjunto: {site}',
   'aria.noBest': 'Nenhum local se qualifica com estas regras.',
   'cards.aria': 'Locais ordenados para esta missão',
@@ -127,7 +128,7 @@ export const ptBR: Messages = {
   'card.linkLow': 'Contato direto só {p:pct} da missão: satélite de retransmissão necessário',
   'card.sun': 'Sol {p:pct}',
   'card.sunTitle': 'Horas da missão com alguma parte do Sol visível',
-  'card.psr': '{km:km1} até a sombra permanente',
+  'card.psr': '{km:km1} até a sombra permanente (região de {a:dec1} km²)',
   'card.psrTitle': 'Distância até a região em sombra permanente mais próxima',
   'card.slope': 'Inclinação {s:deg1}',
   'card.slopeTitle': 'Inclinação local do terreno (DEM de 20 m)',
@@ -205,7 +206,6 @@ export const ptBR: Messages = {
   'scene.vertical': 'Vertical ×{n:int}',
   'scene.verticalAria': 'Exagero vertical',
   'scene.reset': 'Reiniciar vista',
-  'scene.sun': 'Sol {el:deg1}',
   'scene.at': 'em {site}',
   'scene.aria': 'Vista 3D do polo sul. Setas giram e inclinam, mais e menos aproximam, R reinicia.',
   'scene.loading': 'Carregando a vista 3D…',
@@ -245,7 +245,6 @@ export const ptBR: Messages = {
   'detail.play': 'Reproduzir',
   'detail.pause': 'Pausar',
   'detail.hourOf': 'Hora {h:int} de {n:int}',
-  'detail.bodyAt': 'elevação {el:deg1} · relevo {h:deg1} nessa direção',
   'detail.visible': 'visível',
   'detail.partial': 'parcialmente visível',
   'detail.hidden': 'atrás do relevo',
@@ -267,7 +266,8 @@ export const ptBR: Messages = {
   'detail.band': '{px:int} m até {km:int} km',
   'detail.observer': 'Altura do observador',
   'detail.observerValue': '{m:dec1} m acima do solo (mastro)',
-  'detail.signal': 'Cerca de 1,3 s em cada sentido entre a Terra e a Lua.',
+  'detail.signal':
+    'Cerca de 1,3 s em cada sentido: distância média Terra–Lua (384.400 km, NASA) dividida pela velocidade da luz.',
   'detail.directOnly': 'Só a linha de visada direta; satélites retransmissores não são modelados.',
   'detail.notFound': 'Este local não está nos dados.',
   'dir.N': 'N',
@@ -326,20 +326,21 @@ export const ptBR: Messages = {
   'check.diff': '{sign}{d:dec1} p.p.',
   'check.whyTitle': 'Por que diferem',
   'check.why1':
-    'A NASA faz a média de 18,6 anos de passos horários (um ciclo de nutação lunar); a ferramenta olha um ano.',
+    'A NASA faz a média de 18,6 anos de passos horários (um ciclo completo de nutação lunar); a ferramenta olha só 2027, um único ano dentro desse ciclo, então as trajetórias do Sol e principalmente da Terra sobre o relevo diferem da média de longo prazo.',
   'check.why2':
     'A NASA usa um mapa de relevo de 60 m; a ferramenta usa mapas de 20, 80 e 320 m conforme a distância, com o observador num mastro de 2 m.',
   'check.why3':
     'Cada valor da NASA é um pixel de 60 m; em cerca de 90 m ele pode mudar dezenas de pontos (ver data/validation/COMPARISON.md).',
   'check.why4':
-    'A ferramenta consulta o horizonte no grau inteiro de azimute mais próximo do centro do disco.',
+    'A ferramenta consulta o horizonte só no grau inteiro de azimute mais próximo do centro do disco; a Terra tem cerca de 1,9° de largura, então o relevo sob as bordas do disco não é verificado.',
   'check.notTuned': 'Nada foi ajustado para aproximar os números.',
 
   // text review (D50)
   'map.resolution':
     'Relevo LOLA, {px:int} m por pixel; escala vertical exagerada. Só visualização.',
   'info.label': 'Mais informações',
-  'census.tip': 'Missão de {days:int} dias, regras atuais.',
+  'census.tip':
+    'Missão de {days:int} dias, regras atuais. Dias de pouso possíveis: a missão precisa terminar dentro dos dados.',
   'detail.teamRules': 'Os pesos e limites das notas são escolhas do time, não requisitos da NASA.',
   'about.title': 'Sobre',
   'about.compare': 'Comparação com as ferramentas existentes',
@@ -358,4 +359,25 @@ export const ptBR: Messages = {
   'rule.marginalSunFraction': 'Luz do Sol em pelo menos {p:pct} da missão para viável',
   'rule.engineering': 'Nota de engenharia de pelo menos {n:int} para viável',
   'rule.slope': 'Inclinação do terreno de no máximo {s:deg1}',
+
+  // profile review (D52)
+  'intro.statRim': 'borda',
+  'intro.statWall': 'parede interna',
+  'intro.totalTip':
+    'Dias de pouso possíveis: a missão de {days:int} dias precisa terminar dentro dos dados de {year}, então os últimos dias do ano não podem ser dias de pouso.',
+  'controls.prevDay': 'Dia anterior',
+  'controls.nextDay': 'Dia seguinte',
+  'controls.pickDay': 'Dia do pouso {date:date}. Abrir o calendário',
+  'controls.noDelayReadout': 'Sem atraso',
+  'clear.above': '{d:deg1} acima do relevo',
+  'clear.below': '{d:deg1} abaixo do relevo',
+  'clear.level': 'na linha do relevo',
+  'clear.tip': 'Centro do disco: elevação {el:deg1}; relevo {h:deg1} nessa direção.',
+  'header.nav': 'Telas',
+  'header.mission': 'Painel da missão',
+  'cards.more': 'Mais locais abaixo',
+  'part.gapsTip':
+    'Terra visível é a fração da missão com contato direto; Intervalos sem contato é 1 menos o maior intervalo sem contato como fração da missão. Quando todo o tempo sem contato é um único intervalo, os dois valores são iguais.',
+  'part.psrFact': 'Sombra permanente a {km:km1} · região de {a:dec1} km²',
+  'detail.axisDate': '{t:daymonth}',
 };
